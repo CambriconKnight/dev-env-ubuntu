@@ -1,0 +1,35 @@
+# -------------------------------------------------------------------------------
+# Filename:     Dockerfile
+# UpdateDate:   2021/02/23
+# Description:  Build docker images for cambricon-caffe.
+# Example:
+# Depends:      Based on ubuntu:16.04
+# Notes:
+# -------------------------------------------------------------------------------
+# 0.Start FROM ubuntu:16.04 image
+FROM ubuntu:16.04
+#FROM ubuntu:18.04
+
+MAINTAINER kang <ksp416@163.com>
+
+# 1.Sync files
+COPY . /temp/
+WORKDIR /temp/
+RUN mkdir -p /root/.pip/ && \
+    cp pip.conf /root/.pip/ && \
+    cp sources_16.04.list /etc/apt/sources.list
+
+# 2.Pre-installed software
+ENV DEBIAN_FRONTEND=noninteractive
+RUN bash ./pre_packages.sh
+
+# 3.Set ENV && Clean
+ENV LANG C.UTF-8
+ENV TIME_ZONE Asia/Shanghai
+RUN echo "${TIME_ZONE}" > /etc/timezone && \
+    ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime && \
+    rm -rf /temp/ && rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
+
+# 4.Set WorkDir
+WORKDIR /opt/work/
