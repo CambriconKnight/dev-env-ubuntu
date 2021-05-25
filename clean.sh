@@ -13,5 +13,5 @@ if [ $num_container ]; then sudo docker rm $num_container;fi
 
 # 3.rmi docker image
 #sudo docker rmi `sudo docker images | grep cam/ubuntu16.04-caffe | awk '{print $3}'`
-num_images=`sudo docker images | grep ${MY_IMAGE} | awk '{print $3}'`
+num_images=`sudo docker images | grep ${MY_IMAGE}  | grep ${VERSION} | awk '{print $3}'`
 if [ $num_images ]; then sudo docker rmi $num_images;fi

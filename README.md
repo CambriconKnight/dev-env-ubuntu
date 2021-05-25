@@ -88,7 +88,9 @@ source $ROOT_HOME/env_caffe.sh
 #进入以下路径，运行脚本编译Cambricon Caffe
 cd ${CAFFE_HOME}/src/caffe/scripts
 bash build_caffe_mlu270_cambricon_release.sh
-#编译完成后,结果确认:打开目录build/lib，若编译生成了libcaffe.so 和_caffe.so 两个文件，则说明Cambricon Caffe 编译成功。
+#编译完成后,结果确认:
+#打开目录build/lib，若编译生成了libcaffe.so 和_caffe.so 两个文件，
+#则说明Cambricon Caffe 编译成功。
 ls -la ${CAFFE_HOME}/src/caffe/build/lib
 ```
 

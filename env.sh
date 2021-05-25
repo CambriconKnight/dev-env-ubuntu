@@ -15,7 +15,8 @@ TYPE_DOCKERFILE="16.04"
 FILENAME_DOCKERFILE="Dockerfile.$TYPE_DOCKERFILE"
 DIR_DOCKER="docker"
 #Version
-VER="1.0.0"
+#VER="1.0.0"
+VER="1.7.0"
 VERSION="v${VER}"
 #Organization
 ORG="kang"
