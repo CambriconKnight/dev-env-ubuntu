@@ -162,7 +162,7 @@ cd /home/ftp/mlu270/v1.7.0/Ubuntu16.04/PyTorch/src
 tar zxvf pytorch-v0.15.0.tar.gz -C /opt/work/
 ```
 
-### 8.2.2 编译与部署Cambricon PyTorch
+### 8.2.2 编译与安装Cambricon PyTorch
 此章节包含Cambricon PyTorch的编译\安装\验证.
 ### 8.2.2.1 环境设置
 ```bash
