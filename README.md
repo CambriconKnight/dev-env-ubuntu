@@ -102,7 +102,7 @@ dpkg -i cncl_0.8.0-1.ubuntu16.04_amd64.deb
 ```
 
 # 8. Deploy SDK
-## 8.1 Caffe
+## 8.1 CaffeSDK
 ### 8.1.1 部署Cambricon Caffe
 ```bash
 #以下操作都在容器中操作
@@ -153,7 +153,7 @@ make runtest
 #注:如果遇到错误,可以暂时忽略.
 ```
 
-## 8.2 PyTorch
+## 8.2 PyTorchSDK
 ### 8.2.1 部署Cambricon PyTorch
 ```bash
 #以下操作都在容器中操作
@@ -183,7 +183,7 @@ source env_pytorch.sh
 #以下操作都在容器中操作
 #进入以下路径，运行脚本编译Cambricon PyTorch
 cd $ROOT_HOME
-#脚本包含包含后面的分步编译中的步骤
+#脚本包含包含后面的分步编译中1~4步骤
 ./configure_pytorch.sh 0
 ```
 
@@ -194,7 +194,7 @@ cd $ROOT_HOME
 cd $ROOT_HOME/pytorch/src/catch
 # 安装虚拟环境,此处 Python 3 可按需更换为指定版本
 virtualenv -p /usr/bin/python3 venv/pytorch
-# 激活虚拟环境
+# 激活虚拟环境(source pytorch/src/catch/venv/pytorch/bin/activate)
 source venv/pytorch/bin/activate
 # 2.将 Cambricon Catch 中所包含的 Cambricon PyTorch 的 Patch 打到 Cambricon PyTorch 仓库中
 cd script
@@ -209,16 +209,19 @@ cd ../catch
 pip install -r requirements.txt
 rm -rf build
 python setup.py install
+###################################################
 # 5.编译并安装 Cambricon Vision. 在 Cambricon Vision 目录下清理环境，然后编译并安装 Cambricon Vision。
 cd ../vision/
+#cd ${VISION_HOME}
 rm -rf dist
+# 激活虚拟环境(source pytorch/src/catch/venv/pytorch/bin/activate)
 #编译 TorchVision
 python setup.py bdist_wheel
 #安装该版本 release 所对应的 torchvision 版本
 pip install dist/torchvision-*.whl
 
 # 6.设置以下环境变量
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/neuware/lib64/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/neuware/lib64
 
 # 7.确认编译结果
 #对于 Cambricon PyTorch,打开目录 build/lib,若编译生成了 libtorch_pytorch.so 和 libtorch.so等文件,则说明 Cambricon PyTorch 编译成功。
