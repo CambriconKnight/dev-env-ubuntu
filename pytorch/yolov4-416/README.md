@@ -7,13 +7,15 @@
 
 # 1. 概述
 [YOLO](https://pjreddie.com/darknet/yolo) (You Only Look Once)系列目标检测算法(v1-v3)作者 Joe Redmon 宣布不再继续CV方向的研究，引起学术圈一篇哗然。YOLO之父宣布退出CV界，坦言无法忽视自己工作带来的负面影响。当大家以为再也见不到YOLOv4的时候，然鹅不久前YOLOv4 来了！YOLOv4的特点是集大成者，俗称堆料。但最终达到这么高的性能，是不断尝试、不断堆料、不断调参的结果，最终取得了非常好的成绩。
+
 [YOLOv4](https://github.com/AlexeyAB/darknet)的一作是 Alexey Bochkovskiy, 这里对Alexey不过多赘述，简单说他就是Darknet另一个github版本的维护者/YOLO接棒者，大神的YOLOv4的代码库地址：https://github.com/AlexeyAB/darknet 。
+
 下面我们就来看看该算法如何在基于寒武纪MLU智能加速卡上移植开发。
-整个移植过程分为环境准备、模型结构转换、模型量化、在线推理和离线推理共五个步骤，以下详细描述整个移植过程。
-相关移植套件参见[dev-env-ubuntu](https://github.com/CambriconKnight/dev-env-ubuntu)。
+
+整个移植过程分为环境准备、模型结构转换、模型量化、在线推理和离线推理共五个步骤，以下详细描述整个移植过程。相关移植套件参见[dev-env-ubuntu](https://github.com/CambriconKnight/dev-env-ubuntu)。
 
 # 2. 环境准备
-准备物理环境 >> 获取开发资料 >> 安装MLU驱动 >> 安装Docker >> 加载镜像 >> 启动容器 >> 更新环境 >> 设置环境变量 >> 准备网络模型
+准备物理环境 >> 获取开发资料 >> 安装MLU驱动 >> 安装Docker >> 加载镜像 >> 启动容器 >> 安装依赖库 >> 部署PyTorchSDK >> 设置环境变量 >> 准备网络模型 >> 升级YOLOv4优化补丁 >> 创建模型目录 >> 进入虚拟环境
 ## 2.1. 物理环境
 准备服务器/PC机 >> 安装MLU卡 >> 检测MLU卡是否识别 >> 检测PCIE资源分配是否正常
 ```bash
@@ -41,7 +43,7 @@ Docker安装参见：https://docs.docker.com/engine/install/
 如果Docker容器中还没有安装依赖库,请参考[../../README.md](../../README.md) [Install Dependent]章节 安装依赖库。
 
 ## 2.7. 部署PyTorchSDK
-如果Docker容器中还没有部署PyTorchSDK,请参考[../../README.md](../../README.md) [Deploy SDK]章节 部署PyTorchSDK。
+如果Docker容器中还没有部署PyTorchSDK,请参考[../README.md](../README.md) [Deploy SDK]章节 部署PyTorchSDK。
 
 ## 2.8. 设置环境变量
 声明环境变量（该操作每次进入docker都需要进行）
@@ -50,7 +52,7 @@ Docker安装参见：https://docs.docker.com/engine/install/
 #设置压缩包解压后的根目录
 export ROOT_HOME=/opt/work/cambricon_pytorch
 cd $ROOT_HOME
-#创建数据集和模型软链接目录(以实际目录为准):DATASET_HOME, CAFFE_MODELS_DIR
+#创建数据集和模型软链接目录(以实际目录为准)
 ln -s /data/datasets datasets
 ln -s /data/models models
 #如果datasets & models有变化,请修改env_pytorch.sh
@@ -81,22 +83,7 @@ wget https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4.cfg
 wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights
 #注：如果是自己的网络，则不用再下载。可以直接替换【${PATH_NETWORK}】目录中【yolov4.cfg】、【yolov4.weights】.
 ```
-
-## 2.10. 创建模型目录
-```bash
-#创建SDK中模型目录
-mkdir -p $ROOT_HOME/pytorch/models/pytorch_models/origin/checkpoints/
-mkdir -p $ROOT_HOME/pytorch/models/pytorch_models/int16/checkpoints/
-mkdir -p $ROOT_HOME/pytorch/models/pytorch_models/int8/checkpoints/
-```
-
-## 2.11. 进入虚拟环境
-```bash
-cd $ROOT_HOME
-source pytorch/src/catch/venv/pytorch/bin/activate
-```
-
-## 2.12. 升级YOLOv4优化补丁
+## 2.10. 升级YOLOv4优化补丁
 ```bash
 export YOLOv4_PATCH=${PATH_NETWORK}/patch/v1.7.0
 cd $YOLOv4_PATCH
@@ -106,11 +93,18 @@ cp -rvf ./cambricon_pytorch /opt/work/
 #以下操作都在容器中操作
 #进入以下路径，运行脚本编译Cambricon PyTorch
 cd $ROOT_HOME
+source env_pytorch.sh
 #脚本包含包含后面的分步编译中1~4步骤
 ./configure_pytorch.sh 0
 ###################################################
+# 在 Cambricon PyTorch 或 Cambricon Catch 源码目录下安装 Virtualenv 并激活虚拟环境。本例使用Cambricon Catch 目录。
+cd $ROOT_HOME/pytorch/src/catch
+# 安装虚拟环境,此处 Python 3 可按需更换为指定版本
+virtualenv -p /usr/bin/python3 venv/pytorch
+# 激活虚拟环境(source pytorch/src/catch/venv/pytorch/bin/activate)
+source venv/pytorch/bin/activate
 # 编译并安装 Cambricon Vision. 在 Cambricon Vision 目录下清理环境，然后编译并安装 Cambricon Vision。
-cd ../vision/
+cd $ROOT_HOME/pytorch/src/vision
 #cd ${VISION_HOME}
 rm -rf dist
 # 激活虚拟环境(source pytorch/src/catch/venv/pytorch/bin/activate)
@@ -131,8 +125,7 @@ pip install dist/torchvision-*.whl
                 │   │   ├── genoff
                 │   │   │   └── genoff.py
                 │   │   └── yolov4
-                │   │       ├── yolov4_offline_multicore.cpp
-                │   │       └── yolov4_offline_multicore_new.cpp
+                │   │       └── yolov4_offline_multicore.cpp
                 │   └── online
                 │       └── yolov4
                 │           ├── eval.py
@@ -167,8 +160,22 @@ pip install dist/torchvision-*.whl
 ./cambricon_pytorch/pytorch/src/catch/examples/offline/yolov4/yolov4_offline_multicore.cpp
 ```
 
+## 2.11. 创建模型目录
+```bash
+#创建SDK中模型目录
+mkdir -p $ROOT_HOME/pytorch/models/pytorch_models/origin/checkpoints/
+mkdir -p $ROOT_HOME/pytorch/models/pytorch_models/int16/checkpoints/
+mkdir -p $ROOT_HOME/pytorch/models/pytorch_models/int8/checkpoints/
+```
+
+## 2.12. 进入虚拟环境
+```bash
+cd $ROOT_HOME
+source pytorch/src/catch/venv/pytorch/bin/activate
+```
+
 # 3. 模型结构转换
-YOLOv4没有官方的Caffe网络模型。如果要在Cambricon PyTorch 上使用YOLOv4 网络，需要先将[Darknet](https://github.com/pjreddie/darknet) 官方的cfg、weights文件转换成 PyTorch 中对应的pth文件，然后手动修改相关层（增加yolo层）信息匹配Cambricon PyTorch 加速要求（此操作不影响原有YOLOv4训练流程）。相关信息参见《寒武纪PyTorch用户手册-v*.*.*.pdf》中相关章节说明。
+如果要在Cambricon PyTorch 上使用YOLOv4 网络，需要先将[Darknet](https://github.com/pjreddie/darknet) 官方的cfg、weights文件转换成 PyTorch 中对应的pth文件，然后手动修改相关层（增加yolo层）信息匹配Cambricon PyTorch 加速要求（此操作不影响原有YOLOv4训练流程）。相关信息参见《寒武纪PyTorch用户手册-v*.*.*.pdf》中相关章节说明。
 下面以官网 YOLOv4 为示例描述如何进行网络模型转换。
 ```bash
 # 1.修改网络输入的宽&高
@@ -196,8 +203,8 @@ Cambricon PyTorch 提供工具帮助我们量化模型。可以将32 位浮点�
 下面以yolov4 为示例描述如何进行模型量化。
 ```bash
 #1.生成图片列表 file_list_datasets
-cd ${PATH_NETWORK}
-../tools/getFileList.sh ${PATH_NETWORK}/datasets file_list_datasets
+#cd ${PATH_NETWORK}
+#../tools/getFileList.sh ${PATH_NETWORK}/datasets file_list_datasets
 # 2.模型量化
 export QUANTIZED_PATH="${ROOT_HOME}/pytorch/src/catch/examples/online/yolov4"
 cd ${QUANTIZED_PATH}
@@ -225,6 +232,8 @@ ls $ROOT_HOME/pytorch/models/pytorch_models/int8/checkpoints/yolov4.pth
 export ONLINE_PATH="${ROOT_HOME}/pytorch/src/catch/examples/online/yolov4"
 #${ONLINE_PATH}目录下存放的是 YOLOv4 网络的实现。在此目录下执行以下脚本即可在 MLU 上运行 YOLOv4 网络的在线融合,并将 meanAP 精度输出到终端。
 cd ${ONLINE_PATH}
+#cp ./model/yolov4.cfg ./model/yolov4.cfg-bk
+cp ${PATH_NETWORK_MODELS}/yolov4.cfg ./model/yolov4.cfg
 python eval.py -half_input 1 -quantized_mode 1 -datadir $COCO_PATH_PYTORCH/COCO -img_num 16
 #有关该脚本的参数解释信息,参见 python eval.py 脚本的参数解释 。
 ```
@@ -256,7 +265,7 @@ python $CATCH_HOME/examples/offline/yolov4/../genoff/genoff.py -fake_device 1 -m
 #python $CATCH_HOME/examples/offline/yolov4/../genoff/genoff.py -fake_device 1 -model yolov4 -mcore MLU220 -mname mlu220_yolov4_4b4c_fp16 -half_input 1 -core_number 4 -batch_size 4  -input_format 0
 #移动离线模型到模型结果目录
 echo "Move models to dir..."
-mv *.cambricon ${PATH_NETWORK_MODELS_MLU}
+mv *.cambricon* ${PATH_NETWORK_MODELS_MLU}
 echo "Complete!"
 ```
 genoff.py脚本参数使用说明如下,详细说明见《寒武纪 PyTorch 用户手册-v*.*.*.pdf》中相关章节【离线模型生成工具】。
@@ -291,7 +300,8 @@ echo "running offline test..."
 echo "Complete!"
 #移动结果数据到测试目录
 echo "Move result to offline..."
-rm ${PATH_NETWORK}/test/offline/*
+rm ${PATH_NETWORK}/test/offline/*.jpg
+rm ${PATH_NETWORK}/test/offline/*.txt
 mv 000000*.txt ${PATH_NETWORK}/test/offline/
 mv yolov4*.jpg ${PATH_NETWORK}/test/offline/
 echo "Complete!"
