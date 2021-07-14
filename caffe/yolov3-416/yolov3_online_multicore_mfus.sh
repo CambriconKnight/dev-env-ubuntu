@@ -1,5 +1,5 @@
 #!/bin/bash
-# 基于SDK-Demo 在线逐层推理 MFUS模式
+# 基于SDK-Demo 在线融合推理 MFUS模式
 #/opt/cambricon/caffe/src/caffe/build/examples/yolo_v3/yolov3_online_multicore
 # Usage:
 #    $ bash yolov3_online_multicore_mfus.sh

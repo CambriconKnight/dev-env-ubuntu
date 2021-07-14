@@ -2,7 +2,7 @@
 
 cmd_time=$(date +%Y%m%d%H%M%S.%N)
 filename="test-cnmon-${cmd_time}.log"
-timesleep=3
+timesleep=1
 
 while true;
 do 

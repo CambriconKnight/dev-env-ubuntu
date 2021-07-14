@@ -94,7 +94,7 @@ cp -rvf ./cambricon_pytorch /opt/work/
 #进入以下路径，运行脚本编译Cambricon PyTorch
 cd $ROOT_HOME
 source env_pytorch.sh
-#脚本包含包含后面的分步编译中1~4步骤
+# 一键编译
 ./configure_pytorch.sh 0
 ###################################################
 # 在 Cambricon PyTorch 或 Cambricon Catch 源码目录下安装 Virtualenv 并激活虚拟环境。本例使用Cambricon Catch 目录。
@@ -143,7 +143,6 @@ pip install dist/torchvision-*.whl
                                     └── mish.cpp
 
 17 directories, 10 files
-###################################################
 #各类补丁文件如下:
 # 针对YOLOv4性能优化的文件
 ./cambricon_pytorch/pytorch/src/catch/examples/online/yolov4/tool/yolo_layer.py
@@ -158,6 +157,7 @@ pip install dist/torchvision-*.whl
 
 # YOLOv4后处理fix画BOX的问题 postprocss fixbox
 ./cambricon_pytorch/pytorch/src/catch/examples/offline/yolov4/yolov4_offline_multicore.cpp
+###################################################
 ```
 
 ## 2.11. 创建模型目录
