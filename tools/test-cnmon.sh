@@ -9,8 +9,9 @@
 # Notes:
 # -------------------------------------------------------------------------------
 
-CMD_TIME=$(date +%Y%m%d%H%M%S.%N)
 TIMESLEEP=1
+DEMO_NAME="demo"
+CMD_TIME=$(date +%Y%m%d%H%M%S.%N)
 LOG_PACH="log"
 if [ ! -d $LOG_PACH ];then
     mkdir -p $LOG_PACH
@@ -29,9 +30,9 @@ do
     #cnmon >> ${LOG_FILENAME};
     sleep 1;
     echo "=====================" >> $LOG_FILENAME;
-    cnmon | grep demo | wc -l;
+    cnmon | grep $DEMO_NAME | wc -l;
     sleep 0.5;
-    cnmon | grep demo | wc -l >> $LOG_FILENAME;
+    cnmon | grep $DEMO_NAME | wc -l >> $LOG_FILENAME;
     echo "=====================" >> $LOG_FILENAME;
     echo "=====================";
     sleep $TIMESLEEP;
