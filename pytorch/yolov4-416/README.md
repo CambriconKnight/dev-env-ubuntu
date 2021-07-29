@@ -190,7 +190,7 @@ if [ ! -d "mlu" ];then mkdir mlu;fi
 export DARKNET3PTH_PATH="${ROOT_HOME}/pytorch/src/catch/examples/online/yolov4"
 cd ${DARKNET3PTH_PATH}
 python eval.py -cfgfile ${PATH_NETWORK_MODELS}/yolov4.cfg -weightfile ${PATH_NETWORK_MODELS}/yolov4.weights -darknet2pth true
-#注:生成的模型在当前目录下，文件名yolov4.pth
+#注:生成的模型在当前目录下，文件名 yolov4.pth
 # 3.拷贝yolov4.pth模型到之前创建的模型目录 origin/checkpoints
 rm $ROOT_HOME/pytorch/models/pytorch_models/origin/checkpoints/yolov4.pth
 mv yolov4.pth $ROOT_HOME/pytorch/models/pytorch_models/origin/checkpoints/yolov4.pth
@@ -210,6 +210,8 @@ Cambricon PyTorch 提供工具帮助我们量化模型。可以将32 位浮点�
 # 2.模型量化
 export QUANTIZED_PATH="${ROOT_HOME}/pytorch/src/catch/examples/online/yolov4"
 cd ${QUANTIZED_PATH}
+#cp ./model/yolov4.cfg ./model/yolov4.cfg-bk
+cp ${PATH_NETWORK_MODELS}/yolov4.cfg ./model/yolov4.cfg
 python eval.py -cfgfile ${PATH_NETWORK_MODELS}/yolov4.cfg -weightfile ${PATH_NETWORK_MODELS}/yolov4.weights -quantization true -quantized_mode 1
 #注:生成的模型在当前目录下，文件名yolov4.pth
 # 2.通过filelist批量图片进行量化
