@@ -241,3 +241,12 @@ deactivate
 
 # 更多详细信息,请查看<Cambricon-PyTorch-User-Guide-CN-v*.*.*.pdf>
 ```
+
+# 9.save
+
+保存当前容器到镜像文件, 实现镜像内容持久化。
+
+```bash
+#保存当前容器到镜像文件, 实现镜像内容持久化。
+./save-image-ubuntu16.04-dev.sh
+```
