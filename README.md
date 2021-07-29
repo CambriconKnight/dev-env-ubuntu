@@ -11,8 +11,11 @@
 ```
 ## 2.2. 依赖项
 `driver`: [neuware-mlu270-driver-dkms_4.9.2_all.deb](ftp://download.cambricon.com:8821/product/MLU270/1.6.602/driver)
+
 `cntoolkit`: [cntoolkit_1.7.2-1.ubuntu16.04_amd64.deb](ftp://download.cambricon.com:8821/product/MLU270/1.6.602/cntoolkit/X86_64/ubuntu16.04)
+
 `cnml`: [cnml_7.9.4-1.ubuntu16.04_amd64.deb](ftp://download.cambricon.com:8821/product/MLU270/1.6.602/cnml/ubuntu16.04)
+
 `cnplugin`: [cnplugin_1.10.106-1.ubuntu16.04_amd64.deb](ftp://download.cambricon.com:8821/product/MLU270/1.6.602/cnplugin/ubuntu16.04)
 
 # 3. Clone

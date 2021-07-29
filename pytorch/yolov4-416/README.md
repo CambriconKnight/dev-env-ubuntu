@@ -95,6 +95,8 @@ cp -rvf ./cambricon_pytorch /opt/work/
 cd $ROOT_HOME
 source env_pytorch.sh
 # 一键编译
+# 对于性能比较低的主机(eg:I3处理器),可以降低编译的最大Job数量(eg: export MAX_JOBS=2)
+# export MAX_JOBS=2
 ./configure_pytorch.sh 0
 ###################################################
 # 在 Cambricon PyTorch 或 Cambricon Catch 源码目录下安装 Virtualenv 并激活虚拟环境。本例使用Cambricon Catch 目录。
