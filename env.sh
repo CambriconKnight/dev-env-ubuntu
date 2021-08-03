@@ -7,6 +7,11 @@
 # Depends:
 # Notes:
 # -------------------------------------------------------------------------------
+#################### version ####################
+## 以下信息,根据各个版本中文件实际名词填写.
+#Version
+VER="1.7.602"
+#################### docker ####################
 #Work
 PATH_WORK="dev"
 #Dockerfile(16.04/18.04/CentOS)
@@ -15,8 +20,6 @@ TYPE_DOCKERFILE="16.04"
 FILENAME_DOCKERFILE="Dockerfile.$TYPE_DOCKERFILE"
 DIR_DOCKER="docker"
 #Version
-#VER="1.0.0"
-VER="1.7.0"
 VERSION="v${VER}"
 #Organization
 ORG="kang"
