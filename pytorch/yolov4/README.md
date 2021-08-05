@@ -42,19 +42,7 @@ Docker安装参见：https://docs.docker.com/engine/install/
 ## 2.6. 设置环境变量
 声明环境变量（该操作每次进入docker都需要进行）
 ```bash
-#以下操作都在容器中操作
-#设置压缩包解压后的根目录
-#export ROOT_HOME=/
-#cd $ROOT_HOME
-#创建数据集和模型软链接目录(以实际目录为准)
-#ln -s /data/datasets datasets
-#ln -s /data/models models
-#如果datasets & models有变化,请修改env_pytorch.sh
-
-#2. 声明环境变量（该操作每次进入docker都需要进行）
-#cd $ROOT_HOME
-#source env_pytorch.sh
-#3、设置以下操作步骤中用到的全局变量（请保证在进行以下各个步骤之前设置）
+# 设置以下操作步骤中用到的全局变量（请保证在进行以下各个步骤之前设置）
 export PATH_NETWORK="/home/share/pytorch/yolov4"
 export PATH_NETWORK_MODELS="${PATH_NETWORK}/models"
 export PATH_NETWORK_MODELS_MLU="${PATH_NETWORK_MODELS}/mlu"
@@ -110,13 +98,13 @@ cd /torch/examples/online/yolov4
 #cp ./model/yolov4.cfg ./model/yolov4.cfg-bk
 cp -v ${PATH_NETWORK_MODELS}/yolov4.cfg ./model/yolov4.cfg
 # 备注: 如果类别有变化,请拷贝自定义的names文件到目录/torch/examples/online/yolov4/data/
-cp -v ${PATH_NETWORK_MODELS}/x.names /torch/examples/online/yolov4/data/
+#cp -v ${PATH_NETWORK_MODELS}/x.names /torch/examples/online/yolov4/data/
 python eval.py -cfgfile ${PATH_NETWORK_MODELS}/yolov4.cfg -weightfile ${PATH_NETWORK_MODELS}/yolov4.weights -darknet2pth true
 #注:生成的模型在当前目录下，文件名 yolov4.pth
 # 3.拷贝yolov4.pth模型到之前创建的模型目录 origin/checkpoints
 rm ${TORCH_HOME}/origin/checkpoints/yolov4.pth
 mv yolov4.pth ${TORCH_HOME}/origin/checkpoints/yolov4.pth
-ls ${TORCH_HOME}/origin/checkpoints/yolov4.pth
+ls -la ${TORCH_HOME}/origin/checkpoints/yolov4.pth
 ```
 注: 网络配置文件(.cfg)决定了模型架构，训练时需要在命令行指定。文件以[net]段开头，定义与训练直接相关的参数。其余区段，包括[convolutional]、[route]、[shortcut]、[maxpool]、[upsample]、[yolo]层，为不同类型的层的配置参数。
 
@@ -247,7 +235,7 @@ rm -v ${PATH_NETWORK}/test/offline/*.jpg
 rm -v ${PATH_NETWORK}/test/offline/*.txt
 
 # 备注: 如果类别有变化,请拷贝自定义的label_map_coco.txt文件替换/torch/examples/offline/yolov4/label_map_coco.txt
-cp -v /torch/examples/offline/yolov4/label_map_coco.txt /torch/examples/offline/yolov4/label_map_coco.txt-bk
+#cp -v /torch/examples/offline/yolov4/label_map_coco.txt /torch/examples/offline/yolov4/label_map_coco.txt-bk
 cp -v ${PATH_NETWORK_MODELS}/label_map_coco.txt /torch/examples/offline/yolov4/label_map_coco.txt
 
 #离线推理
