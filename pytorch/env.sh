@@ -1,7 +1,7 @@
 # -------------------------------------------------------------------------------
 # Filename:    env.sh
 # Revision:    1.0.0
-# Date:        2021/02/23
+# Date:        2021/08/04
 # Description: Common Environment variable
 # Example:
 # Depends:
@@ -10,32 +10,34 @@
 #################### version ####################
 ## 以下信息,根据各个版本中文件实际名词填写.
 #Version
-#VER="1.7.602"
-VER="1.7.0"
+VER="1.7.602"
 #################### docker ####################
 #Work
-PATH_WORK="dev"
+PATH_WORK="pytorch"
 #Dockerfile(16.04/18.04/CentOS)
 TYPE_DOCKERFILE="16.04"
 #(Dockerfile.16.04/Dockerfile.18.04/Dockerfile.CentOS)
 FILENAME_DOCKERFILE="Dockerfile.$TYPE_DOCKERFILE"
 DIR_DOCKER="docker"
 #Version
-VERSION="v${VER}"
+#VERSION="v${VER}"
+VERSION="0.15.602-ubuntu16.04"
 #Organization
-ORG="kang"
+ORG="yellow.hub.cambricon.com/pytorch"
 #Operating system
 OS="ubuntu16.04"
 #Docker image
-MY_IMAGE="$ORG/$OS-$PATH_WORK"
+#MY_IMAGE="$ORG/$OS-$PATH_WORK"
+#MY_IMAGE="yellow.hub.cambricon.com/pytorch/pytorch"
+MY_IMAGE="$ORG/$PATH_WORK"
 #Docker image name
 NAME_IMAGE="$MY_IMAGE:$VERSION"
 #FileName DockerImage
-FILENAME_IMAGE="image-$OS-$PATH_WORK-$VERSION.tar.gz"
-FULLNAME_IMAGE="./docker/${FILENAME_IMAGE}"
+FILENAME_IMAGE="pytorch-0.15.602-ubuntu16.04.tar"
+FULLNAME_IMAGE="./${FILENAME_IMAGE}"
 #Docker container name
 MY_CONTAINER="container-$OS-$PATH_WORK-$VERSION"
-
+#################### color ####################
 #Font color
 none="\033[0m"
 black="\033[0;30m"

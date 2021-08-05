@@ -32,13 +32,14 @@ git clone https://github.com/CambriconKnight/dev-env-ubuntu.git
 # 5. Load
 ```bash
 #加载Docker镜像
-./load-image-ubuntu16.04-dev.sh ${FULLNAME_IMAGES}
+#./load-image-ubuntu16.04-pytorch.sh ${FULLNAME_IMAGES}
+./load-image-ubuntu16.04-pytorch.sh /data/ftp/product/GJD/MLU270/1.7.602/Ubuntu16.04/PyTorch/docker/pytorch-0.15.602-ubuntu16.04.tar
 ```
 
 # 6. Run
 ```bash
 #启动容器
-./run-container-ubuntu16.04-dev.sh
+./run-container-ubuntu16.04-pytorch.sh
 ```
 
 # 7. Install Dependent
@@ -46,62 +47,46 @@ git clone https://github.com/CambriconKnight/dev-env-ubuntu.git
 ```bash
 #以下操作都在容器中操作
 #Docker容器映射目录[/home/ftp/],以实际目录为准
-#Version:v1.7.0
-cd /home/ftp/mlu270/v1.7.0/Ubuntu16.04/CNToolkit
-dpkg -i cntoolkit_1.7.3-1.ubuntu16.04_amd64.deb
-cd /var/cntoolkit-1.7.3/
+#Version: 1.7.602
+cd /home/ftp/product/GJD/MLU270/1.7.602/Ubuntu16.04/CNToolkit
+dpkg -i cntoolkit_1.7.5-1.ubuntu16.04_amd64.deb
+cd /var/cntoolkit-1.7.5/
 dpkg -i *.deb
-#Version:1.6.602
-#cd /home/ftp/mlu270/1.6.602/cntoolkit/X86_64/ubuntu16.04
-#dpkg -i cntoolkit_1.7.2-1.ubuntu16.04_amd64.deb
-#cd /var/cntoolkit-1.7.2/
-#dpkg -i *.deb
-
 ```
 ## 7.2. CNML
 ```bash
 #以下操作都在容器中操作
 #Docker容器映射目录[/home/ftp/],以实际目录为准
-#Version:v1.7.0
-cd /home/ftp/mlu270/v1.7.0/Ubuntu16.04/CNML
-dpkg -i cnml_7.10.2-1.ubuntu16.04_amd64.deb
-#Version:1.6.602
-#cd /home/ftp/mlu270/1.6.602/cnml/ubuntu16.04
-#dpkg -i cnml_7.9.4-1.ubuntu16.04_amd64.deb
+#Version: 1.7.602
+cd /home/ftp/product/GJD/MLU270/1.7.602/Ubuntu16.04/CNML
+dpkg -i cnml_7.10.3-1.ubuntu16.04_amd64.deb
 ```
 
 ## 7.3. CNPlugin
 ```bash
 #以下操作都在容器中操作
 #Docker容器映射目录[/home/ftp/],以实际目录为准
-#Version:v1.7.0
-cd /home/ftp/mlu270/v1.7.0/Ubuntu16.04/CNPlugin
-dpkg -i cnplugin_1.12.1-1.ubuntu16.04_amd64.deb
-#Version:1.6.602
-#cd /home/ftp/mlu270/1.6.602/cnplugin/ubuntu16.04
-#dpkg -i cnplugin_1.10.106-1.ubuntu16.04_amd64.deb
+#Version: 1.7.602
+cd /home/ftp/product/GJD/MLU270/1.7.602/Ubuntu16.04/CNPlugin
+dpkg -i cnplugin_1.12.4-1.ubuntu16.04_amd64.deb
 ```
 
 ## 7.4. CNNL
 ```bash
 #以下操作都在容器中操作
 #Docker容器映射目录[/home/ftp/],以实际目录为准
-#Version:v1.7.0
-cd /home/ftp/mlu270/v1.7.0/Ubuntu16.04/CNNL
+#Version: 1.7.602
+cd /home/ftp/product/GJD/MLU270/1.7.602/Ubuntu16.04/CNNL
 dpkg -i cnnl_1.3.0-1.ubuntu16.04_amd64.deb
-#Version:1.6.602
-#
 ```
 
 ## 7.5. CNCL
 ```bash
 #以下操作都在容器中操作
 #Docker容器映射目录[/home/ftp/],以实际目录为准
-#Version:v1.7.0
-cd /home/ftp/mlu270/v1.7.0/Ubuntu16.04/CNCL
+#Version: 1.7.602
+cd /home/ftp/product/GJD/MLU270/1.7.602/Ubuntu16.04/CNCL
 dpkg -i cncl_0.8.0-1.ubuntu16.04_amd64.deb
-#Version:1.6.602
-#
 ```
 
 # 8. Deploy SDK
@@ -161,8 +146,9 @@ make runtest
 ```bash
 #以下操作都在容器中操作
 #Docker容器映射目录[/home/ftp/],以实际目录为准
-cd /home/ftp/mlu270/v1.7.0/Ubuntu16.04/PyTorch/src
-tar zxvf pytorch-v0.15.0.tar.gz -C /opt/work/
+#Version: 1.7.602
+cd /home/ftp/product/GJD/MLU270/1.7.602/Ubuntu16.04/PyTorch/src
+tar zxvf pytorch-v0.15.602.tar.gz -C /opt/work/
 ```
 
 ### 8.2.2 编译与安装Cambricon PyTorch
@@ -242,7 +228,7 @@ deactivate
 # 更多详细信息,请查看<Cambricon-PyTorch-User-Guide-CN-v*.*.*.pdf>
 ```
 
-# 9.save
+# 9.Save
 
 保存当前容器到镜像文件, 实现镜像内容持久化。
 
