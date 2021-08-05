@@ -55,7 +55,7 @@ Docker安装参见：https://docs.docker.com/engine/install/
 #cd $ROOT_HOME
 #source env_pytorch.sh
 #3、设置以下操作步骤中用到的全局变量（请保证在进行以下各个步骤之前设置）
-export PATH_NETWORK="/home/share/yolov4"
+export PATH_NETWORK="/home/share/pytorch/yolov4"
 export PATH_NETWORK_MODELS="${PATH_NETWORK}/models"
 export PATH_NETWORK_MODELS_MLU="${PATH_NETWORK_MODELS}/mlu"
 # 设置环境变量
@@ -109,13 +109,14 @@ if [ ! -d "mlu" ];then mkdir mlu;fi
 cd /torch/examples/online/yolov4
 #cp ./model/yolov4.cfg ./model/yolov4.cfg-bk
 cp -v ${PATH_NETWORK_MODELS}/yolov4.cfg ./model/yolov4.cfg
+# 备注: 如果类别有变化,请拷贝自定义的names文件到目录/torch/examples/online/yolov4/data/
+cp -v ${PATH_NETWORK_MODELS}/x.names /torch/examples/online/yolov4/data/
 python eval.py -cfgfile ${PATH_NETWORK_MODELS}/yolov4.cfg -weightfile ${PATH_NETWORK_MODELS}/yolov4.weights -darknet2pth true
 #注:生成的模型在当前目录下，文件名 yolov4.pth
 # 3.拷贝yolov4.pth模型到之前创建的模型目录 origin/checkpoints
 rm ${TORCH_HOME}/origin/checkpoints/yolov4.pth
 mv yolov4.pth ${TORCH_HOME}/origin/checkpoints/yolov4.pth
 ls ${TORCH_HOME}/origin/checkpoints/yolov4.pth
-cd -
 ```
 注: 网络配置文件(.cfg)决定了模型架构，训练时需要在命令行指定。文件以[net]段开头，定义与训练直接相关的参数。其余区段，包括[convolutional]、[route]、[shortcut]、[maxpool]、[upsample]、[yolo]层，为不同类型的层的配置参数。
 
@@ -123,6 +124,17 @@ cd -
 Cambricon PyTorch 提供工具帮助我们量化模型。可以将32 位浮点模型量化成int8/int16 模型。
 有关量化工具的使用信息，参见《寒武纪 PyTorch 用户手册-v*.*.*.pdf》中相关章节【模型量化工具】说明。
 下面以yolov4 为示例描述如何进行模型量化。
+**备注:** 如果类别有变化,需要修改 /torch/examples/online/yolov4/tool/darknet2pytorch.py 中的num_classes为对应值(默认值是80)。
+/torch/examples/online/yolov4/tool/darknet2pytorch.py相关修改项如下:
+```bash
+231         elif use_mlu:
+232             print("Use MLU Yolov4_detection op !")
+233             # Extract anchors
+234             anchors = [12, 16, 19, 36, 40, 28, 36, 75, 76, 55, 72, 146, 142, 110, 192, 243, 459, 401]
+235             num_classes = 80
+236             img_size_w = self.width   # 512
+237             img_size_h = self.height  # 512
+```
 ```bash
 #1.生成图片列表 file_list_datasets
 #cd ${PATH_NETWORK}
@@ -141,7 +153,7 @@ python eval.py -cfgfile ${PATH_NETWORK_MODELS}/yolov4.cfg -weightfile ${PATH_NET
 # 3.拷贝yolov4.pth模型到int8/checkpoints 目录
 rm ${TORCH_HOME}/int8/checkpoints/yolov4.pth
 mv yolov4.pth ${TORCH_HOME}/int8/checkpoints/yolov4.pth
-ls ${TORCH_HOME}/int8/checkpoints/yolov4.pth
+ls -la ${TORCH_HOME}/int8/checkpoints/yolov4.pth
 #注:如果量化成int16 需要拷贝到int16目录
 ```
 **有关量化：什么是量化？为什么要量化？**
@@ -208,6 +220,7 @@ python /torch/examples/offline/yolov4/../genoff/genoff.py -fake_device 1 -model 
 #移动离线模型到模型结果目录
 echo "Move models to dir..."
 mv *.cambricon* ${PATH_NETWORK_MODELS_MLU}
+ls -la ${PATH_NETWORK_MODELS_MLU}
 echo "Complete!"
 ```
 genoff.py脚本参数使用说明如下,详细说明见《寒武纪 PyTorch 用户手册-v*.*.*.pdf》中相关章节【离线模型生成工具】。
@@ -225,19 +238,25 @@ genoff.py脚本参数使用说明如下,详细说明见《寒武纪 PyTorch 用�
 ## 6.2. 执行离线推理
 离线推理指序列化已编译好的算子到离线文件,生成离线模型。离线模型不依赖于 PyTorch 框架,只基于 CNRT(Cambricon Neuware Runtime Library,寒武纪运行时库)单独运行。离线模型为.cambricon文件,生成离线模型可使用 Cambricon PyTorch 的 Python 接口将模型转为离线模型。
 关于离线模型的使用方法，参见《寒武纪CNRT用户手册-v*.*.*.pdf》和《寒武纪 PyTorch 用户手册-v*.*.*.pdf》中相关章节【离线推理】。
+
 ```bash
 cd /torch/examples/offline/yolov4
 #./run_all_offline_mc.sh 1 1
 # 清理
 rm -v ${PATH_NETWORK}/test/offline/*.jpg
 rm -v ${PATH_NETWORK}/test/offline/*.txt
+
+# 备注: 如果类别有变化,请拷贝自定义的label_map_coco.txt文件替换/torch/examples/offline/yolov4/label_map_coco.txt
+cp -v /torch/examples/offline/yolov4/label_map_coco.txt /torch/examples/offline/yolov4/label_map_coco.txt-bk
+cp -v ${PATH_NETWORK_MODELS}/label_map_coco.txt /torch/examples/offline/yolov4/label_map_coco.txt
+
 #离线推理
 echo "running offline test..."
 #file_list_datasets(${PATH_NETWORK}/datasets)
 #../build/yolov4/yolov4_offline_multicore -offlinemodel ${PATH_NETWORK_MODELS_MLU}/mlu270_yolov4_4b4c_fp16.cambricon -dataset_path ${PATH_NETWORK}/datasets -images ${PATH_NETWORK}/file_list_datasets -labels ./label_map_coco.txt -simple_compile 1 -outputdir ${PATH_NETWORK}/test/offline/ -input_format 0
 
 #file_list_coco_val2017(${ROOT_HOME}/datasets/COCO/val2017/)
-../build/yolov4/yolov4_offline_multicore -offlinemodel ${PATH_NETWORK_MODELS_MLU}/mlu270_yolov4_4b4c_fp16.cambricon -dataset_path $COCO_PATH_PYTORCH/COCO/val2017 -images ../../data/coco2017/file_list_for_release -labels ./label_map_coco.txt -simple_compile 1 -outputdir  ${PATH_NETWORK}/test/offline/ -input_format 0
+../build/yolov4/yolov4_offline_multicore -offlinemodel ${PATH_NETWORK_MODELS_MLU}/mlu270_yolov4_4b4c_fp16.cambricon -dataset_path $COCO_PATH_PYTORCH/COCO/val2017 -images ../../data/coco2017/file_list_for_release -labels ./label_map_coco.txt -simple_compile 1 -outputdir ${PATH_NETWORK}/test/offline/ -input_format 0
 #ls -la ${PATH_NETWORK}/test/offline/ | wc -l
 echo "Complete!"
 ```
