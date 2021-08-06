@@ -112,6 +112,7 @@ ls -la ${TORCH_HOME}/origin/checkpoints/yolov4.pth
 Cambricon PyTorch 提供工具帮助我们量化模型。可以将32 位浮点模型量化成int8/int16 模型。
 有关量化工具的使用信息，参见《寒武纪 PyTorch 用户手册-v*.*.*.pdf》中相关章节【模型量化工具】说明。
 下面以yolov4 为示例描述如何进行模型量化。
+
 **备注:** 如果类别有变化,需要修改 /torch/examples/online/yolov4/tool/darknet2pytorch.py 中的num_classes为对应值(默认值是80)。
 /torch/examples/online/yolov4/tool/darknet2pytorch.py相关修改项如下:
 ```bash
@@ -156,8 +157,8 @@ ls -la ${TORCH_HOME}/int8/checkpoints/yolov4.pth
 cd /torch/examples/online/yolov4
 #cp ./model/yolov4.cfg ./model/yolov4.cfg-bk
 cp ${PATH_NETWORK_MODELS}/yolov4.cfg ./model/yolov4.cfg
-# 设置成 "export TORCH_HOME=/home/share/yolov4/models/pytorch_models"
-export TORCH_HOME=/home/share/yolov4/models/pytorch_models
+# 设置成 "export TORCH_HOME=/home/share/pytorch/yolov4/models/pytorch_models"
+export TORCH_HOME="${PATH_NETWORK_MODELS}/pytorch_models"
 python eval.py -half_input 1 -quantized_mode 1 -datadir $COCO_PATH_PYTORCH/COCO -img_num 16
 #有关该脚本的参数解释信息,参见 python eval.py 脚本的参数解释 。
 ```
