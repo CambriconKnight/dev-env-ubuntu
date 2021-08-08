@@ -19,7 +19,7 @@ clean_all() {
     #clean models
     rm -vf ./models/mlu/*.cambricon*
     rm -vf ./models/*.weights
-    rm -vf ./models/pytorch_models
+    rm -rvf ./models/pytorch_models
 }
 
 if [[ $# -eq 0 ]];then

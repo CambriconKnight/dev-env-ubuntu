@@ -12,10 +12,10 @@
 
 下面我们就来看看该算法如何在基于寒武纪MLU智能加速卡上移植开发。
 
-整个移植过程分为环境准备、模型结构转换、模型量化、在线推理和离线推理共五个步骤，以下详细描述整个移植过程。相关移植套件参见[dev-env-ubuntu](https://github.com/CambriconKnight/dev-env-ubuntu)。
+整个移植过程大体可分为环境准备、模型量化、在线推理、生成离线模型、离线推理、性能测试、精度测试共七个步骤，以下详细描述整个移植过程。相关移植套件参见[dev-env-ubuntu](https://github.com/CambriconKnight/dev-env-ubuntu)。
 
 # 2. 环境准备
-准备物理环境 >> 获取开发资料 >> 安装MLU驱动 >> 安装Docker >> 加载镜像 >> 启动容器 >> 安装依赖库 >> 部署PyTorchSDK >> 设置环境变量 >> 准备网络模型 >> 创建模型目录 >> 进入虚拟环境
+准备物理环境 >> 获取开发资料 >> 安装MLU驱动 >> 安装Docker >> 加载镜像 >> 启动容器 >> 设置环境变量 >> 准备网络模型 >> 创建模型目录 >> 进入虚拟环境
 ## 2.1. 物理环境
 准备服务器/PC机 >> 安装MLU卡 >> 检测MLU卡是否识别 >> 检测PCIE资源分配是否正常
 ```bash
@@ -83,7 +83,8 @@ if [ ! -d "${TORCH_HOME}/int8/checkpoints/" ];then mkdir -p ${TORCH_HOME}/int8/c
 source /torch/venv3/pytorch/bin/activate
 ```
 
-# 3. 模型结构转换
+# 3. 模型量化
+## 3.1 模型结构转换
 如果要在Cambricon PyTorch 上使用YOLOv4 网络，需要先将[Darknet](https://github.com/pjreddie/darknet) 官方的cfg、weights文件转换成 PyTorch 中对应的pth文件，然后手动修改相关层（增加yolo层）信息匹配Cambricon PyTorch 加速要求（此操作不影响原有YOLOv4训练流程）。相关信息参见《寒武纪PyTorch用户手册-v*.*.*.pdf》中相关章节说明。
 下面以官网 YOLOv4 为示例描述如何进行网络模型转换。
 ```bash
@@ -108,7 +109,7 @@ ls -la ${TORCH_HOME}/origin/checkpoints/yolov4.pth
 ```
 注: 网络配置文件(.cfg)决定了模型架构，训练时需要在命令行指定。文件以[net]段开头，定义与训练直接相关的参数。其余区段，包括[convolutional]、[route]、[shortcut]、[maxpool]、[upsample]、[yolo]层，为不同类型的层的配置参数。
 
-# 4. 模型量化
+## 3.2. 模型量化
 Cambricon PyTorch 提供工具帮助我们量化模型。可以将32 位浮点模型量化成int8/int16 模型。
 有关量化工具的使用信息，参见《寒武纪 PyTorch 用户手册-v*.*.*.pdf》中相关章节【模型量化工具】说明。
 下面以yolov4 为示例描述如何进行模型量化。
@@ -148,7 +149,7 @@ ls -la ${TORCH_HOME}/int8/checkpoints/yolov4.pth
 **有关量化：什么是量化？为什么要量化？**
 量化是将float32的模型转换为int8/int16的模型，可以保证计算精度在目标误差范围内的情况下，显著减少模型占用的存储空间和处理带宽。比如int8模型是指将数值以有符号8位整型数据保存，并提供int8定点数的指数position和缩放因子scale，因此int8模型中每个8位整数i表示的实际值为：value=i*2^position/scale。另一方面进行在线推理和生成离线模型时仅支持量化后的模型。
 
-# 5. 在线推理
+# 4. 在线推理
 在线推理指使用原生 PyTorch 提供的 Python API 直接运行网络。在线推理包括逐层模式和融合模式两
 种。关于在线验证工具的使用方法，参见《寒武纪 PyTorch 用户手册-v*.*.*.pdf》中相关 章节【在线推理】。
 ```bash
@@ -163,9 +164,10 @@ python eval.py -half_input 1 -quantized_mode 1 -datadir $COCO_PATH_PYTORCH/COCO 
 #有关该脚本的参数解释信息,参见 python eval.py 脚本的参数解释 。
 ```
 
-# 6. 离线推理
-## 6.1. 生成离线模型
+# 5. 离线推理
+## 5.1. 生成离线模型
 本小节主要介绍如何使用 PyTorch 生成离线模型工具。关于离线模型的使用方法请参考《寒武纪 CNRT 开发者手册》和《寒武纪 PyTorch 用户手册-v*.*.*.pdf》中相关章节离线推理 。在 Cambricon Catch 中新增 torch_mlu.core.mlu_model.save_as_cambricon(model_name) 接口。当调用该接口时,会在进行 jit.trace 时自动生成离线模型。生成的离线模型一般是以 model_name.cambricon命名的离线模型文件。
+
 **修改脚本**
 由于目前版本SDK中genoff.py脚本中针对YOLOv4设置为了固定的512*512,所以需要修改为yolov4.cfg文件中的输入尺寸.
 - 修改文件
@@ -224,7 +226,7 @@ genoff.py脚本参数使用说明如下,详细说明见《寒武纪 PyTorch 用�
 - -batch_size:指定使用的 batch size 大小。
 - -half_input:指定 input tensor 类型,half 或者 float。
 
-## 6.2. 执行离线推理
+## 5.2. 执行离线推理
 离线推理指序列化已编译好的算子到离线文件,生成离线模型。离线模型不依赖于 PyTorch 框架,只基于 CNRT(Cambricon Neuware Runtime Library,寒武纪运行时库)单独运行。离线模型为.cambricon文件,生成离线模型可使用 Cambricon PyTorch 的 Python 接口将模型转为离线模型。
 关于离线模型的使用方法，参见《寒武纪CNRT用户手册-v*.*.*.pdf》和《寒武纪 PyTorch 用户手册-v*.*.*.pdf》中相关章节【离线推理】。
 
@@ -250,7 +252,7 @@ echo "running offline test..."
 echo "Complete!"
 ```
 
-## 6.3. 性能测试
+# 6. 性能测试
 ```bash
 #cnrtexec为离线模型的性能测试程序，利用随机数来测试离线模型的demo.
 cd ${PATH_NETWORK_MODELS_MLU}
@@ -279,7 +281,7 @@ cd ${PATH_NETWORK_MODELS_MLU}
 #4.该demo使用的是分配的随机数进行推理，在Cnrtexec.cpp中，MLUInfer::Detect传入的data并没有被使用，实际使用时，需将输入数据拷入，进行后续推理；
 #5.对于FLOAT32类型的输出结果，可以直接使用。但对于FLOAT16的输出，需要将数据类型转换为FLOAT32才可以在CPU上使用；
 ```
-## 6.4. 精度测试
+## 7. 精度测试
 ```bash
 #计算 meanAp 命令
 #yolov4的精度衡量指标一般为mAP(mean average precision)。一般基于COCO 数据集或者VOC 数据集计算yolov4模型的mAP。
@@ -311,8 +313,8 @@ python /torch/examples/offline/scripts/meanAP_COCO.py --file_list /torch/example
 #    推理使用的图片集合与meanAP_COCO.py中指定的data_type 不一致。
 ```
 
-# 7. 附录
-## 7.1. 官网yolov4.cfg中net层
+# 8. 附录
+## 8.1. 官网yolov4.cfg中net层
 ```bash
 [net]
 # Testing # 测试时，batch和subdivisions设置为1,否则可能出错。
@@ -339,7 +341,7 @@ scales=.1,.1 # 迭代到steps(1)次时，学习率衰减十倍，steps(2)次时�
 #cutmix=1 # cutmix数据增强，将一部分区域cut掉但不填充0像素而是随机填充训练集中的其他数据的区域像素值，分类结果按一定的比例分配。
 mosaic=1 # 马赛克数据增强，取四张图，随机缩放、随机裁剪、随机排布的方式拼接，详见上述代码分析。
 ```
-## 7.2. 官网yolov4.cfg中yolo层
+## 8.2. 官网yolov4.cfg中yolo层
 ```bash
 #yolov4.cfg中有三个yolo层
 [yolo]
@@ -365,7 +367,7 @@ beta_nms=0.6
 max_delta=5
 ```
 
-## 7.3 后处理算子参数
+## 8.3 后处理算子参数
 - 修改文件：
 ```
 tool/darknet2pytorch.py
