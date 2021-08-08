@@ -16,6 +16,9 @@
 
 整个移植过程大体可分为环境准备、模型量化、在线推理、生成离线模型、离线推理、性能测试、精度测试共七个步骤，以下详细描述整个移植过程。相关移植套件参见[dev-env-ubuntu](https://github.com/CambriconKnight/dev-env-ubuntu)。
 
+- **相关开发资料可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载，也可在官方提供的专属FTP账户指定路径下载。**
+- **有关寒武纪产品开发资料的公开链接汇总参见[cam-dev-info](https://gitee.com/cambriconknight/cam-dev-info)。**
+
 # 2. 环境准备
 准备物理环境 >> 获取开发资料 >> 安装MLU驱动 >> 安装Docker >> 加载镜像 >> 启动容器 >> 设置环境变量 >> 准备网络模型 >> 创建模型目录 >> 进入虚拟环境
 ## 2.1. 物理环境
@@ -30,6 +33,16 @@ lspci -d:270 -vvv
 ## 2.2. 获取资料
 开通FTP账号，使用filezilla登录并下载所需开发资料。
 主要资料有：MLU开发文档，Driver安装包，Docker镜像，数据集，模型。
+
+**下载地址:**
+
+Ubuntu16.04: http://mirrors.aliyun.com/ubuntu-releases/16.04
+
+MLU开发文档: https://developer.cambricon.com/index/document/index/classid/3.html
+
+Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
+
+其他开发资料, 可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载。也可在官方提供的专属FTP账户指定路径下载。
 
 ## 2.3. 安装驱动
 参见《寒武纪Linux驱动安装手册-v*.*.*.pdf》
