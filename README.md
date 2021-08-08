@@ -9,7 +9,7 @@
 本[工具集](https://gitee.com/cambriconknight/dev-env-ubuntu)主要基于寒武纪MLU进行移植环境的搭建及常用算法的移植与验证。力求压缩寒武纪MLU环境搭建与功能验证的时间成本, 以便快速上手[寒武纪MLU设备](https://www.cambricon.com/)。
 
 >![](./res/note.gif) **功能说明：**
->- 可基于 Dockerfile 自动编译 Docker 镜像，也可直接加载官网提供的 Docker 镜像。
+>- 可基于 Dockerfile 编译镜像，也可直接加载官网提供的镜像。
 >- 支持 Caffe、PyTorch、TensorFlow 深度学习框架。
 >- 支持常用算法的部署、移植、在线/离线推理等验证。
 
@@ -17,7 +17,7 @@
 
 | 名称           | 数量      | 备注                  |
 | :------------ | :--------- | :------------------ |
-| 开发主机/服务器  | 一台       | CPU、Memory、存储等主流配置即可；主机电源功率推荐大于500W；x16 PCIe Gen.3 |
+| 开发主机/服务器  | 一台       |主流配置即可；电源功率大于500W；PCIe Gen.3 x16 |
 | MLU270-F4/S4   | 一套       |使用板卡自带的8pin连接器连接主机电源|
 
 **软件环境准备:**
@@ -25,7 +25,7 @@
 | 名称                   | 版本/文件                                              | 备注                                  |
 | :-------------------- | :-------------------------------                      | :----------------------------------  |
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                       | 宿主机操作系统                         |
-| Driver_MLU270         | neuware-mlu270-driver-dkms_4.9.2_all.deb              | MLU270驱动安装包(依操作系统选择)         |
+| Driver_MLU270         | neuware-mlu270-driver-dkms_4.9.2_all.deb              | 依操作系统选择                         |
 | CNToolkit_MLU270      | cntoolkit_1.7.3-2.ubuntu16.04_amd64.deb               | 依操作系统选择                         |
 | CNML_MLU270           | cnml_7.10.3-1.ubuntu16.04_amd64.deb                   | 依操作系统选择                         |
 | CNPlugin_MLU270       | cnplugin_1.12.4-1.ubuntu16.04_amd64.deb               | 依操作系统选择                         |
