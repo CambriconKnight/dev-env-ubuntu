@@ -1,7 +1,7 @@
 # -------------------------------------------------------------------------------
 # Filename:    env.sh
-# Revision:    1.0.0
-# Date:        2021/02/23
+# Revision:    1.1.0
+# Date:        2021/08/08
 # Description: Common Environment variable
 # Example:
 # Depends:
@@ -10,8 +10,7 @@
 #################### version ####################
 ## 以下信息,根据各个版本中文件实际名词填写.
 #Version
-#VER="1.7.602"
-VER="1.7.0"
+VER="1.7.602"
 #################### docker ####################
 #Work
 PATH_WORK="dev"
