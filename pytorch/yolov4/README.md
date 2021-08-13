@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://github.com/CambriconKnight/easy-deploy-mlu/tree/master/caffe/yolov3-416">
+    <a href="https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/yolov4">
         <img alt="yolo-logo" src="./res/yolov4.png" height="140" />
         <h1 align="center">MLU算法移植教程-YOLOv4</h1>
     </a>
