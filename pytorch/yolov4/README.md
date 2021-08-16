@@ -52,7 +52,7 @@ Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
 Docker安装参见：https://docs.docker.com/engine/install/
 
 ## 2.5. 启动Docker
-启动Docker参见：[../../README.md](../../README.md)
+启动Docker参见：[../README.md](../README.md)
 
 ## 2.6. 设置环境变量
 声明环境变量（该操作每次进入docker都需要进行）
