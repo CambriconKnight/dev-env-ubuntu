@@ -143,7 +143,7 @@ python3 convertmodel.py --arg mfus --genoff true
 # 5. 离线推理
 离线推理，基于上一步生成的离线模型文件进行操作，生成推理结果。
 操作环境与上一步一致。
-1、复制目录offline到Docker中任意工作目录，并进入目录offline；
+1、复制目录offline到Docker中任意工作目录，并进入目录offline。
 ```bash
 cd offline
 ```
