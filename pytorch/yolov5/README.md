@@ -107,23 +107,23 @@ MODDEL_NAME_ORG=yolov5s.pt		#需要转换的模型名称,如果是使用自己�
 
 **以下步骤以yolov5s为例, 介绍如何在基于寒武纪MLU智能加速卡上移植开发。**
   1、复制目录convertmodel到Docker中任意工作目录，并进入目录convertmodel；
-  ```bash
-    cp -rf convertmodel ./
-    cd convertmodel
-  ```
+```bash
+cp -rf convertmodel ./
+cd convertmodel
+```
   2、复制第3章得到的模型文件yolov5s.pth到当前目录,yaml文件到model目录
-  ```bash
-    cp yolov5s.pth ./
-    cp yolov5s.yaml ./models
-  ```
+```bash
+cp yolov5s.pth ./
+cp yolov5s.yaml ./models
+```
 
 ## 4.3 模型转换-简略版
   3、执行脚本：
-  ```bash
-    ./run_convertmodel.sh
-    #说明：该脚本，默认转换YOLOv5官方的yolov5s.pt模型，输出名称为：yolov5s.carmbrcion
-    #用户转换自己训练的模型时，替换模型文件和yaml文件即可。
-  ```
+```bash
+./run_convertmodel.sh
+#说明：该脚本，默认转换YOLOv5官方的yolov5s.pt模型，输出名称为：yolov5s.carmbrcion
+#用户转换自己训练的模型时，替换模型文件和yaml文件即可。
+```
 
 ## 4.4 模型转换-单步执行版
 注：4.3节和4.4节二选一执行即可。
@@ -144,15 +144,15 @@ python3 convertmodel.py --arg mfus --genoff true
 离线推理，基于上一步生成的离线模型文件进行操作，生成推理结果。
 操作环境与上一步一致。
 1、复制目录offline到Docker中任意工作目录，并进入目录offline；
-  ```bash
-    cd offline
-  ```
+```bash
+cd offline
+```
 2、离线推理：
-  ```bash
-    ./run_offline.sh
-    #说明：该脚本，基于上一步生成的离线模型文件【yolov5s_int8_4b_4c.cambricon】和样例图片【image.jpg】，
-    # 推理输出结果为：./output/offline_result
-  ```
+```bash
+./run_offline.sh
+#说明：该脚本，基于上一步生成的离线模型文件【yolov5s_int8_4b_4c.cambricon】和样例图片【image.jpg】，
+# 推理输出结果为：./output/offline_result
+```
 
 # 6. 性能测试
 ```bash
