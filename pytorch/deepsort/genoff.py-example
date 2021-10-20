@@ -1,0 +1,302 @@
+from __future__ import division
+import os
+import sys
+import logging
+import argparse
+import torch
+import torchvision.models as models
+import torch_mlu.core.mlu_model as ct
+
+##1，载⼊⾃定义的⽹络
+import sys
+# ⾃定义⽹络定义在当前⽬录下
+net_dir = os.getcwd()
+sys.path.append(net_dir)
+from create_feature_extract import feature_extract
+
+#configure logging path
+logging.basicConfig(level=logging.INFO,
+                    format='[genoff.py line:%(lineno)d] - %(levelname)s: %(message)s')
+logger = logging.getLogger("TestNets")
+
+#support model
+support = ['resnet50', 'resnext50_32x4d', 'resnext101_32x8d', 'vgg16', 'inception_v3', 'mobilenet',
+           'googlenet', 'resnet101', 'mobilenet_v2', 'mobilenet_v3', 'ssd', 'yolov3', 'alexnet',
+           'resnet18', 'resnet34', 'resnet152', 'vgg16_bn', 'squeezenet1_0', 'squeezenet1_1',
+           'densenet121', 'faceboxes', 'yolov2', 'pnet', 'rnet', 'onet', 'east', 'ssd_mobilenet_v1',
+           'efficientnet', 'ssd_mobilenet_v2', 'ssd', 'PreActResNet50', 'PreActResNet101',
+##2，support中添加⽹络名称'feature_extract'
+           'fasterrcnn_fpn', 'centernet', 'fcn8s', 'segnet', 'vdsr', 'fsrcnn', 'yolov4', 'yolov5', 'feature_extract']
+
+abs_path = os.path.dirname(os.path.realpath(__file__))
+
+torch.set_grad_enabled(False)
+
+def get_args():
+    parser = argparse.ArgumentParser(description='Generate offline model.')
+    parser.add_argument("-model", dest='model', help=
+                        "The network name of the offline model needs to be generated",
+                        default="", type=str)
+    parser.add_argument("-core_number", dest="core_number", help=
+                        "Core number of offline model with simple compilation. ",
+                        default=1, type=int)
+    parser.add_argument("-mname", dest='mname', help=
+                        "The name for the offline model to be generated",
+                        default="offline", type=str)
+    parser.add_argument("-mcore", dest='mcore', help=
+                        "Specify the offline model run device type.",
+                        default="MLU270", type=str)
+    parser.add_argument("-modelzoo", dest='modelzoo', type=str,
+                        help="Specify the path to the model weight file.",
+                        default=None)
+    parser.add_argument("-channel_size", dest="channel_size", help=
+                        "channel size for one inference.",
+                        default=3, type=int)
+    parser.add_argument("-batch_size", dest="batch_size", help="batch size for one inference.",
+                        default=1, type=int)
+    parser.add_argument("-in_height", dest="in_height", help="input height.",
+                        default=224, type=int)
+    parser.add_argument("-in_width", dest="in_width", help="input width.",
+                        default=224, type=int)
+    parser.add_argument("-half_input", dest='half_input', help=
+                        "the input data type, 0-float32, 1-float16/Half, default 1.",
+                        default=1, type=int)
+    parser.add_argument("-fake_device", dest='fake_device', help=
+                        "genoff offline cambricon without mlu device if \
+                        fake device is true. 1-fake_device, 0-mlu_device",
+                        default=1, type=int)
+    parser.add_argument("-quantized_mode", dest='quantized_mode', help=
+                        "the data type, 1-mlu int8, 2-mlu int16, default 1.",
+                        default=1, type=int)
+    parser.add_argument("-input_format", dest="input_format", help=
+                        "describe input image channel order in C direction, \
+                        0-rgba, 1-argb, 2-bgra, 3-abgr",
+                        default=0, type=int)
+    parser.add_argument("-autotune", dest="autotune", help="autotune mode",
+                        default=0, type=int)
+    parser.add_argument("-autotune_config_path", dest="autotune_config_path", \
+                        help="autotune configuration file path", default="config.ini", type=str)
+    parser.add_argument("-autotune_time_limit", dest="autotune_time_limit", \
+                        help="time limit for autotune", default=120, type=int)
+
+    return parser.parse_args()
+
+def genoff(model, mname, batch_size, core_number, in_heigth, in_width,
+           half_input, input_format, fake_device):
+    # construct input tensor
+    net = None
+    in_h = 224
+    in_w = 224
+    if model == 'inception_v3':
+        net = getattr(models.quantization, model)(pretrained=True,
+                                                  quantize=True,
+                                                  transform_input=False)
+        in_h = 299
+        in_w = 299
+    elif model == 'googlenet':
+        net = getattr(models.quantization, model)(pretrained=True,
+                                                  quantize=True,
+                                                  transform_input=False)
+    elif model == "ssd":
+        net = models.quantization.object_detection.ssd300(pretrained=True,
+                                                          use_mlu=True,
+                                                          quantize=True)
+        in_h = 300
+        in_w = 300
+    elif model == "yolov5":
+        sys.path.append(os.path.join(abs_path, '../../online/yolov5'))
+        from models.yolo import yolov5
+        in_h = 640
+        in_w = 640
+        net = yolov5(pretrained=True,
+                     img_h=in_h,
+                     img_w=in_w,
+                     conf_thres=0.001,
+                     nms_thres=0.65,
+                     quantize=True)
+    elif model == "yolov4":
+        sys.path.append(os.path.join(abs_path, '../../online/yolov4'))
+        from tool.darknet2pytorch import yolov4
+        in_h = 512
+        in_w = 512
+        net = yolov4(pretrained=True, quantize=True)
+    elif model == "yolov3":
+        in_h = 416
+        in_w = 416
+        net = models.quantization.object_detection.yolov3(pretrained=True,
+                                                          quantize=True,
+                                                          img_size=in_h,
+                                                          conf_thres=0.001,
+                                                          nms_thres=0.5)
+    elif model == "alexnet":
+        in_h = 227
+        in_w = 227
+        net = getattr(models.quantization, model)(pretrained=True, quantize=True)
+    elif model == "faceboxes":
+        in_h = 800
+        in_w = 800
+        net = models.quantization.object_detection.faceboxes(pretrained=True,
+                                                             quantize=True)
+    elif model == "yolov2":
+        in_h = 416
+        in_w = 416
+        net = models.quantization.object_detection.yolov2(pretrained=True,
+                                                          quantize=True)
+    elif model == "pnet":
+        in_h = in_height
+        in_w = in_width
+        net = models.quantization.object_detection.pnet(pretrained=True,
+                                                        quantize=True,
+                                                        is_train=False)
+        mname = mname + '_' + str(in_h) + '_' + str(in_w)
+    elif model == "rnet":
+        in_h = 24
+        in_w = 24
+        net = models.quantization.object_detection.rnet(pretrained=True,
+                                                        quantize=True,
+                                                        is_train=False)
+    elif model == "onet":
+        in_h = 48
+        in_w = 48
+        net = models.quantization.object_detection.onet(pretrained=True,
+                                                        quantize=True,
+                                                        is_train=False)
+    elif model == "ssd_mobilenet_v1":
+        net = models.quantization.object_detection.ssd_mobilenet_v1(pretrained=True,
+                                                                    quantize=True,
+                                                                    use_mlu=True)
+        in_h = 301
+        in_w = 301
+    elif model == "ssd_mobilenet_v2":
+        net = models.quantization.object_detection.ssd_mobilenet_v2(pretrained=True,
+                                                                    quantize=True,
+                                                                    use_mlu=True)
+        in_h = 300
+        in_w = 300
+    elif model == "east":
+        in_h = 704
+        in_w = 1280
+        net = models.quantization.object_detection.east(pretrained=True,
+                                                        quantize=True)
+    elif model == "efficientnet":
+        net = getattr(models.quantization, 'efficientnet') \
+              ('efficientnet-b0', pretrained=True, quantize=True)
+    elif model == "fasterrcnn_fpn":
+        in_h = 800
+        in_w = 800
+        net = models.quantization.detection.fasterrcnn_resnet50_fpn(pretrained=True,
+                                                                    batch_size=args.batch_size,
+                                                                    img_size=in_h,
+                                                                    use_mlu=True,
+                                                                    quantize=True)
+    elif model == "centernet":
+        ctnet_lib_path = os.getenv("CTNET_LIB_HOME")
+        sys.path.insert(0, ctnet_lib_path)
+        from models.model import create_centernet_hg
+        in_h = 512
+        in_w = 512
+        net = create_centernet_hg(quantize=True)
+    elif model == "fcn8s":
+        in_h = 400
+        in_w = 500
+        net = models.quantization.semantic_segmentation.fcn8s(pretrained=True,
+                                                              quantize=True,
+                                                              n_class = 21)
+    elif model == "segnet":
+        in_h = 300
+        in_w = 300
+        net = models.quantization.semantic_segmentation.segnet(pretrained=True,
+                                                               quantize=True,
+                                                               num_classes = 21)
+    elif model == "vdsr":
+        in_h = 300
+        in_w = 300
+        net = models.quantization.super_resolution.vdsr(pretrained=True,
+                                                        quantize=True)
+##3，在genoff函数中，添加条件选项，并实例化⾃定义模型。quantized置为True，使⽤量化权重。
+    elif model == "feature_extract":
+        in_h = 128
+        in_w = 64
+        # 量化权重放在当前⽬录下
+        net = feature_extract(True, net_dir + "/feature_extract_quantized.pth")
+
+    elif model == "fsrcnn":
+        in_h = 128
+        in_w = 128
+        net = models.quantization.fsrcnn.FSRCNN(scale_factor=2, pretrained=True, quantize=True)
+    else:
+        net = getattr(models.quantization, model)(pretrained=True, quantize=True)
+    net = net.eval().float()
+
+    # prepare input
+    example_mlu = torch.randn(batch_size, args.channel_size, in_h, in_w, dtype=torch.float)
+    randn_mlu = torch.randn(1, args.channel_size, in_h, in_w, dtype=torch.float)
+    if half_input:
+        randn_mlu = randn_mlu.type(torch.HalfTensor)
+        example_mlu = example_mlu.type(torch.HalfTensor)
+
+    # set offline flag
+    ct.set_core_number(core_number)
+    ct.set_core_version(mcore)
+    if fake_device:
+        ct.set_device(-1)
+    ct.save_as_cambricon(mname)
+    ct.set_input_format(input_format)
+
+    # set autotune
+    if autotune:
+        ct.set_autotune(True)
+        ct.set_autotune_config_path(autotune_config_path)
+        ct.set_autotune_time_limit(autotune_time_limit)
+
+    # run jit fuse
+    if model == "fasterrcnn_fpn":
+        net_traced = torch.jit.trace(net.to(ct.mlu_device()),
+                                     example_mlu.to(ct.mlu_device()),
+                                     check_trace=False)
+    else:
+        net_traced = torch.jit.trace(net.to(ct.mlu_device()),
+                                     randn_mlu.to(ct.mlu_device()),
+                                     check_trace=False)
+
+    # run inference and save cambricon
+    net_traced(example_mlu.to(ct.mlu_device()))
+
+if __name__ == "__main__":
+    args = get_args()
+    model = args.model
+    core_number = args.core_number
+    mname = args.mname
+    modelzoo = args.modelzoo
+    mcore = args.mcore
+    batch_size = args.batch_size
+    in_height = args.in_height
+    in_width = args.in_width
+    half_input = args.half_input
+    input_format = args.input_format
+    fake_device = args.fake_device
+    autotune = args.autotune
+    autotune_config_path = args.autotune_config_path
+    autotune_time_limit = args.autotune_time_limit
+
+    #check param
+    assert model != "", "Generating the offline model requires" + \
+        "specifying the generated network name."
+    assert model in support, "The specified model is not currently supported.\n" + \
+        "Support model list: " + str(support)
+    assert not fake_device or not autotune, "Fake device is not supported for autotune!"
+
+    # env
+    if modelzoo != None:
+        os.environ['TORCH_HOME'] = modelzoo
+        logger.info("TORCH_HOME: " + modelzoo)
+    else:
+        TORCH_HOME = os.getenv('TORCH_HOME')
+        if TORCH_HOME == None:
+            print("Warning: please set environment variable TORCH_HOME such as $PWD/models/pytorch")
+            exit(1)
+
+    #genoff
+    logger.info("Generate offline model: " + model)
+    genoff(model, mname, batch_size, core_number,
+           in_height, in_width, half_input, input_format, fake_device)
