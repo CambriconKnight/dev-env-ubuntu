@@ -30,7 +30,6 @@ Mask R-CNN是在Faster R-CNN的基础上添加了一个预测分割mask的分支
 | 模型权重 | [https://download.pytorch.org/models/maskrcnn/e2e_mask_rcnn_R_50_FPN_1x.pth]() |
 
 
-
 ## 3.2. 下载容器
 
 - **路径**

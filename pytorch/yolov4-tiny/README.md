@@ -57,7 +57,7 @@ sudo docker run \
 else
 sudo docker start $MY_CONTAINER
 sudo docker exec -ti $MY_CONTAINER /bin/bash
-fi
+fiREADME.md
 ```
 - 进入容器
 ```bash
