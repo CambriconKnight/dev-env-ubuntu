@@ -236,7 +236,7 @@ network_list=(
 ```
 备注：
 ```bash
-运行离线demo 时，模型是从 $TORCH_HOME 目录获取，注意 $TORCH_HOME 路径；
+运行离线demo 时，模型是从$TORCH_HOME 目录获取，注意 $TORCH_HOME 路径；
 ```
 
 ## 5.3. 离线demo 编译
