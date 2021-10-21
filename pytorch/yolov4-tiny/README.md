@@ -126,7 +126,11 @@ python3 -c "import torch;print(torch.__version__,torch.__file__)"
 pip install matplotlib
 pip install opencv-python
 ```
+<<<<<<< HEAD
 ### 3.2.8 yolov4-tiny online 目录
+=======
+### 3.2.8 yolov4 online 目录
+>>>>>>> c65f959acc40f3f6dbebc3074cfcceb35ee6046c
 ```bash
 cd $CATCH_HOME/examples/online/yolov4/
 
@@ -136,7 +140,11 @@ mkdir -p output/mlu_res/
 ```
 
 # 4.模型准备
+<<<<<<< HEAD
 ## 4.1. 下载yolov4-tiny 模型准备
+=======
+## 4.1. 下载yolov4 模型准备
+>>>>>>> c65f959acc40f3f6dbebc3074cfcceb35ee6046c
 - 下载链接
 ```bash
 https://github.com/AlexeyAB/darknet
@@ -194,7 +202,11 @@ mv yolov4-tiny.pth $TORCH_HOME/int8/checkpoints/
 备注：如果int16 量化，注意模型存放目录，int16 需要拷贝到int16目录 $TORCH_HOME/int16/checkpoints/
 
 # 5.运行示例
+<<<<<<< HEAD
 ## 5.1. 在线运行yolov4-tiny demo（MLU)
+=======
+## 5.1. 在线运行yolov4 demo（MLU)
+>>>>>>> c65f959acc40f3f6dbebc3074cfcceb35ee6046c
 
 - yolov4-tiny
 ```bash
@@ -210,7 +222,11 @@ python eval.py -half_input 0 -quantized_mode 1 -datadir $COCO_PATH_PYTORCH/COCO 
 ```
 备注：测试精度需要使用5000张以上图片，测试图片太少，测试精度值不准确。
 
+<<<<<<< HEAD
 ## 5.2. 离线运行yolov4-tiny demo（MLU)
+=======
+## 5.2. 离线运行yolov4 demo（MLU)
+>>>>>>> c65f959acc40f3f6dbebc3074cfcceb35ee6046c
 - 运行脚本
 ```bash
 cd $CATCH_HOME/examples/offline/yolov4
