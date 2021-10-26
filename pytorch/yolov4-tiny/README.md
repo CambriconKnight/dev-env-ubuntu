@@ -121,7 +121,6 @@ wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/y
 ```bash
 ./download_weights.sh
 ```
-Quantize
 ## 4.3. 模型量化
 
 基于上一个步骤中准备好的网络模型，生成量化模型。可以使用脚本一键量化也可以分步执行。
