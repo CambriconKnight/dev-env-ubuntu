@@ -193,7 +193,6 @@ cd ../../offline
 ./run_offline.sh
 ```
 ## 6.2. 手动生成离线模型
-- 
 ```bash
 export TORCH_HOME=$TORCH_HOME/int8/
 
