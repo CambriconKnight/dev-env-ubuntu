@@ -34,35 +34,18 @@ YOLOv4-tiny是YOLOv4的压缩版本。它是基于YOLOv4使网络结构更加简
 ## 3.2.操作步骤
 ### 3.2.1 加载容器
 ```bash
-sudo docker load -i pytorch-0.15.604-ubuntu18.04.tar.gz
+#加载Docker镜像
+#./load-image-ubuntu18.04-pytorch.sh /data/ftp/product/GJD/MLU270/1.7.604/Docker/pytorch-0.15.604-ubuntu18.04.tar
+./load-image-ubuntu18.04-pytorch.sh ${FULLNAME_IMAGES}
 ```
-### 3.2.2 进入容器
-- 模型脚本run-mlu270_ubuntu18.04.torch.docker.sh
 
+### 3.2.2 进入容器
 ```bash
-#/bin/bash
-export MY_CONTAINER="mlu270_v1.7.604_ubuntu18.04_yolov4.pytorh_`whoami`"
-num=`sudo docker ps -a|grep -w "$MY_CONTAINER$"|wc -l`
-echo $num
-echo $MY_CONTAINER
-if [ 0 -eq $num ];then
-sudo xhost +
-sudo docker run \
--e DISPLAY=unix$DISPLAY \
---ipc=host --net=host --pid=host \
--it --privileged --name $MY_CONTAINER \
--v /home/cam/workspace/datasets/:/datasets/ \
--v /home/cam/workspace/models/:/models/ \
--v $PWD:/home/share/ yellow.hub.cambricon.com/pytorch/pytorch:0.15.604-ubuntu18.04 /bin/bash
-else
-sudo docker start $MY_CONTAINER
-sudo docker exec -ti $MY_CONTAINER /bin/bash
-fi
+#启动容器
+./run-container-ubuntu18.04-pytorch.sh
 ```
-- 进入容器
-```bash
-./run-mlu270_ubuntu18.04.torch.docker.sh
-```
+**以下操作都是在docker容器中进行的**
+
 ### 3.2.3 torch 工程目录
 - 确认torch 目录
 ```bash
@@ -70,8 +53,8 @@ fi
 cd /torch/
 ```
 
-### 3.2.5 进入虚拟环境
-- 进入虚拟环境
+### 3.2.4 进入虚拟环境
+- 进入pytorch虚拟环境
 ```bash
 #源码编译的activate 路径
 source /torch/venv3/pytorch/bin/activate
@@ -80,72 +63,89 @@ source /torch/venv3/pytorch/bin/activate
 ```bash
 python3 -c "import torch;print(torch.__version__,torch.__file__)"
 ```
+返回信息如下：
 ```bash
-1.3.0a0 /cambricon_pytorch/pytorch/src/catch/venv/pytorch/lib/python3.6/site-packages/torch/__init__.py
+1.3.0a0+b8d5360 /torch/venv3/pytorch/lib/python3.6/site-packages/torch/__init__.py
 ```
 - 安装pip 依赖
 ```bash
+/torch/venv3/pytorch/bin/python -m pip install --upgrade pip
 pip install matplotlib
 pip install opencv-python
 ```
 
 # 4.模型准备
-## 4.1.1下载YOLOv4-tiny代码，放到Docker中.设置环境变量,解压COCO数据集到yolov4-tiny目录下。
-下载地址：https://github.com/tianzang/dev-env-ubuntu/tree/master/pytorch/yolov4-tiny,
+## 4.1.1. 下载YOLOv4-tiny代码，放到Docker中. 设置环境变量, 解压COCO数据集到yolov4-tiny目录下。
 
--进入yolov4-tiny文件夹下 eg :cd xxx/yolov4-tiny
+- 进入yolov4-tiny 工作目录下 
+```bash
+cd /home/share/yolov4-tiny/
+```
 
-### 4.1.2 设置环境变量
+### 4.1.2. 设置环境变量
 ```bash
 export TORCH_HOME=$PWD/pytorch_models
-export DATASET_HOME=$PWD/
+export DATASET_HOME=/data/datasets
 export COCO_PATH_PYTORCH=$DATASET_HOME/
 ```
-- 注: 必须进入yolov4-tiny文件夹下,设置环境变量
+- **注: 必须进入yolov4-tiny文件夹下,设置环境变量**
 
-### 4.1.3.
+### 4.1.3. 准备测试数据集
 
-- 测试 yolov4 需要依赖 COCO数据集并且放到yolov4-tiny文件夹下。数据集可以直接用COCO官方数据集，也可以从ftp下载。 
+测试 YOLOv4-Tiny 需要依赖 COCO 数据集并且放到 $DATASET_HOME[/data/datasets] 文件夹下。数据集可以直接用COCO官方数据集，也可以从ftp上下载/product/datasets/MLU270_datasets_COCO.tar.gz. 
+```bash
+#进入模型目录
+cd $DATASET_HOME
+#解压数据集
+tar -zxvf MLU270_datasets_COCO.tar.gz -C .
+```
 
-## 4.2. 下载yolov4-tiny 模型
-- cd ./online/yolov4/model
+## 4.2. 准备网络模型
+从官网下载配置文件及模型权重,以下以 yolov4-tiny(416*416) 为例进行演示.
+|Name|URL|Note|
+|----|-------|-------|
+|`Darknet`|https://github.com/AlexeyAB/darknet.git||
+|`yolov4-tiny.cfg`|https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4-tiny.cfg||
+|`yolov4-tiny.weights`|https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights||
 
-- 可以参考4.2.1一键下载或者参考4.2.2 手动下载
-### 4.2.1 一键下载：
+```bash
+#进入模型目录
+cd /home/share/yolov4-tiny/online/yolov4/model
+#下载 yolov4-tiny.cfg
+wget https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4-tiny.cfg
+#下载 yolov4-tiny.weights
+wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights
+#注：如果是自己的网络，则不用再下载。可以直接替换目录中【yolov4.cfg】、【yolov4.weights】.
+```
+以上操作也可直接运行脚本，一键下载网络模型和权重。
 ```bash
 ./download_weights.sh
 ```
-### 4.2.2 手动下载
+Quantize
+## 4.3. 模型量化
+
+基于上一个步骤中准备好的网络模型，生成量化模型。可以使用脚本一键量化也可以分步执行。
+
+### 4.3.1. 一键量化：
 ```bash
-#下载yolov4-tiny.cfg
-wget https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4-tiny.cfg
-
-#下载yolov4-tiny.weights
-wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights
-```
-
-## 4.3. 生成yolov4-tiny 量化模型pth文件
-- 返回上级目录：cd ..
-- 生成量化模型可以参考：4.3.1. 一键生成量化模型或者4.3.2. 手动生成量化模型
-
-### 4.3.1. 一键生成量化模型：
-```bash
+#进入操作目录
+cd /home/share/yolov4-tiny/online/yolov4
+#一键生成 int8 量化模型
 ./run_quant.sh
 ```
 
-### 4.3.2. 手动生成量化模型
-- 生成pytorch 网络模型
+### 4.3.2. 分步量化
+分步量化，可根据具体需求修改量化参数。
+- 生成 pytorch 框架网络模型
 ```bash
-#生成yolov4-tiny网络模型
+# 生成pytorch 网络模型
 python eval.py -cfgfile model/yolov4-tiny.cfg -weightfile model/yolov4-tiny.weights -darknet2pth true
-
 #拷贝模型到origin/checkpoints 目录
 mv yolov4-tiny.pth $TORCH_HOME/origin/checkpoints/yolov4-tiny.pth
 ```
 
-- yolov4-tiny模型量化
+- 模型量化
 ```bash
-#int8
 #INT8 Quantize
 python eval.py -quantized_mode 1 -quantization True -yolov4_version yolov4-tiny
 ```
@@ -153,25 +153,17 @@ python eval.py -quantized_mode 1 -quantization True -yolov4_version yolov4-tiny
 ```bash
 • ‑quantized_mode：设置使用的权重为原始权重、 int8、 int16、分通道 int8 和分通道 int16 量化的权重。
 • ‑quantization：设置是否使能量化模式。
-• ‑yolov4_version:yolov4-tiny
-```
-
-```bash
-拷贝模型到int8/checkpoints 目录
+• yolov4_version
+#拷贝模型到int8/checkpoints 目录
 mv yolov4-tiny.pth $TORCH_HOME/int8/checkpoints/
 ```
 备注：如果int16 量化，注意模型存放目录，int16 需要拷贝到int16目录 $TORCH_HOME/int16/checkpoints/
 
-# 5.在线运行yolov4-tiny demo（MLU)
-- 在线运行可以参考5.1.一键运行或者参考5.2 手动运行
-## 5.1. 一键在线运行yolov4-tiny demo（MLU)
-```bash
-./run_online.sh
-```
 
-## 5.2. 手动在线运行yolov4-tiny demo
-
+# 5.在线运行
 ```bash
+#进入操作目录
+#cd /home/share/yolov4-tiny/online/yolov4
 #INT8 Inference,for float16 input
 python eval.py -half_input 1 -quantized_mode 1 -datadir $COCO_PATH_PYTORCH/COCO -yolov4_version yolov4-tiny
 ```
@@ -184,18 +176,12 @@ python eval.py -half_input 1 -quantized_mode 1 -datadir $COCO_PATH_PYTORCH/COCO 
 ```
 备注：测试精度需要使用5000张以上图片，测试图片太少，测试精度值不准确。
 
-# 6. 离线运行yolov4-tiny demo（MLU)
-- 进入目录
-cd ../../offline
-- 可以参考6.1.一键生成离线模型或者参考6.2. 手动生成离线模型
-## 6.1. 一键生成离线模型
+# 6. 离线运行
 ```bash
-./run_offline.sh
-```
-## 6.2. 手动生成离线模型
-```bash
+#进入操作目录
+cd /home/share/yolov4-tiny/offline
 export TORCH_HOME=$TORCH_HOME/int8/
-
+#
 python ./genoff/genoff.py -fake_device 0 -model yolov4-tiny -mcore MLU270 -mname mlu270_yolov4-tiny_4b4c_fp16 -half_input 1 -core_number 4 -batch_size 4 -input_format 0
 ```
 genoff.py脚本参数使用说明如下,详细说明见《寒武纪 PyTorch 用户手册-v*.*.*.pdf》中相关章节【离线模型生成工具】。
