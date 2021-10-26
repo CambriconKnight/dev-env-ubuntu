@@ -32,28 +32,28 @@ YOLOv4-tiny是YOLOv4的压缩版本。它是基于YOLOv4使网络结构更加简
 
 
 ## 3.2.操作步骤
-### 3.2.1 加载容器
+### 3.2.1. 加载容器
 ```bash
 #加载Docker镜像
 #./load-image-ubuntu18.04-pytorch.sh /data/ftp/product/GJD/MLU270/1.7.604/Docker/pytorch-0.15.604-ubuntu18.04.tar
 ./load-image-ubuntu18.04-pytorch.sh ${FULLNAME_IMAGES}
 ```
 
-### 3.2.2 进入容器
+### 3.2.2. 进入容器
 ```bash
 #启动容器
 ./run-container-ubuntu18.04-pytorch.sh
 ```
 **以下操作都是在docker容器中进行的**
 
-### 3.2.3 torch 工程目录
+### 3.2.3. torch 工程目录
 - 确认torch 目录
 ```bash
 #发布容器默认是下面目录
 cd /torch/
 ```
 
-### 3.2.4 进入虚拟环境
+### 3.2.4. 进入虚拟环境
 - 进入pytorch虚拟环境
 ```bash
 #源码编译的activate 路径
