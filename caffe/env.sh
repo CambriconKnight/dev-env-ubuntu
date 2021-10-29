@@ -25,9 +25,9 @@ FILENAME_DOCKERFILE="Dockerfile.$OSVer"
 DIR_DOCKER="docker"
 #Version
 #VERSION="v${VER}"
-VERSION="0.15.602-$OS"
+VERSION="$FrameVer-$OS"
 #Organization
-ORG="yellow.hub.cambricon.com/pytorch"
+ORG="yellow.hub.cambricon.com/$PATH_WORK"
 #Docker image
 #MY_IMAGE="$ORG/$OS-$PATH_WORK"
 #MY_IMAGE="yellow.hub.cambricon.com/pytorch/pytorch"
@@ -35,7 +35,8 @@ MY_IMAGE="$ORG/$PATH_WORK"
 #Docker image name
 NAME_IMAGE="$MY_IMAGE:$VERSION"
 #FileName DockerImage
-FILENAME_IMAGE="pytorch-0.15.602-ubuntu$OSVer.tar"
+FILENAME_IMAGE="$PATH_WORK-$FrameVer-$OS.tar"
+#FILENAME_IMAGE="caffe-5.4.602-ubuntu18.04.tar"
 FULLNAME_IMAGE="./${FILENAME_IMAGE}"
 #Docker container name
 MY_CONTAINER="container-$OS-$PATH_WORK-$VERSION"
