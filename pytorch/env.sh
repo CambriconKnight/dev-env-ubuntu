@@ -15,17 +15,17 @@ VER="1.7.602"
 #Work
 PATH_WORK="pytorch"
 #Dockerfile(16.04/18.04/CentOS)
-TYPE_DOCKERFILE="16.04"
+OSVer="18.04"
 #(Dockerfile.16.04/Dockerfile.18.04/Dockerfile.CentOS)
-FILENAME_DOCKERFILE="Dockerfile.$TYPE_DOCKERFILE"
+FILENAME_DOCKERFILE="Dockerfile.$OSVer"
 DIR_DOCKER="docker"
 #Version
 #VERSION="v${VER}"
-VERSION="0.15.602-ubuntu16.04"
+VERSION="0.15.602-ubuntu$OSVer"
 #Organization
 ORG="yellow.hub.cambricon.com/pytorch"
 #Operating system
-OS="ubuntu16.04"
+OS="ubuntu$OSVer"
 #Docker image
 #MY_IMAGE="$ORG/$OS-$PATH_WORK"
 #MY_IMAGE="yellow.hub.cambricon.com/pytorch/pytorch"
@@ -33,7 +33,7 @@ MY_IMAGE="$ORG/$PATH_WORK"
 #Docker image name
 NAME_IMAGE="$MY_IMAGE:$VERSION"
 #FileName DockerImage
-FILENAME_IMAGE="pytorch-0.15.602-ubuntu16.04.tar"
+FILENAME_IMAGE="pytorch-0.15.602-ubuntu$OSVer.tar"
 FULLNAME_IMAGE="./${FILENAME_IMAGE}"
 #Docker container name
 MY_CONTAINER="container-$OS-$PATH_WORK-$VERSION"

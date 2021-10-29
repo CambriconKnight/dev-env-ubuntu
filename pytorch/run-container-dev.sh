@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 # -------------------------------------------------------------------------------
-# Filename:     run-container-ubuntu16.04-dev.sh
+# Filename:     run-container-dev.sh
 # UpdateDate:   2021/04/26
 # Description:  Run docker image for IDE.
-# Example:      ./run-container-ubuntu16.04-dev.sh
+# Example:      ./run-container-dev.sh
 # Depends:      container-$OS-$PATH_WORK-$VERSION
 # Notes:
 # -------------------------------------------------------------------------------

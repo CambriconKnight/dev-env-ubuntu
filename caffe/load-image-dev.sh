@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 # -------------------------------------------------------------------------------
-# Filename:     load-image-ubuntu16.04-pytorch.sh
+# Filename:     load-image-dev.sh
 # UpdateDate:   2021/08/04
 # Description:  Loading docker image for IDE.
-# Example:      ./load-image-ubuntu16.04-pytorch.sh
+# Example:      ./load-image-dev.sh
 # Depends:      pytorch-0.15.602-ubuntu16.04.tar
 # Notes:
 # -------------------------------------------------------------------------------

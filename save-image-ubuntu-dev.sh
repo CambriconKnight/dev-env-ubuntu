@@ -1,19 +1,25 @@
 #/bin/bash
 set -e
 # -------------------------------------------------------------------------------
-# Filename:     save-image-ubuntu16.04-dev.sh
+# Filename:     save-image-ubuntu-dev.sh
 # UpdateDate:   2021/07/26
 # Description:  1. commit: 提交容器到镜像，实现容器持久化；
 #               2. save: 导出镜像文件，实现镜像内容持久化。
-# Example:      ./save-image-ubuntu16.04-dev.sh
+# Example:
+#               ./save-image-ubuntu-dev.sh
+#               ./save-image-ubuntu-dev.sh 16.04
+#               ./save-image-ubuntu-dev.sh 18.04
 # Depends:
 # Notes:
 # -------------------------------------------------------------------------------
 #CMD_TIME=$(date +%Y%m%d%H%M%S.%N) # eg:20210402230402.403666251
 CMD_TIME=$(date +%Y%m%d%H%M%S) # eg:20210402230402
 
-# 1.Source env
-source "./env.sh"
+#Dockerfile(16.04/18.04/CentOS)
+OSVer="16.04"
+if [[ $# -ne 0 ]];then OSVer="${1}";fi
+# Source env
+source ./env.sh $OSVer
 #New Docker image name
 NAME_IMAGE_NEW="$MY_IMAGE:$VERSION-$CMD_TIME"
 FILENAME_IMAGE_NEW="image-$OS-$PATH_WORK-$VERSION-$CMD_TIME.tar.gz"

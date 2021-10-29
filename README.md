@@ -38,6 +38,8 @@
 
 Ubuntu16.04: http://mirrors.aliyun.com/ubuntu-releases/16.04
 
+Ubuntu18.04: http://mirrors.aliyun.com/ubuntu-releases/18.04
+
 MLU开发文档: https://developer.cambricon.com/index/document/index/classid/3.html
 
 Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
@@ -48,9 +50,10 @@ Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
 ## 2.1. 脚本
 ```bash
 .
-├── build-image-ubuntu16.04-dev.sh
-├── load-image-ubuntu16.04-dev.sh
-└── run-container-ubuntu16.04-dev.sh
+├── build-image-ubuntu-dev.sh
+├── load-image-ubuntu-dev.sh
+├── run-container-ubuntu-dev.sh
+└── save-image-ubuntu-dev.sh
 ```
 ## 2.2. 依赖项
 `driver`: [neuware-mlu270-driver-dkms_4.9.2_all.deb](ftp://download.cambricon.com:8821/product/MLU270/1.6.602/driver)
@@ -68,21 +71,23 @@ git clone https://github.com/CambriconKnight/dev-env-ubuntu.git
 
 # 4. Build
 ```bash
-#编译Docker镜像
-./build-image-ubuntu16.04-dev.sh
+#编译Docker镜像 Ubuntu16.04,默认编译Ubuntu16.04,Docker镜像
+./build-image-ubuntu-dev.sh
+#./build-image-ubuntu-dev.sh 16.04
+#编译Docker镜像 Ubuntu18.04
+#./build-image-ubuntu-dev.sh 18.04
 ```
 
 # 5. Load
 ```bash
 #加载Docker镜像
-#./load-image-ubuntu16.04-pytorch.sh ${FULLNAME_IMAGES}
-./load-image-ubuntu16.04-pytorch.sh /data/ftp/product/GJD/MLU270/1.7.602/Ubuntu16.04/PyTorch/docker/pytorch-0.15.602-ubuntu16.04.tar
+./load-image-ubuntu-dev.sh
 ```
 
 # 6. Run
 ```bash
 #启动容器
-./run-container-ubuntu16.04-pytorch.sh
+./run-container-ubuntu-dev.sh
 ```
 
 # 7. Install Dependent
@@ -277,5 +282,5 @@ deactivate
 
 ```bash
 #保存当前容器到镜像文件, 实现镜像内容持久化。
-./save-image-ubuntu16.04-dev.sh
+./save-image-ubuntu-dev.sh
 ```

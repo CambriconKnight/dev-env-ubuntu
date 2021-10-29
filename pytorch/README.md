@@ -47,17 +47,19 @@ Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
 Cambricon PyTorch 支持的典型网络及移植流程.
 |网络名称|操作目录|备注|
 |----|-------|-------|
-|`YOLOv4`|./yolov4|以输入416*416为例|
+|`YOLOv4`|./yolov4|以输入 416 * 416 为例|
+|`YOLOv4-Tiny`|./yolov4-tiny|以输入 416 * 416 为例|
+|`YOLOv5`|./yolov5|以 YOLOv5s 模型输入 640 * 640 为例|
 
 # 3. Load
 ```bash
 #加载Docker镜像
-#./load-image-ubuntu16.04-pytorch.sh /data/ftp/product/GJD/MLU270/1.7.602/Docker/pytorch-0.15.602-ubuntu16.04.tar
-./load-image-ubuntu16.04-pytorch.sh ${FULLNAME_IMAGES}
+#./load-image-dev.sh /data/ftp/product/GJD/MLU270/1.7.602/Docker/pytorch-0.15.602-ubuntu18.04.tar
+./load-image-dev.sh ${FULLNAME_IMAGES}
 ```
 
 # 4. Run
 ```bash
 #启动容器
-./run-container-ubuntu16.04-pytorch.sh
+./run-container-dev.sh
 ```

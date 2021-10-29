@@ -1,93 +1,63 @@
-# 1. Overview
 
-使用已安装Cambricon Caffe 运行环境的Docker容器中进行开发，需先执行以下步骤加载镜像并启动容器。
-以下表格中内容为依赖项
-|类别|文件|
-|----|-------|
-|驱动|[neuware-mlu270-driver-dkms_4.4.4_all.deb](ftp://download.cambricon.com:8821/product/MLU270/v1.5.0/driver)|
-|镜像|[mlu270_v1.5.0_ubuntu16.04.caffe_v1.0.tar.gz](ftp://username@download.cambricon.com:8821/product/MLU270/v1.5.0/docker-images)|
-|加载镜像|load-mlu200-image-ubuntu16.04.caffe.sh|
-|运行容器|run-mlu200-docker-ubuntu16.04.caffe.sh|
+**该教程仅仅用于学习，打通流程； 不对效果负责，不承诺商用。**
+
+# 1. 概述
+本目录下脚本适配于官方发布的 Caffe 框架的 Docker 容器。 官方发布的 Docker 容器已经对 Caffe 框架进行了编译安装。可按照以下步骤可快速基于 Cambricon Caffe 框架进行各类网络的部署、移植、在线/离线推理等验证工作。
+
+**运行环境**
+
+- 主机系统: Ubuntu16.04/Ubuntu18.04/CentOS7(以下重点以Ubuntu18.04为例说明)
+- 软件栈版本: 1.7.602
+- 深度学习框架: Caffe
+- 镜像文件: caffe-5.4.602-ubuntu18.04.tar
+-
+**硬件环境准备:**
+
+| 名称           | 数量      | 备注                  |
+| :------------ | :--------- | :------------------ |
+| 开发主机/服务器  | 一台       |主流配置即可；电源功率大于500W；PCIe Gen.3 x16 |
+| MLU270-F4/S4   | 一套       |使用板卡自带的8pin连接器连接主机电源|
+
+**软件环境准备:**
+
+| 名称                   | 版本/文件                                              | 备注                                 |
+| :-------------------- | :-------------------------------                      | :---------------------------------- |
+| Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                       | 宿主机操作系统                         |
+| Docker Image          | caffe-5.4.602-ubuntu18.04.tar                         | 官方发布的 Caffe 框架 Docker 镜像文件   |
+| Driver_MLU270         | neuware-mlu270-driver-dkms_4.9.8_all.deb              | 依操作系统选择                         |
+| CNToolkit_MLU270      | cntoolkit_1.7.5-1.ubuntu18.04_amd64.deb               | 依操作系统选择                         |
+| CNML_MLU270           | cnml_7.10.3-1.ubuntu18.04_amd64.deb                   | 依操作系统选择                         |
+| CNPlugin_MLU270       | cnplugin_1.12.4-1.ubuntu18.04_amd64.deb               | 依操作系统选择                         |
+| CNNL_MLU270           | cnnl_1.3.0-1.ubuntu18.04_amd64.deb                    | 依操作系统选择                         |
+| CNCL_MLU270           | cncl_0.8.0-1.ubuntu18.04_amd64.deb                    | 依操作系统选择                         |
+
+注: 以上软件环境中文件名词, 如有版本升级及名称变化, 可以在 [env.sh](./env.sh) 中进行修改。
+
+**下载地址:**
+
+Ubuntu18.04: http://mirrors.aliyun.com/ubuntu-releases/18.04
+
+MLU开发文档: https://developer.cambricon.com/index/document/index/classid/3.html
+
+Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
+
+其他开发资料, 可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载。也可在官方提供的专属FTP账户指定路径下载。
 
 # 2. Structure
-
-```bash
-.
-├── load-mlu200-image-ubuntu16.04.caffe.sh
-├── run-mlu200-docker-ubuntu16.04.caffe.sh
-└── README.md
-```
+Cambricon PyTorch 支持的典型网络及移植流程.
+|网络名称|操作目录|备注|
+|----|-------|-------|
+|`YOLOv3`|./yolov3-416|以输入416*416为例|
 
 # 3. Load
 ```bash
 #加载Docker镜像
-./load-mlu200-image-ubuntu16.04.caffe.sh ${FULLNAME_IMAGES}
-```
-```bash
-#加载Docker镜像
-cam@cam-3630:/data/github/easy-deploy-mlu/caffe$ ./load-mlu200-image-ubuntu16.04.caffe.sh /data/ftp/v1.5.0/docker-images/mlu270_v1.5.0_ubuntu16.04.caffe_v1.0.tar.gz
-[sudo] password for cam:
-0
-mlu270_v1.5.0_ubuntu16.04.caffe
-The image is not loaded and is loading......
-63f451eb9fa9: Loading layer [==================================================>]   2.56kB/2.56kB
-40c7e9efb360: Loading layer [==================================================>]    510kB/510kB
-39bfebde293a: Loading layer [==================================================>]   2.56kB/2.56kB
-5a80ca88af1d: Loading layer [==================================================>]  4.096kB/4.096kB
-15111af6fbda: Loading layer [==================================================>]  1.322GB/1.322GB
-67a26de6479e: Loading layer [==================================================>]  3.072kB/3.072kB
-255aee7f07e6: Loading layer [==================================================>]  4.096kB/4.096kB
-c14fddc01369: Loading layer [==================================================>]  3.072kB/3.072kB
-b97f0ed1d218: Loading layer [==================================================>]  3.072kB/3.072kB
-73ce5852c97b: Loading layer [==================================================>]  76.28MB/76.28MB
-a498fca6502d: Loading layer [==================================================>]  77.76MB/77.76MB
-0415b038c6e8: Loading layer [==================================================>]  1.585MB/1.585MB
-2d551522dae7: Loading layer [==================================================>]  16.01MB/16.01MB
-a91442c0e04b: Loading layer [==================================================>]  2.247MB/2.247MB
-a8eddd6834af: Loading layer [==================================================>]  1.402GB/1.402GB
-5ddf96efdddb: Loading layer [==================================================>]  4.096kB/4.096kB
-9bbae90d421a: Loading layer [==================================================>]  2.956MB/2.956MB
-68c54b4d0b81: Loading layer [==================================================>]  425.5MB/425.5MB
-a31dffc45248: Loading layer [==================================================>]  1.745GB/1.745GB
-734491da9967: Loading layer [==================================================>]  3.584kB/3.584kB
-9615d9b181ea: Loading layer [==================================================>]  3.072kB/3.072kB
-Loaded image: cambricon/scm/dockerfile/mlu270_v1.5.0_ubuntu16.04.caffe:v1.0
-The image information:
-REPOSITORY                                                   TAG                 IMAGE ID            CREATED             SIZE
-cambricon/scm/dockerfile/mlu270_v1.5.0_ubuntu16.04.caffe     v1.0                563cfd55883d        3 months ago        5.2GB
-cam@cam-3630:/data/github/easy-deploy-mlu/caffe$
+#./load-image-dev.sh /data/ftp/product/GJD/MLU270/1.7.602/Ubuntu18.04/Caffe/docker/caffe-5.4.602-ubuntu18.04.tar
+./load-image-dev.sh ${FULLNAME_IMAGES}
 ```
 
 # 4. Run
 ```bash
-#启动caffe容器
-./run-mlu200-docker-ubuntu16.04.caffe.sh
-```
-```bash
-cam@cam-3630:/data/github/easy-deploy-mlu/caffe$ ./run-mlu200-docker-ubuntu16.04.caffe.sh
-0
-mlu200_container-ubuntu16.04.caffe-v1.5.0
-root@cam-3630:/opt/cambricon# ls
-Cambricon-CNPlugin-MLU270.tar.gz  caffe  configure_caffe.sh  env_caffe.sh  run_caffe.sh
-root@cam-3630:/opt/cambricon#
-```
-
-# 5. Test
-```bash
-#设置环境变量(该步骤每次进入docker都需要操作)
-source env_caffe.sh
-```
-
-```bash
-root@cam-3630:/opt/cambricon# ls -la
-total 1369060
-drwxr-xr-x 1 root root       4096 Aug 27 04:18 .
-drwxr-xr-x 1 root root       4096 Aug 27 04:09 ..
--rw-r--r-- 1 root root 1401884819 Aug 26 16:49 Cambricon-CNPlugin-MLU270.tar.gz
-drwxr-xr-x 1 root root       4096 Aug 27 04:15 caffe
--rwxr-xr-x 1 root root        323 Aug 26 16:44 configure_caffe.sh
--rw-r--r-- 1 root root       1029 Aug 26 16:44 env_caffe.sh
--rwxr-xr-x 1 root root        238 Aug 26 16:44 run_caffe.sh
-root@cam-3630:/opt/cambricon# source env_caffe.sh
-root@cam-3630:/opt/cambricon#
+#启动容器
+./run-container-dev.sh
 ```

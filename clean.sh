@@ -1,8 +1,11 @@
 #/bin/bash
 set -e
 
+#Dockerfile(16.04/18.04/CentOS)
+OSVer="16.04"
+if [[ $# -ne 0 ]];then OSVer="${1}";fi
 # 1.Source env
-source "./env.sh"
+source ./env.sh $OSVer
 
 # 2.rm docker container
 #sudo docker stop `sudo docker ps -a | grep container-ubuntu16.04-caffe-v1.6.0 | awk '{print $1}'`

@@ -36,38 +36,9 @@ apt install --no-install-recommends -y \
     update-alternatives --install /usr/bin/python python /usr/bin/python2 100 \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3 99 \
     && sed -i "s/\/usr\/bin\/python.*/\/usr\/bin\/python2/g" /usr/bin/pip2 \
-    && ln -s /usr/bin/pip2  /usr/bin/pip -f \
-    && pip install --upgrade pip
+    && ln -s /usr/bin/pip2  /usr/bin/pip -f
 
-    #pip2&pip3安装
-    pip2 install cycler==0.9.0 \
-    && pip2 install decorator==4.0.6 \
-    && pip2 install future==0.18.2 \
-    && pip2 install nose==1.3.7 \
-    && pip2 install pyparsing==2.0.3 \
-    && pip2 install Pyste==0.9.10 \
-    && pip2 install python-dateutil==2.4.2 \
-    && pip2 install pytz==2014.10 \
-    && pip2 install six==1.10.0 \
-    && pip2 install numpy==1.11.1 \
-    && pip2 install scikit-build \
-    && pip2 install Cython\
-    && pip2 install opencv-python==4.2.0.32\
-    && pip2 install psutil \
-    && pip2 install pydot \
-    && pip2 install matplotlib==2.0.0 \
-    && pip2 install Pillow==6.1 \
-    && pip2 install scipy==1.2 \
-    && pip2 install PyWavelets==1.0.1 \
-    && pip2 install scikit-image==0.10.1 \
-    && pip2 install protobuf==3.15.7 \
-    && pip2 install virtualenv==15.1.0\
-    && pip2 install dask==1.2.2\
-    && pip2 install pycocotools==2.0.0\
-    && echo -e "\033[0;32m[pip2 install... Done] \033[0m" \
-    && pip3 install numpy==1.16 \
-    && pip3 install protobuf \
-    && pip3 install virtualenv==15.1.0 \
-    && pip3 install graphviz \
+    #pip2&pip3安装。 第三方依赖包列表可在 PyTorch 源码主目录下的 requirements.txt 中查询。
+    pip install -r requirements.txt \
     && apt-get clean \
-    && echo -e "\033[0;32m[pip3 install... Done] \033[0m"
+    && echo -e "\033[0;32m[pip install -r requirements.txt... Done] \033[0m"

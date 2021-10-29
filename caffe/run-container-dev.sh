@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 # -------------------------------------------------------------------------------
-# Filename:     run-container-ubuntu16.04-dev.sh
+# Filename:     run-container-dev.sh
 # UpdateDate:   2021/04/26
 # Description:  Run docker image for IDE.
-# Example:      ./run-container-ubuntu16.04-dev.sh
+# Example:      ./run-container-dev.sh
 # Depends:      container-$OS-$PATH_WORK-$VERSION
 # Notes:
 # -------------------------------------------------------------------------------
@@ -12,7 +12,7 @@ set -e
 source "./env.sh"
 ######Modify according to your development environment#####
 #Share path on the host
-PATH_SHARE_HOST="$PWD"
+PATH_SHARE_HOST="$PWD/../"
 #Share path on the docker container
 PATH_SHARE_DOCKER="/home/share"
 #SDK path on the host

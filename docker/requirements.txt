@@ -1,0 +1,26 @@
+decorator==4.3.0; python_version <= '2.7'
+pytest==3.4.0
+scipy==1.1.0
+munch==2.2.0
+opencv-python==3.4.2.17
+matplotlib==2.2.2
+scikit-image==0.14.2
+pillow==5.2.0
+sacred==0.7.2
+tqdm==4.19.5
+shapely==1.7.0
+lanms==1.0.2; python_version >= '3.4'
+pandas==0.23.2
+numpy==1.16.0; python_version < '3.7'
+numpy==1.20.1; python_version >= '3.7'
+tensorboardX==1.0
+boto3==1.5.22
+requests==2.18.4
+scikit-learn==0.19.2
+regex==2018.2.3
+nltk==3.2.5
+yacs==0.1.6
+onnx==1.6.0
+typing==3.7.4.3
+cpplint; python_version >= '3.5'
+pylint; python_version >= '3.5'
