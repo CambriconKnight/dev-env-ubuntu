@@ -15,7 +15,7 @@
 
 *本工具集仅用于个人学习，打通流程； 不对效果负责，不承诺商用。*
 
-**网络移植教程图谱**
+## 网络移植图谱
 
 *以下仅为常用网络MLU移植教程，并未包含寒武纪支持的全部网络, 如有新网络需求, 可在 [issue](https://gitee.com/cambriconknight/mlu220-cross-compile-docker-image/issues) 区讨论。*
 
@@ -55,20 +55,20 @@
 
 *注:Cambricon Caffe/Pytorch 框架 支持CPU、MLU（逐层模式）和MFUS（融合模式）三种模式上运行。*
 
-**硬件环境准备:**
+## 硬件环境准备
 
 | 名称           | 数量      | 备注                  |
 | :------------ | :--------- | :------------------ |
 | 开发主机/服务器  | 一台       |主流配置即可；电源功率大于500W；PCIe Gen.3 x16 |
 | MLU270-F4/S4   | 一套       |使用板卡自带的8pin连接器连接主机电源|
 
-**软件环境准备:**
+## 软件环境准备
 
 | 名称                   | 版本/文件                                              | 备注                                  |
 | :-------------------- | :-------------------------------                      | :----------------------------------  |
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                       | 宿主机操作系统                         |
-| Driver_MLU270         | neuware-mlu270-driver-dkms_4.9.2_all.deb              | 依操作系统选择                         |
-| CNToolkit_MLU270      | cntoolkit_1.7.3-2.ubuntu16.04_amd64.deb               | 依操作系统选择                         |
+| Driver_MLU270         | neuware-mlu270-driver-aarch64-4.9.8.tar.gz            | 依操作系统选择                         |
+| CNToolkit_MLU270      | cntoolkit_1.7.5-1.ubuntu16.04_amd64.deb               | 依操作系统选择                         |
 | CNML_MLU270           | cnml_7.10.3-1.ubuntu16.04_amd64.deb                   | 依操作系统选择                         |
 | CNPlugin_MLU270       | cnplugin_1.12.4-1.ubuntu16.04_amd64.deb               | 依操作系统选择                         |
 | CNNL_MLU270           | cnnl_1.3.0-1.ubuntu16.04_amd64.deb                    | 依操作系统选择                         |
@@ -76,7 +76,7 @@
 
 注: 以上软件环境中文件名词, 如有版本升级及名称变化, 可以在 [env.sh](./env.sh) 中进行修改。
 
-**下载地址:**
+## 资料下载
 
 Ubuntu16.04: http://mirrors.aliyun.com/ubuntu-releases/16.04
 
@@ -89,6 +89,9 @@ Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
 其他开发资料, 可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载。也可在官方提供的专属FTP账户指定路径下载。
 
 # 2. Structure
+
+以下基于 Dockerfile 自行编译各个框架镜像。也可进入对应AI框架目录(如:caffe/pytorch目录)直接运行脚本加载官网提供的镜像。
+
 ## 2.1. 脚本
 ```bash
 .
@@ -98,13 +101,17 @@ Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
 └── save-image-ubuntu-dev.sh
 ```
 ## 2.2. 依赖项
-`driver`: [neuware-mlu270-driver-dkms_4.9.2_all.deb](ftp://download.cambricon.com:8821/product/MLU270/1.6.602/driver)
+`driver`: [neuware-mlu270-driver-aarch64-4.9.8.tar.gz](ftp://download.cambricon.com:8821/product/GJD/MLU270/1.7.604/Ubuntu16.04/Driver/neuware-mlu270-driver-aarch64-4.9.8.tar.gz)
 
-`cntoolkit`: [cntoolkit_1.7.2-1.ubuntu16.04_amd64.deb](ftp://download.cambricon.com:8821/product/MLU270/1.6.602/cntoolkit/X86_64/ubuntu16.04)
+`cntoolkit`: [cntoolkit_1.7.5-1.ubuntu16.04_amd64.deb](ftp://download.cambricon.com:8821/product/GJD/MLU270/1.7.602/Ubuntu16.04/CNToolkit/cntoolkit_1.7.5-1.ubuntu16.04_amd64.deb)
 
-`cnml`: [cnml_7.9.4-1.ubuntu16.04_amd64.deb](ftp://download.cambricon.com:8821/product/MLU270/1.6.602/cnml/ubuntu16.04)
+`cnml`: [cnml_7.10.3-1.ubuntu16.04_amd64.deb](ftp://download.cambricon.com:8821/product/GJD/MLU270/1.7.602/Ubuntu16.04/CNML/cnml_7.10.3-1.ubuntu16.04_amd64.deb)
 
-`cnplugin`: [cnplugin_1.10.106-1.ubuntu16.04_amd64.deb](ftp://download.cambricon.com:8821/product/MLU270/1.6.602/cnplugin/ubuntu16.04)
+`cnplugin`: [cnplugin_1.12.4-1.ubuntu16.04_amd64.deb](ftp://download.cambricon.com:8821/product/GJD/MLU270/1.7.602/Ubuntu16.04/CNPlugin/cnplugin_1.12.4-1.ubuntu16.04_amd64.deb)
+
+`cnnl`: [cnnl_1.3.0-1.ubuntu16.04_amd64.deb](ftp://download.cambricon.com:8821/product/GJD/MLU270/1.7.602/Ubuntu16.04/CNNL/cnnl_1.3.0-1.ubuntu16.04_amd64.deb)
+
+`cncl`: [cncl_0.8.0-1.ubuntu16.04_amd64.deb](ftp://download.cambricon.com:8821/product/GJD/MLU270/1.7.602/Ubuntu16.04/CNCL/cncl_0.8.0-1.ubuntu16.04_amd64.deb)
 
 # 3. Clone
 ```bash
@@ -133,6 +140,9 @@ git clone https://github.com/CambriconKnight/dev-env-ubuntu.git
 ```
 
 # 7. Install Dependent
+
+Caffe/Pytorch 框架编译安装前，需要安装CNToolkit 软件包和 CNML、CNNL、CNPlugin、CNCL 等组件。具体安装步骤，参见《寒武纪CNToolkit 软件包安装升级使用手册》和相应的寒武纪用户手册。
+
 ## 7.1. CNToolkit
 ```bash
 #以下操作都在容器中操作
