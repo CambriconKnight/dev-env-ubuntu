@@ -18,42 +18,41 @@
 ## 网络移植图谱
 
 *以下仅为常用网络MLU移植教程，并未包含寒武纪支持的全部网络, 如有新网络需求, 可在 [issue](https://gitee.com/cambriconknight/mlu220-cross-compile-docker-image/issues) 区讨论。*
+*在Cambricon Caffe/TF/Pytorch 框架下可支持CPU、MLU（逐层模式）和MFUS（融合模式）三种模式上运行。*
 
-|  AI框架 | 应用领域  | 网络   | CPU | MLU | MFUS | OFFLINE |
-|:----  |:-------  |:----   |:----:    |:----: |:----: |:----: |
-| Caffe | 图像分类（Image Classification）  | [AlexNet](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/alexnet)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 图像分类（Image Classification）  | [ResNet-18](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/resnet18)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 图像分类（Image Classification）  | [ResNet-50](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/resnet50)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 图像分类（Image Classification）  | [VGG16](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/vgg16)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 图像分类（Image Classification）  | [MobileNetV1](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/mobilenetv1)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 图像分类（Image Classification）  | [MobileNetV2](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/mobilenetv2)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 图像分类（Image Classification）  | [DenseNet121](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/densenet121)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 目标检测（Object Detection）  | [Faster R-CNN](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/faster-rcnn)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 目标检测（Object Detection）  | [RFCN](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/rfcn)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 目标检测（Object Detection）  | [MTCNN](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/mtcnn)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 目标检测（Object Detection）  | [SSD-VGG16](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/ssd-vgg16)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 目标检测（Object Detection）  | [YOLOv3-DarkNet53](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/yolov3-416)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 目标检测（Object Detection）  | [YOLOv4](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/yolov4‑mish‑416)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 语义分割（Semantic Segmentation）  | [SegNet](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/segnet)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Caffe | 关键点检测（Keypoint Detection）  | [OpenPose](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/openpose)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 图像分类（Image Classification）  | [ResNet-34](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/resnet34)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 图像分类（Image Classification）  | [ResNet-50](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/resnet50)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 图像分类（Image Classification）  | [ResNet-101](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/resnet101)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 图像分类（Image Classification）  | [VGG16](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/vgg16)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 图像分类（Image Classification）  | [MobileNetV1](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/mobilenetv1)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 图像分类（Image Classification）  | [MobileNetV2](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/mobilenetv2)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 图像分类（Image Classification）  | [MobileNetV3](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/mobilenetv3)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 图像分类（Image Classification）  | [DenseNet121](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/densenet121)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 目标检测（Object Detection）  | [Faster R-CNN](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/faster-rcnn)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 目标检测（Object Detection）  | [Mask R-CNN](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/mask-rcnn)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 目标检测（Object Detection）  | [SSD-VGG16](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/ssd-vgg16)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 目标检测（Object Detection）  | [YOLOv3](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/yolov3)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 目标检测（Object Detection）  | [YOLOv4](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/yolov4)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 目标检测（Object Detection）  | [YOLOv4-Tiny](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/yolov4-tiny)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 目标检测（Object Detection）  | [YOLOv5](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/yolov5)  |  ✅ |  ✅ |  ✅ |  ✅ |
-| Pytorch | 目标检测（Object Detection）  | [CenterNet](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/centernet)  |  ✅ |  ✅ |  ✅ |  ✅ |
 
-*注:Cambricon Caffe/Pytorch 框架 支持CPU、MLU（逐层模式）和MFUS（融合模式）三种模式上运行。*
+|  AI框架 | 应用领域  | 原始网络  | 网络移植教程   | CPU | MLU | MFUS | OFFLINE |
+|:----  |:-------  |:----   |:----   |:----:    |:----: |:----: |:----: |
+| Caffe | 图像分类  | [AlexNet](https://github.com/BVLC/caffe/tree/master/models/bvlc_alexnet)  | [MLU算法移植教程-AlexNet](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/alexnet)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 图像分类  | [ResNet-18](https://github.com/HolmesShuan/ResNet-18-Caffemodel-on-ImageNet)  | [MLU算法移植教程-ResNet18](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/resnet18)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 图像分类  | [ResNet-50](https://github.com/KaimingHe/deep-residual-networks)  | [MLU算法移植教程-ResNet50](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/resnet50)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 图像分类  | [VGG16](https://www.robots.ox.ac.uk/~vgg/research/very_deep/)  | [MLU算法移植教程-VGG16](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/vgg16)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 图像分类  | [MobileNetV1](https://github.com/chuanqi305/MobileNet-SSD)  | [MLU算法移植教程-MobileNetV1](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/mobilenetv1)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 图像分类  | [MobileNetV2](https://github.com/eric612/MobileNet-SSD-windows/tree/master/models/MobileNetV2)  | [MLU算法移植教程-MobileNetV2](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/mobilenetv2)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 目标检测  | [Faster R-CNN](https://github.com/rbgirshick/py-faster-rcnn)  | [MLU算法移植教程-FasterRCNN](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/faster-rcnn)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 目标检测  | [RFCN](https://github.com/YuwenXiong/py-R-FCN)  | [MLU算法移植教程-RFCN](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/rfcn)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 目标检测  | [MTCNN](https://github.com/kpzhang93/MTCNN_face_detection_alignment)  | [MLU算法移植教程-MTCNN](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/mtcnn)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 目标检测  | [SSD-VGG16](https://github.com/weiliu89/caffe/tree/ssd)  | [MLU算法移植教程-SSD](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/ssd-vgg16)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 目标检测  | [YOLOv3](https://github.com/pjreddie/darknet)  | [MLU算法移植教程-YOLOv3](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/yolov3-416)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 目标检测  | [YOLOv4](https://github.com/pjreddie/darknet)  | [MLU算法移植教程-YOLOv4](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/yolov4‑mish‑416)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 语义分割  | [SegNet](https://github.com/alexgkendall/SegNet-Tutorial)  | [MLU算法移植教程-SegNet](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/segnet)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Caffe | 关键点检测  | [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose)  | [MLU算法移植教程-OpenPose](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/caffe/openpose)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 图像分类  | [ResNet-34](https://github.com/pytorch/vision)  | [MLU算法移植教程-ResNet34](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/resnet34)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 图像分类  | [ResNet-50](https://github.com/pytorch/vision)  | [MLU算法移植教程-ResNet50](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/resnet50)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 图像分类  | [ResNet-101](https://github.com/pytorch/vision)  | [MLU算法移植教程-ResNet101](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/resnet101)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 图像分类  | [VGG16](https://github.com/pytorch/vision)  | [MLU算法移植教程-VGG16](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/vgg16)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 图像分类  | [MobileNetV1](https://modelzoo.co/model/pytorch-mobilenet)  | [MLU算法移植教程-MobileNetV1](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/mobilenetv1)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 图像分类  | [MobileNetV2](https://modelzoo.co/model/mobilenetv2)  | [MLU算法移植教程-MobileNetV2](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/mobilenetv2)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 图像分类  | [DenseNet121](https://github.com/pytorch/vision/blob/main/torchvision/models/densenet.py)  | [MLU算法移植教程-DenseNet121](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/densenet121)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 目标检测  | [Faster R-CNN](https://github.com/pytorch/vision)  | [MLU算法移植教程-FasterRCNN](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/faster-rcnn)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 目标检测  | [Mask R-CNN](https://github.com/facebookresearch/maskrcnn-benchmark)  | [MLU算法移植教程-MaskRCNN](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/mask-rcnn)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 目标检测  | [SSD-VGG16](https://github.com/amdegroot/ssd.pytorch)  | [MLU算法移植教程-SSD](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/ssd-vgg16)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 目标检测  | [YOLOv3](https://modelzoo.co/model/pytorch-yolov3-pytorch)  | [MLU算法移植教程-YOLOv3](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/yolov3)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 目标检测  | [YOLOv4](https://github.com/AlexeyAB/darknet.git)  | [MLU算法移植教程-YOLOv4](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/yolov4)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 目标检测  | [YOLOv4-Tiny](https://github.com/AlexeyAB/darknet.git)  | [MLU算法移植教程-YOLOv4Tiny](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/yolov4-tiny)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 目标检测  | [YOLOv5](https://github.com/ultralytics/yolov5.git)  | [MLU算法移植教程-YOLOv5](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/yolov5)  |  ✅ |  ✅ |  ✅ |  ✅ |
+| Pytorch | 目标检测  | [CenterNet](https://github.com/xingyizhou/CenterNet)  | [MLU算法移植教程-CenterNet](https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch/centernet)  |  ✅ |  ✅ |  ✅ |  ✅ |
+
 
 ## 硬件环境准备
 
