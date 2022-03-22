@@ -95,9 +95,9 @@ MODDEL_NAME_ORG=yolov5s.pt		#需要转换的模型名称,如果是使用自己�
 ```
 
 ### 3.2.2 Docker环境
-使用目录[./algntorch/docker](./algntorch/docker)下的文件，可以快速构建一个用于yolov5模型降版本的容器。
+使用目录[./aligntorch/docker](./aligntorch/docker)下的文件，可以快速构建一个用于yolov5模型降版本的容器。
 
-使用说明，请参考[./algntorch/docker/readme.md](./algntorch/docker/readme.md)文件。
+使用说明，请参考[./aligntorch/docker/readme.md](./aligntorch/docker/readme.md)文件。
 
 加载容器后，进入当前目录，执行上一节版本对齐脚本。
 
