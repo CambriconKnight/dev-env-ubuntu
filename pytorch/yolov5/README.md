@@ -51,7 +51,7 @@ Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
 ## 2.4. 安装Docker
 Docker安装参见：https://docs.docker.com/engine/install/
 
-# 3. 对齐Torch版本 
+# 3. 对齐Torch版本
 由于官方 YOLOv5 依赖 PyTorch 版本 >=1.6， 寒武纪版本为1.3. 所以在进行模型转换操作前，需要在标准pytorch 环境中（非MLU版本）， 将网络模型转换为 Torch 版本为1.3的模型文件。该操作可以有两种方式实现：  1、主机环境；2、Docker环境。操作之前需要从官网或者自训练工程中，准备网络模型。
 
 ## 3.1. 准备网络模型
@@ -73,7 +73,7 @@ Docker安装参见：https://docs.docker.com/engine/install/
 
 以下操作基于HOST主机环境，实现网络模型版本对齐。步骤如下：
 
-1. 确认Host主机，已安装pytorch，版本>=1.6； 
+1. 确认Host主机，已安装pytorch，版本>=1.6；
 pytorch安装方法参考：https://pytorch.org/get-started/locally/
 
 2. 复制目录【aligntorch】到Host主机任意目录，并进入【aligntorch】目录；
@@ -95,9 +95,9 @@ MODDEL_NAME_ORG=yolov5s.pt		#需要转换的模型名称,如果是使用自己�
 ```
 
 ### 3.2.2 Docker环境
-使用目录./algntorch/docker下的文件，可以快速构建一个用于yolov5模型降版本的容器。
+使用目录[./algntorch/docker](./algntorch/docker)下的文件，可以快速构建一个用于yolov5模型降版本的容器。
 
-使用说明，请参考./algntorch/docker/readme.md文件。
+使用说明，请参考[./algntorch/docker/readme.md](./algntorch/docker/readme.md)文件。
 
 加载容器后，进入当前目录，执行上一节版本对齐脚本。
 
