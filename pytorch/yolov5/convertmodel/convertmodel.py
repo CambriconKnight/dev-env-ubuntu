@@ -91,7 +91,7 @@ class DetectMark():
             state_dict = torch.load(self.model_path)
             self.quantized_net.load_state_dict(state_dict, strict=False)
             self.quantized_net_mlu = self.quantized_net.to(self.device)
-                     
+
         #self.names = ['mark', 'top_window', 'tissue_box', 'roof_rack', 'pendant', 'spaer_wheel_rack']#self.model.names if hasattr(self.model, 'names') else self.model.modules.names
         self.names=['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', \
                 'boat', 'traffic light', 'fire hydrant', 'stop sign', 'parking meter', 'bench', \
@@ -119,9 +119,9 @@ class DetectMark():
             #img = torch.from_numpy(img).to('cuda').float()
             img = torch.from_numpy(img).float()
             img /= 255.0  # 0 - 255 to 0.0 - 1.0
-            if img.ndimension() == 3: 
+            if img.ndimension() == 3:
                 img = img.unsqueeze(0)
-            
+
             if self.running_mode == 'cpu' or self.running_mode == 'quant':
                 if self.running_mode == 'quant':
                     qconfig={'iteration': 1, 'use_avg':False, 'data_scale':1.0, 'firstconv':False, 'per_channel': False}
@@ -129,7 +129,7 @@ class DetectMark():
                     quantized_net = quantized_net.eval().float()
                     pred = quantized_net(img, augment=False)[0]
                     torch.save(quantized_net.state_dict(), 'yolov5_quant.pth')
-                else:    
+                else:
                     pred = self.model(img, augment=False)[0]
                 # Apply NMS
                 pred = non_max_suppression(pred, conf_thres, iou_thres)
@@ -148,7 +148,7 @@ class DetectMark():
             elif self.running_mode == 'mlu':
                 device = self.device
                 pred = self.quantized_net_mlu(img.to(device))
-                
+
                 pred = pred.to(torch.device('cpu'))
                 pred = get_boxes(pred)
                 print(pred)
@@ -169,7 +169,7 @@ class DetectMark():
                 if self.gen_off:
                     print('generate offline model')
                     ct.save_as_cambricon('yolov5s_int8_4b_4c')
-                torch.set_grad_enabled(False) 
+                torch.set_grad_enabled(False)
                 batch_size = 4
                 ct.set_core_number(4)
                 ct.set_core_version('MLU270')
@@ -212,7 +212,7 @@ if __name__ == '__main__':
 #    parser.add_argument('--model-path', type=str, default=None)
     opt = parser.parse_args()
     DM = DetectMark(opt)
-    img = cv2.imread('./bus.jpg')
+    img = cv2.imread('./data/bus.jpg')
     det_result = DM.detect_img(img)
 #    print(det_result)
 
