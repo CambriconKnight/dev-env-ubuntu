@@ -1,13 +1,11 @@
 #!/bin/bash
 set -e
 # -------------------------------------------------------------------------------
-# Filename:     run-container-ffmpeg-mlu.sh
+# Filename:     run-container-yolov5-align.sh
 # UpdateDate:   2022/02/08
 # Description:  Run docker image for IDE.
 # Example:
-#               ./run-container-ffmpeg-mlu.sh
-#               ./run-container-ffmpeg-mlu.sh 16.04
-#               ./run-container-ffmpeg-mlu.sh 18.04
+#               ./run-container-yolov5-align.sh
 # Depends:      container-$OS-$PATH_WORK-$VERSION
 # Notes:
 # -------------------------------------------------------------------------------

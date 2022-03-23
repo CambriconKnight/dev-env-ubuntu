@@ -1,13 +1,11 @@
 #!/bin/bash
 set -e
 # -------------------------------------------------------------------------------
-# Filename:     load-image-ffmpeg-mlu.sh
-# UpdateDate:   2022/02/08
+# Filename:     load-image-yolov5-align.sh
+# UpdateDate:   2022/03/23
 # Description:  Loading docker image for IDE.
 # Example:
-#               ./load-image-ffmpeg-mlu.sh
-#               ./load-image-ffmpeg-mlu.sh 16.04
-#               ./load-image-ffmpeg-mlu.sh 18.04
+#               ./load-image-yolov5-align.sh
 # Depends:      image-$OS-$PATH_WORK-$VERSION.tar.gz
 # Notes:
 # -------------------------------------------------------------------------------

@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 # -------------------------------------------------------------------------------
-# Filename:     save-image-ffmpeg-mlu.sh
+# Filename:     save-image-yolov5-align.sh
 # UpdateDate:   2022/02/08
 # Description:  1. commit: 提交容器到镜像，实现容器持久化；
 #               2. save: 导出镜像文件，实现镜像内容持久化。
 # Example:
-#               ./save-image-ffmpeg-mlu.sh
-#               ./save-image-ffmpeg-mlu.sh 16.04
-#               ./save-image-ffmpeg-mlu.sh 18.04
+#               ./save-image-yolov5-align.sh
+#               ./save-image-yolov5-align.sh 16.04
+#               ./save-image-yolov5-align.sh 18.04
 # Depends:
 # Notes:
 # -------------------------------------------------------------------------------

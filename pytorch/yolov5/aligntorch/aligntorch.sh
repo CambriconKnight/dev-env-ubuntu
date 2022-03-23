@@ -10,16 +10,6 @@ set -e
 #               dev-env-ubuntu(https://github.com/CambriconKnight/dev-env-ubuntu)
 # Notes:
 # -------------------------------------------------------------------------------
-# -------------------------------------------------------------------------------
-# Filename:     build-image-yolov5-align.sh
-# UpdateDate:   2022/02/08
-# Description:  Build docker images for yolov5-align.
-# Example:      ./build-image-yolov5-align.sh
-# Depends:
-#               YOLOv5(git clone https://github.com/ultralytics/yolov5 -b v5.0)
-#               https://github.com/ultralytics/yolov5/archive/refs/tags/v5.0.tar.gz
-# Notes:
-# -------------------------------------------------------------------------------
 #################### main ####################
 WEIGHTS_DIR=$PWD/weights			#原始模型存放路径
 OUTPUT_DIR=$PWD/output				#输出模型存放路径
