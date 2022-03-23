@@ -79,10 +79,10 @@ Ubuntu18.04: http://mirrors.aliyun.com/ubuntu-releases/18.04
 ./run-container-yolov5-align.sh
 ```
 
-# 6.Align
+# 6. Align
 
 *该脚本默认会自动下载并转换 YOLOv5 官方的 yolov5s.pt 模型，输出路径为【output】,输出文件默认名称为yolov5s.pth。*
-*用户转换自己训练的模型时， 替换【weights】目录下的模型文件或修改aligntorch脚本中需要转换的模型名称的宏定义 MODDEL_NAME_ORG。*
+*用户转换自己训练的模型时， 替换【weights】目录下的模型文件或修改[aligntorch.sh](./aligntorch.sh)脚本中需要转换的模型名称的宏定义 MODDEL_NAME_ORG。*
 
 ```bash
 #执行测试脚本
