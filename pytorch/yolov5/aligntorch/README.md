@@ -6,7 +6,7 @@
 
 # 1. 概述
 
-由于官方 [YOLOv5](https://github.com/ultralytics/yolov5) 依赖 PyTorch 版本 >=1.6， 而寒武纪版本为1.3。 所以在进行YOLOv5模型转换操作前，需要在标准pytorch 环境中（非MLU版本）， 将模型权重转换为 Torch 版本为1.3的模型文件。该操作可以有两种方式实现： 1、主机环境；2、Docker环境。本章节操作基于Docker环境进行环境搭建与对齐操作说明.
+由于官方 [YOLOv5](https://github.com/ultralytics/yolov5) 依赖 PyTorch 版本 >=1.6， 而寒武纪版本为1.3。 所以在进行YOLOv5模型转换操作前，需要在标准pytorch 环境中（非MLU版本），将模型权重转换为 Torch 版本为1.3的模型文件， 本文基于Docker环境进行环境搭建与对齐操作说明。
 
 *本工具集仅用于个人学习，打通流程； 不对效果负责，不承诺商用。*
 
@@ -27,6 +27,11 @@
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7   | 宿主机操作系统   |
 | YOLOv5                | v5.0   | 自动[下载](https://github.com/ultralytics/yolov5/archive/refs/tags/v5.0.tar.gz)    |
 | yolov5s.pt            | v5.0   | 自动[下载](https://github.com/ultralytics/yolov5/releases/download/v5.0/yolov5s.pt)    |
+| yolov5m.pt            | v5.0   | 自动[下载](https://github.com/ultralytics/yolov5/releases/download/v5.0/yolov5m.pt)    |
+| yolov5l.pt            | v5.0   | 自动[下载](https://github.com/ultralytics/yolov5/releases/download/v5.0/yolov5l.pt)    |
+| yolov5x.pt            | v5.0   | 自动[下载](https://github.com/ultralytics/yolov5/releases/download/v5.0/yolov5x.pt)    |
+
+*以上软件包可下载到本地[dependent_files](./dependent_files)目录下,方便对应以下步骤中的提示操作。*
 
 ## 1.3. 资料下载
 
