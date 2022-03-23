@@ -1,286 +1,92 @@
-<div align="center">
-<p>
-<a align="left" href="https://ultralytics.com/yolov5" target="_blank">
-<img width="850" src="https://github.com/ultralytics/yolov5/releases/download/v1.0/splash.jpg"></a>
-</p>
-<br>
-<div>
-<a href="https://github.com/ultralytics/yolov5/actions"><img src="https://github.com/ultralytics/yolov5/workflows/CI%20CPU%20testing/badge.svg" alt="CI CPU testing"></a>
-<a href="https://zenodo.org/badge/latestdoi/264818686"><img src="https://zenodo.org/badge/264818686.svg" alt="YOLOv5 Citation"></a>
-<br>  
-<a href="https://colab.research.google.com/github/ultralytics/yolov5/blob/master/tutorial.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"></a>
-<a href="https://www.kaggle.com/ultralytics/yolov5"><img src="https://kaggle.com/static/images/open-in-kaggle.svg" alt="Open In Kaggle"></a>
-<a href="https://hub.docker.com/r/ultralytics/yolov5"><img src="https://img.shields.io/docker/pulls/ultralytics/yolov5?logo=docker" alt="Docker Pulls"></a>
-</div>
-  <br>
-  <div align="center">
-    <a href="https://github.com/ultralytics">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-github.png" width="2%"/>
-    </a>
-    <img width="2%" />
-    <a href="https://www.linkedin.com/company/ultralytics">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-linkedin.png" width="2%"/>
-    </a>
-    <img width="2%" />
-    <a href="https://twitter.com/ultralytics">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-twitter.png" width="2%"/>
-    </a>
-    <img width="2%" />
-    <a href="https://youtube.com/ultralytics">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-youtube.png" width="2%"/>
-    </a>
-    <img width="2%" />
-    <a href="https://www.facebook.com/ultralytics">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-facebook.png" width="2%"/>
-    </a>
-    <img width="2%" />
-    <a href="https://www.instagram.com/ultralytics/">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-instagram.png" width="2%"/>
-    </a>
-</div>
-
-<br>
-<p>
-YOLOv5 🚀 is a family of object detection architectures and models pretrained on the COCO dataset, and represents <a href="https://ultralytics.com">Ultralytics</a>
- open-source research into future vision AI methods, incorporating lessons learned and best practices evolved over thousands of hours of research and development.
-</p>
-
-<!-- 
-<a align="center" href="https://ultralytics.com/yolov5" target="_blank">
-<img width="800" src="https://github.com/ultralytics/yolov5/releases/download/v1.0/banner-api.png"></a>
--->
-
-</div>
-
-## <div align="center">Documentation</div>
-
-See the [YOLOv5 Docs](https://docs.ultralytics.com) for full documentation on training, testing and deployment.
-
-## <div align="center">Quick Start Examples</div>
-
-<details open>
-<summary>Install</summary>
-
-[**Python>=3.6.0**](https://www.python.org/) is required with all
-[requirements.txt](https://github.com/ultralytics/yolov5/blob/master/requirements.txt) installed including
-[**PyTorch>=1.7**](https://pytorch.org/get-started/locally/):
-<!-- $ sudo apt update && apt install -y libgl1-mesa-glx libsm6 libxext6 libxrender-dev -->
-
-```bash
-$ git clone https://github.com/ultralytics/yolov5
-$ cd yolov5
-$ pip install -r requirements.txt
-```
-
-</details>
-
-<details open>
-<summary>Inference</summary>
-
-Inference with YOLOv5 and [PyTorch Hub](https://github.com/ultralytics/yolov5/issues/36). Models automatically download
-from the [latest YOLOv5 release](https://github.com/ultralytics/yolov5/releases).
-
-```python
-import torch
-
-# Model
-model = torch.hub.load('ultralytics/yolov5', 'yolov5s')  # or yolov5m, yolov5l, yolov5x, custom
-
-# Images
-img = 'https://ultralytics.com/images/zidane.jpg'  # or file, Path, PIL, OpenCV, numpy, list
-
-# Inference
-results = model(img)
-
-# Results
-results.print()  # or .show(), .save(), .crop(), .pandas(), etc.
-```
-
-</details>
-
-
-
-<details>
-<summary>Inference with detect.py</summary>
-
-`detect.py` runs inference on a variety of sources, downloading models automatically from
-the [latest YOLOv5 release](https://github.com/ultralytics/yolov5/releases) and saving results to `runs/detect`.
-
-```bash
-$ python detect.py --source 0  # webcam
-                            file.jpg  # image 
-                            file.mp4  # video
-                            path/  # directory
-                            path/*.jpg  # glob
-                            'https://youtu.be/NUsoVlDFqZg'  # YouTube
-                            'rtsp://example.com/media.mp4'  # RTSP, RTMP, HTTP stream
-```
-
-</details>
-
-<details>
-<summary>Training</summary>
-
-Run commands below to reproduce results
-on [COCO](https://github.com/ultralytics/yolov5/blob/master/data/scripts/get_coco.sh) dataset (dataset auto-downloads on
-first use). Training times for YOLOv5s/m/l/x are 2/4/6/8 days on a single V100 (multi-GPU times faster). Use the
-largest `--batch-size` your GPU allows (batch sizes shown for 16 GB devices).
-
-```bash
-$ python train.py --data coco.yaml --cfg yolov5s.yaml --weights '' --batch-size 64
-                                         yolov5m                                40
-                                         yolov5l                                24
-                                         yolov5x                                16
-```
-
-<img width="800" src="https://user-images.githubusercontent.com/26833433/90222759-949d8800-ddc1-11ea-9fa1-1c97eed2b963.png">
-
-</details>  
-
-<details open>
-<summary>Tutorials</summary>
-
-* [Train Custom Data](https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data)&nbsp; 🚀 RECOMMENDED
-* [Tips for Best Training Results](https://github.com/ultralytics/yolov5/wiki/Tips-for-Best-Training-Results)&nbsp; ☘️
-  RECOMMENDED
-* [Weights & Biases Logging](https://github.com/ultralytics/yolov5/issues/1289)&nbsp; 🌟 NEW
-* [Supervisely Ecosystem](https://github.com/ultralytics/yolov5/issues/2518)&nbsp; 🌟 NEW
-* [Multi-GPU Training](https://github.com/ultralytics/yolov5/issues/475)
-* [PyTorch Hub](https://github.com/ultralytics/yolov5/issues/36)&nbsp; ⭐ NEW
-* [TorchScript, ONNX, CoreML Export](https://github.com/ultralytics/yolov5/issues/251) 🚀
-* [Test-Time Augmentation (TTA)](https://github.com/ultralytics/yolov5/issues/303)
-* [Model Ensembling](https://github.com/ultralytics/yolov5/issues/318)
-* [Model Pruning/Sparsity](https://github.com/ultralytics/yolov5/issues/304)
-* [Hyperparameter Evolution](https://github.com/ultralytics/yolov5/issues/607)
-* [Transfer Learning with Frozen Layers](https://github.com/ultralytics/yolov5/issues/1314)&nbsp; ⭐ NEW
-* [TensorRT Deployment](https://github.com/wang-xinyu/tensorrtx)
-
-</details>
-
-## <div align="center">Environments and Integrations</div>
-
-Get started in seconds with our verified environments and integrations,
-including [Weights & Biases](https://wandb.ai/site?utm_campaign=repo_yolo_readme) for automatic YOLOv5 experiment
-logging. Click each icon below for details.
-
-<div align="center">
-    <a href="https://colab.research.google.com/github/ultralytics/yolov5/blob/master/tutorial.ipynb">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-colab-small.png" width="15%"/>
-    </a>
-    <a href="https://www.kaggle.com/ultralytics/yolov5">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-kaggle-small.png" width="15%"/>
-    </a>
-    <a href="https://hub.docker.com/r/ultralytics/yolov5">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-docker-small.png" width="15%"/>
-    </a>
-    <a href="https://github.com/ultralytics/yolov5/wiki/AWS-Quickstart">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-aws-small.png" width="15%"/>
-    </a>
-    <a href="https://github.com/ultralytics/yolov5/wiki/GCP-Quickstart">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-gcp-small.png" width="15%"/>
-    </a>
-    <a href="https://wandb.ai/site?utm_campaign=repo_yolo_readme">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-wb-small.png" width="15%"/>
-    </a>
-</div>  
-
-## <div align="center">Compete and Win</div>
-
-We are super excited about our first-ever Ultralytics YOLOv5 🚀 EXPORT Competition with **$10,000** in cash prizes!
-
 <p align="center">
-  <a href="https://github.com/ultralytics/yolov5/discussions/3213">
-  <img width="850" src="https://github.com/ultralytics/yolov5/releases/download/v1.0/banner-export-competition.png"></a>
+    <a href="https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/pytorch/yolov5/aligntorch">
+        <h1 align="center">YOLOv5环境搭建与对齐模型版本</h1>
+    </a>
 </p>
 
-## <div align="center">Why YOLOv5</div>
+# 1. 概述
 
-<p align="center"><img width="800" src="https://user-images.githubusercontent.com/26833433/114313216-f0a5e100-9af5-11eb-8445-c682b60da2e3.png"></p>
-<details>
-  <summary>YOLOv5-P5 640 Figure (click to expand)</summary>
+由于官方 [YOLOv5](https://github.com/ultralytics/yolov5) 依赖 PyTorch 版本 >=1.6， 而寒武纪版本为1.3。 所以在进行YOLOv5模型转换操作前，需要在标准pytorch 环境中（非MLU版本）， 将模型权重转换为 Torch 版本为1.3的模型文件。该操作可以有两种方式实现： 1、主机环境；2、Docker环境。本章节操作基于Docker环境进行环境搭建与对齐操作说明.
 
-<p align="center"><img width="800" src="https://user-images.githubusercontent.com/26833433/114313219-f1d70e00-9af5-11eb-9973-52b1f98d321a.png"></p>
-</details>
-<details>
-  <summary>Figure Notes (click to expand)</summary>
+*本工具集仅用于个人学习，打通流程； 不对效果负责，不承诺商用。*
 
-* GPU Speed measures end-to-end time per image averaged over 5000 COCO val2017 images using a V100 GPU with batch size
-  32, and includes image preprocessing, PyTorch FP16 inference, postprocessing and NMS.
-* EfficientDet data from [google/automl](https://github.com/google/automl) at batch size 8.
-* **Reproduce** by
-  `python val.py --task study --data coco.yaml --iou 0.7 --weights yolov5s6.pt yolov5m6.pt yolov5l6.pt yolov5x6.pt`
+**说明:**
 
-</details>
+操作之前需要从官网或者自训练工程中，准备YOLOv5模型权重文件。
 
-### Pretrained Checkpoints
+## 1.1. 硬件环境准备
 
-[assets]: https://github.com/ultralytics/yolov5/releases
+| 名称            | 数量       | 备注                |
+| :-------------- | :--------- | :------------------ |
+| 开发主机/服务器 | 一台       |主流配置即可；电源功率大于500W；PCIe Gen.3 x16 |
 
-|Model |size<br><sup>(pixels) |mAP<sup>val<br>0.5:0.95 |mAP<sup>test<br>0.5:0.95 |mAP<sup>val<br>0.5 |Speed<br><sup>V100 (ms) | |params<br><sup>(M) |FLOPs<br><sup>640 (B)
-|---                    |---  |---      |---      |---      |---     |---|---   |---
-|[YOLOv5s][assets]      |640  |36.7     |36.7     |55.4     |**2.0** |   |7.3   |17.0
-|[YOLOv5m][assets]      |640  |44.5     |44.5     |63.1     |2.7     |   |21.4  |51.3
-|[YOLOv5l][assets]      |640  |48.2     |48.2     |66.9     |3.8     |   |47.0  |115.4
-|[YOLOv5x][assets]      |640  |**50.4** |**50.4** |**68.8** |6.1     |   |87.7  |218.8
-|                       |     |         |         |         |        |   |      |
-|[YOLOv5s6][assets]     |1280 |43.3     |43.3     |61.9     |**4.3** |   |12.7  |17.4
-|[YOLOv5m6][assets]     |1280 |50.5     |50.5     |68.7     |8.4     |   |35.9  |52.4
-|[YOLOv5l6][assets]     |1280 |53.4     |53.4     |71.1     |12.3    |   |77.2  |117.7
-|[YOLOv5x6][assets]     |1280 |**54.4** |**54.4** |**72.0** |22.4    |   |141.8 |222.9
-|                       |     |         |         |         |        |   |      |
-|[YOLOv5x6][assets] TTA |1280 |**55.0** |**55.0** |**72.0** |70.8    |   |-     |-
+## 1.2. 软件环境准备
 
-<details>
-  <summary>Table Notes (click to expand)</summary>
+| 名称                   | 版本/文件                                    | 备注            |
+| :-------------------- | :-------------------------------             | :--------------- |
+| Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7   | 宿主机操作系统   |
+| YOLOv5                | v5.0   | 自动[下载](https://github.com/ultralytics/yolov5/archive/refs/tags/v5.0.tar.gz)    |
+| yolov5s.pt            | v5.0   | 自动[下载](https://github.com/ultralytics/yolov5/releases/download/v5.0/yolov5s.pt)    |
 
-* AP<sup>test</sup> denotes COCO [test-dev2017](http://cocodataset.org/#upload) server results, all other AP results
-  denote val2017 accuracy.
-* AP values are for single-model single-scale unless otherwise noted. **Reproduce mAP**
-  by `python val.py --data coco.yaml --img 640 --conf 0.001 --iou 0.65`
-* Speed<sub>GPU</sub> averaged over 5000 COCO val2017 images using a
-  GCP [n1-standard-16](https://cloud.google.com/compute/docs/machine-types#n1_standard_machine_types) V100 instance, and
-  includes FP16 inference, postprocessing and NMS. **Reproduce speed**
-  by `python val.py --data coco.yaml --img 640 --conf 0.25 --iou 0.45 --half`
-* All checkpoints are trained to 300 epochs with default settings and hyperparameters (no autoaugmentation).
-* Test Time Augmentation ([TTA](https://github.com/ultralytics/yolov5/issues/303)) includes reflection and scale
-  augmentation. **Reproduce TTA** by `python val.py --data coco.yaml --img 1536 --iou 0.7 --augment`
+## 1.3. 资料下载
 
-</details>
+Ubuntu16.04: http://mirrors.aliyun.com/ubuntu-releases/16.04
 
-## <div align="center">Contribute</div>
+Ubuntu18.04: http://mirrors.aliyun.com/ubuntu-releases/18.04
 
-We love your input! We want to make contributing to YOLOv5 as easy and transparent as possible. Please see
-our [Contributing Guide](CONTRIBUTING.md) to get started.
+# 2. Structure
 
-## <div align="center">Contact</div>
+*当前仓库默认基于Docker 进行YOLOv5环境搭建与对齐模型版本。按照以下章节步骤即可快速实现YOLOv5环境搭建与对齐模型版本*
 
-For issues running YOLOv5 please visit [GitHub Issues](https://github.com/ultralytics/yolov5/issues). For business or
-professional support requests please visit [https://ultralytics.com/contact](https://ultralytics.com/contact).
+```bash
+..
+├── aligntorch.sh                       #此脚本用于对齐模型版本
+├── build-image-yolov5-align.sh         #此脚本用于编译Docker 镜像用于搭建YOLOv5环境
+├── clean.sh                            #清理Build出来的临时目录或文件,包括镜像文件,已加载的镜像,已加载的容器等
+├── docker                              #此目录主要用于存储编译Docker 镜像所需依赖文件
+│   ├── clean.sh                        #清理当前目录下新编译生存的Docker 镜像文件
+│   ├── Dockerfile.18.04                #用于编译Docker 镜像的Dockerfile 文件
+│   ├── pip.conf                        #切换python的pip源
+│   ├── pre_packages.sh                 #安装基于操作系统所需依赖包, 也可用于裸机下环境搭建
+│   ├── requirements.txt                #用于记录所有依赖包及其精确的版本号,以便新环境部署
+│   └── sources_18.04.list              #Ubuntu18.04 sources文件
+├── env.sh                              #用于设置全局环境变量
+├── load-image-yolov5-align.sh          #加载Docker 镜像
+├── README.md                           #README
+├── run-container-yolov5-align.sh       #启动Docker 容器
+├── save-image-yolov5-align.sh          #导出镜像文件，实现镜像内容持久化
+├── tools                               #常用工具存放目录
+└── weights                             #原始模型权重存放目录
+```
 
-<br>
+*如需在裸机HOST上进行环境搭建, 也可以利用本目录下[aligntorch.sh](./aligntorch.sh)脚本实现快速搭建。*
 
-<div align="center">
-    <a href="https://github.com/ultralytics">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-github.png" width="3%"/>
-    </a>
-    <img width="3%" />
-    <a href="https://www.linkedin.com/company/ultralytics">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-linkedin.png" width="3%"/>
-    </a>
-    <img width="3%" />
-    <a href="https://twitter.com/ultralytics">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-twitter.png" width="3%"/>
-    </a>
-    <img width="3%" />
-    <a href="https://youtube.com/ultralytics">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-youtube.png" width="3%"/>
-    </a>
-    <img width="3%" />
-    <a href="https://www.facebook.com/ultralytics">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-facebook.png" width="3%"/>
-    </a>
-    <img width="3%" />
-    <a href="https://www.instagram.com/ultralytics/">
-        <img src="https://github.com/ultralytics/yolov5/releases/download/v1.0/logo-social-instagram.png" width="3%"/>
-    </a>
-</div>
+# 3. Build
+```bash
+#编译 Docker 镜像
+./build-image-yolov5-align.sh
+```
+
+# 4. Load
+```bash
+#加载 Docker 镜像
+./load-image-yolov5-align.sh
+```
+
+# 5. Run
+```bash
+#启动 Docker 容器
+./run-container-yolov5-align.sh
+```
+
+# 6.Align
+
+*该脚本默认会自动下载并转换 YOLOv5 官方的 yolov5s.pt 模型，输出路径为【output】,输出文件默认名称为yolov5s.pth。*
+*用户转换自己训练的模型时， 替换【weights】目录下的模型文件或修改aligntorch脚本中需要转换的模型名称的宏定义 MODDEL_NAME_ORG。*
+
+```bash
+#执行测试脚本
+#将高Torch版本 YOLOv5 模型权重转为 Torch 版本为1.3的模型权重文件。
+cd /home/share/
+./aligntorch.sh
+```
