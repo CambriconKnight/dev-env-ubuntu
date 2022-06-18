@@ -6,7 +6,7 @@
 # Description:  1.监测以下模块信息: VPU、MLU、CPU、溫度、板卡主頻、Memory、DDR主頻等
 #               2.运行后会在当前目录下生成个log目录及对应时间戳后缀的log文件。
 #                如:./log/test-cnmon-20210122165216.225126059.log
-# Example:      直接運行腳本: ./test-cnmon.sh
+# Example:      運行腳本: ./test-cnmon.sh 0;./test-cnmon.sh all
 # Depends:      cnmon命令
 # Notes:
 # -------------------------------------------------------------------------------
