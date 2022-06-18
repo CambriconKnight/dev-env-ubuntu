@@ -8,9 +8,13 @@
 # 1. 概述
 本[工具集](https://gitee.com/cambriconknight/dev-env-ubuntu)主要基于寒武纪MLU进行移植环境的搭建及常用算法的移植与验证。力求压缩寒武纪MLU环境搭建与功能验证的时间成本, 以便快速上手[寒武纪MLU设备](https://www.cambricon.com/)。
 
+<p align="left">
+    <img alt="dev-env-ubuntu" src="./res/dev-env-ubuntu-1.png" height="360" />
+</p>
+
 >![](./res/note.gif) **功能说明：**
->- 可基于 Dockerfile 编译镜像，也可直接加载官网提供的镜像。
->- 支持 Caffe、PyTorch、TensorFlow 深度学习框架。
+>- 可基于 Dockerfile 编译镜像，也可直接加载官网提供的各类镜像(推荐)。
+>- 支持 Caffe、PyTorch、TensorFlow 深度学习框架以及MagicMind推理加速引擎。
 >- 支持常用算法的部署、移植、在线/离线推理等验证。
 
 *本工具集仅用于个人学习，打通流程； 不对效果负责，不承诺商用。*
@@ -59,7 +63,7 @@
 | 名称           | 数量      | 备注                  |
 | :------------ | :--------- | :------------------ |
 | 开发主机/服务器 | 一台       |主流配置即可；电源功率按需配置；PCIe Gen.3 x16/Gen.4 x16 |
-| MLU270/MLU370    | 一套       |  |
+| MLU270/MLU370    | 一套       | 不同型号板卡尽量避免混插混用 |
 
 ## 软件环境准备
 
