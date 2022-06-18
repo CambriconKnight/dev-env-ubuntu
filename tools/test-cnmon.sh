@@ -10,11 +10,27 @@
 # Depends:      cnmon命令
 # Notes:
 # -------------------------------------------------------------------------------
-
-TIMESLEEP=1
+#一个循环时间 = 4 * TimeSleep4Middle + TimeSleep4While
+TimeSleep4While=1
+TimeSleep4Middle=0.5
+StringGrep="Video|MLU|Cluster|Board|Device CPU Chip|DDR"
+StringError="Error: You must provide [a card number]/[all] as \$1 "
 DEMO_NAME="demo"
 CMD_TIME=$(date +%Y%m%d%H%M%S.%N)
 LOG_PACH="log"
+DEVICE_ID="all"
+
+if [[ $# -eq 1 ]];then
+    #判断参数$1是否为数字或者字符串[all]
+    echo "$1"|[ -n "`sed -n '/^[0-9][0-9]*$/p'`" ]
+    if [ "$?" != "0" ] && [ "$1" != "all" ]; then
+        echo "${StringError}" && exit 0
+    fi
+    DEVICE_ID=$1
+else
+    echo "${StringError}" && exit 0
+fi
+
 if [ ! -d $LOG_PACH ];then
     mkdir -p $LOG_PACH
 fi
@@ -24,18 +40,26 @@ while true;
 do
     date;
     date >> ${LOG_FILENAME};
-    sleep 1;
+    sleep ${TimeSleep4Middle};
+    echo "==========================================";
+    echo "==========================================" >> $LOG_FILENAME;
+    if [[ "$DEVICE_ID" == "all" ]];then
+        cnmon info | grep -E "${StringGrep}";
+        sleep ${TimeSleep4Middle};
+        cnmon info | grep -E "${StringGrep}" >> ${LOG_FILENAME};
+        sleep ${TimeSleep4Middle};
+    else
+        cnmon info -c ${DEVICE_ID} | grep -E "${StringGrep}";
+        sleep ${TimeSleep4Middle};
+        cnmon info -c ${DEVICE_ID} | grep -E "${StringGrep}" >> ${LOG_FILENAME};
+        sleep ${TimeSleep4Middle};
+    fi
     echo "=====================";
-    cnmon info | grep -E "Video Codec|MLU|Cluster|Board|Device CPU Chip|DDR";
-    sleep 0.5;
-    cnmon info | grep -E "Video Codec|MLU|Cluster|Board|Device CPU Chip|DDR" >> ${LOG_FILENAME};
-    #cnmon >> ${LOG_FILENAME};
-    sleep 1;
     echo "=====================" >> $LOG_FILENAME;
     cnmon | grep $DEMO_NAME | wc -l;
-    sleep 0.5;
+    sleep ${TimeSleep4Middle};
     cnmon | grep $DEMO_NAME | wc -l >> $LOG_FILENAME;
-    echo "=====================" >> $LOG_FILENAME;
-    echo "=====================";
-    sleep $TIMESLEEP;
+    sleep $TimeSleep4While;
+    echo "==========================================";
+    echo "==========================================" >> $LOG_FILENAME;
 done
