@@ -75,7 +75,7 @@
 
 注: 以上软件环境中文件名词, 如有版本升级及名称变化, 可以在 [env.sh](./env.sh) 中进行修改。
 
-## 资料下载
+## 开发资料下载
 
 MLU开发文档: https://developer.cambricon.com/index/document/index/classid/3.html
 
