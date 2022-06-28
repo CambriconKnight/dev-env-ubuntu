@@ -5,7 +5,7 @@ set -e
 # UpdateDate:   2021/08/04
 # Description:  Loading docker image for IDE.
 # Example:      ./load-image-dev.sh
-# Depends:      pytorch-0.15.602-ubuntu16.04.tar
+# Depends:      tensorflow-1.4.0-2-tf1-ubuntu18.04-py3.tar
 # Notes:
 # -------------------------------------------------------------------------------
 # Source env

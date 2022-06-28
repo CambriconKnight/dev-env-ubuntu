@@ -5,7 +5,7 @@ set -e
 # UpdateDate:   2021/04/26
 # Description:  Run docker image for IDE.
 # Example:      ./run-container-dev.sh
-# Depends:      container-$OS-$PATH_WORK-$VERSION
+# Depends:      container-${PATH_WORK}-${VERSION}-${Owner}
 # Notes:
 # -------------------------------------------------------------------------------
 # Source env

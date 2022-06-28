@@ -11,33 +11,39 @@
 ## 以下信息,根据各个版本中文件实际名词填写.
 #Version
 VER="1.7.0"
+Owner="kang"
 #################### docker ####################
 #Work
 PATH_WORK="tensorflow"
 #Dockerfile(16.04/18.04/CentOS)
 OSVer="18.04"
+#Operating system
+OS="ubuntu$OSVer"
+#FrameVersion
+FrameVer="1.4.0"
 #(Dockerfile.16.04/Dockerfile.18.04/Dockerfile.CentOS)
 FILENAME_DOCKERFILE="Dockerfile.$OSVer"
 DIR_DOCKER="docker"
 #Version
 #VERSION="v${VER}"
 #1.4.0-2-tf1-ubuntu18.04-py3
-VERSION="1.4.0-2-tf1-ubuntu$OSVer-py3"
+VERSION="$FrameVer-2-tf1-$OS-py3"
 #Organization
-ORG="yellow.hub.cambricon.com/tensorflow"
-#Operating system
-OS="ubuntu$OSVer"
+ORG="yellow.hub.cambricon.com/$PATH_WORK"
 #Docker image
 #MY_IMAGE="$ORG/$OS-$PATH_WORK"
 #MY_IMAGE="yellow.hub.cambricon.com/tensorflow/tensorflow"
-MY_IMAGE="$ORG/$PATH_WORK"
+MY_IMAGE="${ORG}/${PATH_WORK}"
 #Docker image name
 NAME_IMAGE="$MY_IMAGE:$VERSION"
 #FileName DockerImage
-FILENAME_IMAGE="tensorflow-1.4.0-2-tf1-ubuntu$OSVer-py3.tar"
+FILENAME_IMAGE="$PATH_WORK-$FrameVer-2-tf1-$OS-py3.tar"
+#FILENAME_IMAGE="tensorflow-1.4.0-2-tf1-ubuntu$OSVer-py3.tar"
 FULLNAME_IMAGE="./${FILENAME_IMAGE}"
 #Docker container name
-MY_CONTAINER="container-$OS-$PATH_WORK-$VERSION"
+#Docker container name  container-tensorflow-1.4.0-2-tf1-ubuntu18.04-py3-kang
+MY_CONTAINER="container-${PATH_WORK}-${VERSION}-${Owner}"
+
 #################### color ####################
 #Font color
 none="\033[0m"

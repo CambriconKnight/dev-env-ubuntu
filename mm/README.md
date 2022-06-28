@@ -6,7 +6,7 @@
 
 **运行环境**
 
-- 主机系统: Ubuntu16.04/Ubuntu18.04/CentOS7(以下重点以Ubuntu18.04为例说明)
+- 主机系统: Ubuntu16.04/Ubuntu18.04/CentOS7
 - 软件栈版本: 0.10.1
 - 深度学习框架: MagicMind
 - 镜像文件: magicmind_0.10.0-1_ubuntu18.04.tar.gz

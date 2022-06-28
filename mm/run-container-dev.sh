@@ -5,7 +5,7 @@ set -e
 # UpdateDate:   2021/04/26
 # Description:  Run docker image for IDE.
 # Example:      ./run-container-dev.sh
-# Depends:      container-$PATH_WORK-$VERSION
+# Depends:      container-${PATH_WORK}-${VERSION}-${Owner}
 # Notes:
 # -------------------------------------------------------------------------------
 # Source env
@@ -20,11 +20,11 @@ PATH_FTP_HOST="/data/ftp"
 #Work path on the docker container
 PATH_FTP_DOCKER="/home/ftp"
 #Datasets path on the host
-PATH_DATASETS_HOST="/DATA_SPACE/datasets"
+PATH_DATASETS_HOST="/data/datasets"
 #Datasets path on the docker container
 PATH_DATASETS_DOCKER="/data/datasets"
 #Models path on the host
-PATH_MODELS_HOST="/DATA_SPACE/models"
+PATH_MODELS_HOST="/data/models"
 #Models path on the docker container
 PATH_MODELS_DOCKER="/data/models"
 

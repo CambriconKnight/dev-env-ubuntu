@@ -6,11 +6,12 @@
 
 **运行环境**
 
-- 主机系统: Ubuntu16.04/Ubuntu18.04/CentOS7(以下重点以Ubuntu16.04为例说明)
+- 主机系统: Ubuntu16.04/Ubuntu18.04/CentOS7
 - 软件栈版本: 1.7.602
 - 深度学习框架: Pytorch
 - 镜像文件: pytorch-0.15.602-ubuntu16.04.tar
--
+- Docker: ⽤⼾需要⾃⾏安装docker（版本要求 >= v19.03）
+
 **硬件环境准备:**
 
 | 名称           | 数量      | 备注                  |
@@ -25,17 +26,10 @@
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                       | 宿主机操作系统                         |
 | Docker Image          | pytorch-0.15.602-ubuntu16.04.tar                      | 官方发布的 Pytorch 框架 Docker 镜像文件 |
 | Driver_MLU270         | neuware-mlu270-driver-dkms_4.9.2_all.deb              | 依操作系统选择                         |
-| CNToolkit_MLU270      | cntoolkit_1.7.3-2.ubuntu16.04_amd64.deb               | 依操作系统选择                         |
-| CNML_MLU270           | cnml_7.10.3-1.ubuntu16.04_amd64.deb                   | 依操作系统选择                         |
-| CNPlugin_MLU270       | cnplugin_1.12.4-1.ubuntu16.04_amd64.deb               | 依操作系统选择                         |
-| CNNL_MLU270           | cnnl_1.3.0-1.ubuntu16.04_amd64.deb                    | 依操作系统选择                         |
-| CNCL_MLU270           | cncl_0.8.0-1.ubuntu16.04_amd64.deb                    | 依操作系统选择                         |
 
 注: 以上软件环境中文件名词, 如有版本升级及名称变化, 可以在 [env.sh](./env.sh) 中进行修改。
 
 **下载地址:**
-
-Ubuntu16.04: http://mirrors.aliyun.com/ubuntu-releases/16.04
 
 MLU开发文档: https://developer.cambricon.com/index/document/index/classid/3.html
 
@@ -43,7 +37,7 @@ Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
 
 其他开发资料, 可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载。也可在官方提供的专属FTP账户指定路径下载。
 
-# 2. Structure
+# 2. 网络图谱
 Cambricon PyTorch 支持的典型网络及移植流程.
 |网络名称|操作目录|备注|
 |----|-------|-------|
@@ -51,14 +45,20 @@ Cambricon PyTorch 支持的典型网络及移植流程.
 |`YOLOv4-Tiny`|./yolov4-tiny|以输入 416 * 416 为例|
 |`YOLOv5`|./yolov5|以 YOLOv5s 模型输入 640 * 640 为例|
 
-# 3. Load
+# 3. 下载镜像
+
+下载官方发布的 Pytorch 框架 Docker 镜像文件。 可前往寒武纪开发者社区注册账号按需下载, 也可在官方提供的专属FTP账户指定路径下载。
+
+官方发布的镜像包命名格式: pytorch-<x.y.z>-ubuntu<a.b>.tar , 其中 <x.y.z> 为 Pytorch 版本号，<a.b> 为操作系统版本号。
+
+# 4. 加载镜像
 ```bash
 #加载Docker镜像
 #./load-image-dev.sh /data/ftp/product/GJD/MLU270/1.7.602/Docker/pytorch-0.15.602-ubuntu18.04.tar
 ./load-image-dev.sh ${FULLNAME_IMAGES}
 ```
 
-# 4. Run
+# 5. 启动容器
 ```bash
 #启动容器
 ./run-container-dev.sh

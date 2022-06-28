@@ -11,32 +11,37 @@
 ## 以下信息,根据各个版本中文件实际名词填写.
 #Version
 VER="1.7.602"
+Owner="kang"
 #################### docker ####################
 #Work
 PATH_WORK="pytorch"
 #Dockerfile(16.04/18.04/CentOS)
 OSVer="18.04"
+#Operating system
+OS="ubuntu$OSVer"
+#FrameVersion
+FrameVer="0.15.602"
 #(Dockerfile.16.04/Dockerfile.18.04/Dockerfile.CentOS)
 FILENAME_DOCKERFILE="Dockerfile.$OSVer"
 DIR_DOCKER="docker"
 #Version
 #VERSION="v${VER}"
-VERSION="0.15.602-ubuntu$OSVer"
+VERSION="$FrameVer-$OS"
 #Organization
-ORG="yellow.hub.cambricon.com/pytorch"
-#Operating system
-OS="ubuntu$OSVer"
+ORG="yellow.hub.cambricon.com/$PATH_WORK"
 #Docker image
 #MY_IMAGE="$ORG/$OS-$PATH_WORK"
 #MY_IMAGE="yellow.hub.cambricon.com/pytorch/pytorch"
-MY_IMAGE="$ORG/$PATH_WORK"
+MY_IMAGE="${ORG}/${PATH_WORK}"
 #Docker image name
 NAME_IMAGE="$MY_IMAGE:$VERSION"
 #FileName DockerImage
-FILENAME_IMAGE="pytorch-0.15.602-ubuntu$OSVer.tar"
+FILENAME_IMAGE="$PATH_WORK-$FrameVer-$OS.tar"
+#FILENAME_IMAGE="pytorch-0.15.602-ubuntu$OSVer.tar"
 FULLNAME_IMAGE="./${FILENAME_IMAGE}"
 #Docker container name
-MY_CONTAINER="container-$OS-$PATH_WORK-$VERSION"
+#Docker container name  container-pytorch-0.15.602-ubuntu18.04-kang
+MY_CONTAINER="container-${PATH_WORK}-${VERSION}-${Owner}"
 #################### color ####################
 #Font color
 none="\033[0m"

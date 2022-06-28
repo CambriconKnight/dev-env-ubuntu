@@ -11,6 +11,7 @@
 ## 以下信息,根据各个版本中文件实际名词填写.
 #Version
 VER="1.7.602"
+Owner="kang"
 #################### docker ####################
 #Work
 PATH_WORK="caffe"
@@ -30,8 +31,8 @@ VERSION="$FrameVer-$OS"
 ORG="yellow.hub.cambricon.com/$PATH_WORK"
 #Docker image
 #MY_IMAGE="$ORG/$OS-$PATH_WORK"
-#MY_IMAGE="yellow.hub.cambricon.com/pytorch/pytorch"
-MY_IMAGE="$ORG/$PATH_WORK"
+#MY_IMAGE="yellow.hub.cambricon.com/caffe/caffe"
+MY_IMAGE="${ORG}/${PATH_WORK}"
 #Docker image name
 NAME_IMAGE="$MY_IMAGE:$VERSION"
 #FileName DockerImage
@@ -39,7 +40,8 @@ FILENAME_IMAGE="$PATH_WORK-$FrameVer-$OS.tar"
 #FILENAME_IMAGE="caffe-5.4.602-ubuntu18.04.tar"
 FULLNAME_IMAGE="./${FILENAME_IMAGE}"
 #Docker container name
-MY_CONTAINER="container-$OS-$PATH_WORK-$VERSION"
+#Docker container name  container-caffe-5.4.602-ubuntu18.04-kang
+MY_CONTAINER="container-${PATH_WORK}-${VERSION}-${Owner}"
 #################### color ####################
 #Font color
 none="\033[0m"
