@@ -37,7 +37,7 @@ Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
 
 其他开发资料, 可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载。也可在官方提供的专属FTP账户指定路径下载。
 
-# 2. 网络移植图谱
+# 2. 网络图谱
 Cambricon PyTorch 支持的典型网络及移植流程。
 |网络名称|操作目录|备注|
 |----|-------|-------|
