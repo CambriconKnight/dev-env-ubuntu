@@ -10,7 +10,8 @@
 - 软件栈版本: 0.10.1
 - 深度学习框架: MagicMind
 - 镜像文件: magicmind_0.10.0-1_ubuntu18.04.tar.gz
--
+- Docker: ⽤⼾需要⾃⾏安装docker（版本要求 >= v19.03）
+
 **硬件环境准备:**
 
 | 名称           | 数量      | 备注                  |
@@ -30,28 +31,31 @@
 
 **下载地址:**
 
-Ubuntu18.04: http://mirrors.aliyun.com/ubuntu-releases/18.04
-
 MLU开发文档: https://developer.cambricon.com/index/document/index/classid/3.html
 
 Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
 
 其他开发资料, 可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载。也可在官方提供的专属FTP账户指定路径下载。
 
-# 2. Structure
-Cambricon PyTorch 支持的典型网络及移植流程.
+# 2. 网络移植图谱
+Cambricon PyTorch 支持的典型网络及移植流程。
 |网络名称|操作目录|备注|
 |----|-------|-------|
 
+# 3. 下载镜像
 
-# 3. Load
+下载官方发布的 MagicMind 框架 Docker 镜像文件。 可前往寒武纪开发者社区注册账号按需下载, 也可在官方提供的专属FTP账户指定路径下载。
+
+官方发布的镜像包命名格式: magicmind_<x.y.z>-1_ubuntu<a.b>_docker.tar.gz , 其中 <x.y.z> 为MagicMind 版本号，<a.b> 为操作系统版本号。
+
+# 4. 加载镜像
 ```bash
 #加载Docker镜像
 #./load-image-dev.sh /data/ftp/product/MLU370/inference/1.4.0/magicmind_v0.10.0/Ubuntu/18.04/abiold/docker/magicmind_0.10.0-1_ubuntu18.04.tar.gz
 ./load-image-dev.sh ${FULLNAME_IMAGES}
 ```
 
-# 4. Run
+# 5. 启动容器
 ```bash
 #启动容器
 ./run-container-dev.sh

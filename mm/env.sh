@@ -11,6 +11,7 @@
 ## 以下信息,根据各个版本中文件实际名词填写.
 #Version
 VER="0.10.0"
+Owner="kang"
 #################### docker ####################
 #Work
 PATH_WORK="magicmind"
@@ -36,7 +37,7 @@ NAME_IMAGE="$MY_IMAGE:$VERSION"
 FILENAME_IMAGE="${PATH_WORK}_${VER}-1_ubuntu$OSVer.tar.gz"
 FULLNAME_IMAGE="./${FILENAME_IMAGE}"
 #Docker container name  container-magicmind-0.10.0-x86_64-ubuntu18.04-py_3_7
-MY_CONTAINER="container-${PATH_WORK}-${VERSION}"
+MY_CONTAINER="container-${PATH_WORK}-${VERSION}-${Owner}"
 #################### color ####################
 #Font color
 none="\033[0m"
