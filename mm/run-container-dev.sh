@@ -47,6 +47,8 @@ if [ 0 -eq $num ];then
         --net=host --ipc=host --pid=host \
         -v /sys/kernel/debug:/sys/kernel/debug \
         -v /dev/cambricon:/dev/cambricon \
+        -v /mnt/:/mnt/ \
+        -v /usr/bin/cnmon:/usr/bin/cnmon\
         -v /tmp/.X11-unix:/tmp/.X11-unix \
         -it -v $PATH_SHARE_HOST:$PATH_SHARE_DOCKER \
         -it -v $PATH_FTP_HOST:$PATH_FTP_DOCKER \
