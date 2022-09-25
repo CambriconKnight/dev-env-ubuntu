@@ -1,0 +1,108 @@
+
+**该教程仅仅用于学习，打通流程； 不对效果负责，不承诺商用。**
+
+# 1. 概述
+本目录下脚本主要记录MM性能测试。
+
+**运行环境**
+
+- 主机系统: Ubuntu16.04/Ubuntu18.04/CentOS7
+- 软件栈版本: 0.10.1
+- 深度学习框架: MagicMind
+- 镜像文件: magicmind_0.10.0-1_ubuntu18.04.tar.gz
+- Docker: ⽤⼾需要⾃⾏安装docker（版本要求 >= v19.03）
+
+**硬件环境准备:**
+
+| 名称           | 数量      | 备注                  |
+| :------------ | :--------- | :------------------ |
+| 服务器         | 一台       |参考寒武纪服务器是配列表 |
+| MLU370-S4     | 一套       |机箱风扇需满足MLU370板卡被动散热要求|
+
+**软件环境准备:**
+
+| 名称                   | 版本/文件/目录                                              | 备注                                 |
+| :-------------------- | :-------------------------------                      | :---------------------------------- |
+| Linux OS              | Ubuntu18.04                                          | 宿主机操作系统                         |
+| Docker Image          | magicmind_0.10.0-1_ubuntu18.04.tar.gz                 | 官方发布的 MagicMind 框架 Docker 镜像文件 |
+| Driver_MLU370         | cambricon-mlu-driver-ubuntu18.04-dkms_4.20.6_amd64.deb| 依操作系统选择                         |
+| 网络模型               | models                                                 | 联系对应技术人员获取                  |
+| 数据集                 | datasets                                               | 联系对应技术人员获取                  |
+| MM性能测试配置套件       | testsuites                                             | 联系对应技术人员获取                  |
+
+注: 以上软件环境中文件名词, 如有版本升级及名称变化, 可以在上一级目录 [env.sh](../env.sh) 中进行修改。
+
+# 2. 网络图谱
+Cambricon MagicMind 支持的典型网络及性能测试流程。
+|网络名称|操作目录|备注|
+|----|-------|-------|
+
+# 3. 下载测试模型&数据集&配置文件
+
+**下载方式**
+
+关注微信公众号 AIKnight , 发送文字消息, 包含关键字(不区分大小写): **MM性能测试**或**mm_perf**, 公众号会自动回复MM测试套件(testsuites；datasets；models)的下载地址；
+
+>![](../../res/note.gif) **备注信息：**
+>- 1. 请把下载后的目录(testsuites)及文件放置到当前目录下或其他目录, 目录位置保证与脚本配置一致。
+>- 2. 目录(tdatasets；models)请联系对应技术人员获取。
+
+**公众号**
+>![](../../res/aiknight_wechat_344.jpg)
+
+# 4. 根据实际环境修改配置
+```bash
+vim ./mm_perf.sh
+```
+根据上一步下载后的各个目录的实际位置修改mm_perf.sh脚本中如下全局参数配置
+```bash
+######Modify according to your development environment#####
+# Test suites file
+TEST_SUITES_FILE="${CURRENT_PATH}/testsuites/csv_cases/performance_resnet50.csv"
+#TEST_SUITES_FILE=${CURRENT_PATH}/testsuites/csv_cases/performance_yolov3.csv
+# Model path
+MODEL_PATH="/data/models/test_models"
+# Datasets path
+DATASET_PATH="/data/datasets"
+###########################################################
+```
+
+# 5. MM性能测试
+```bash
+#MM性能测试(测试服务器上所有板卡MM性能；如需要测试单个板卡,请通过传入脚本参数$1设定.)
+./mm_perf.sh
+#./mm_perf.sh all
+#测试第一块卡的MM性能
+#./mm_perf.sh 0
+```
+**测试实例:**
+```bash
+root@localhost:/home/share/mm/perf# ./mm_perf.sh
+==================================================
+NEUWARE_HOME:/usr/local/neuware/
+CURRENT_PATH:/home/share/mm/perf
+TEST_SUITES_FILE:/home/share/mm/perf/testsuites/csv_cases/performance_resnet50.csv
+MODEL_PATH:/data/models/test_models
+DATASET_PATH:/data/datasets
+DEVICE_NAME:mlu370_S4
+TEST_LOG:output/MM_benchmark_card_*.log
+CARD_NUM: 2
+CARD_LIST[0]: 0
+CARD_LIST[1]: 1
+[# Test MLU performance Card 0:
+[# Test MLU performance Card 1:
+[#######################################################################################################################]
+### Print Result Card 0:
+==========================================================================================================================================================
+|  framework |              model | batch | threads | bind_cluster |       precision_mode |       qps | mlu latency(ms) | const size(MB) | workspace(MB) |
+==========================================================================================================================================================
+| tensorflow |         resnet50v1 |    48 |       1 |        False |  qint8_mixed_float16 |   10234.0 |           4.678 |      24.427612 |      41.34375 |
+### Print Result Card 1:
+==========================================================================================================================================================
+|  framework |              model | batch | threads | bind_cluster |       precision_mode |       qps | mlu latency(ms) | const size(MB) | workspace(MB) |
+==========================================================================================================================================================
+| tensorflow |         resnet50v1 |    48 |       1 |        False |  qint8_mixed_float16 |   12269.3 |          3.9014 |      24.427612 |      41.34375 |
+==================================================
+Total time: 121.654 s
+root@localhost:/home/share/mm/perf#
+```
