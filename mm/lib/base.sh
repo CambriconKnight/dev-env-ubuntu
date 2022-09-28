@@ -16,8 +16,6 @@ MAX_PARALLEL=5
 QARR_PARALLEL=();
 # Number of running processes
 NUM_RUN_PARALLEL=0
-# Maximum timeout
-TIMEOUT_MAX_SECOND=900
 
 #################### Common function ####################
 #Find if the directory contains a string
@@ -46,27 +44,32 @@ check_queue_processes() {
     NUM_RUN_PARALLEL=${#QARR_PARALLEL[@]}
 }
 
-# Check the process in the queue and echo bar
-check_queue_processes_bar() {
-    num_parallel=();
-    if [[ $# -eq 1 ]];then
-        num_parallel=$1
-    else
-        num_parallel=$MAX_PARALLEL
-    fi
-    while [[ $NUM_RUN_PARALLEL -gt $num_parallel ]];do
-        #echo -n "$NUM_RUN_PARALLEL#"
-        echo -n "#"
-        check_queue_processes
-        sleep 2
+# Print the process in the queue
+print_queue_processes() {
+    # Print QARR_PARALLEL
+    print_log_echo_info "NUM_RUN_PARALLEL: ${NUM_RUN_PARALLEL}"
+    num=0
+    for element in "${QARR_PARALLEL[@]}";do
+        print_log_echo_info "QARR_PARALLEL[${num}]: ${element}"
+        let "num+=1"
     done
 }
 
 # Check the process in the queue and echo bar
 check_queue_processes_bar() {
+    # Maximum timeout
+    TIMEOUT_MAX_SECOND=900
     num_parallel=();
     if [[ $# -eq 1 ]];then
         num_parallel=$1
+    elif [[ $# -eq 2 ]];then
+        num_parallel=$1
+        if [[ "$2" -eq 0 ]];then
+            # 无限制,但最长超时为7天: 7 * 24 * 60 *60 = 604800s
+            TIMEOUT_MAX_SECOND=604800
+        else
+            TIMEOUT_MAX_SECOND=$2
+        fi
     else
         num_parallel=$MAX_PARALLEL
     fi
@@ -85,8 +88,7 @@ check_queue_processes_bar() {
         if [[ $num_bar -gt $num_max ]];then
             echo ""
             echo -en "${none}"
-            num_second=`expr $num_max / 5`
-            print_log_echo_fatal "${RUN_FAILED_TIMEOUT}(${num_second}s)"
+            print_log_echo_fatal "${RUN_FAILED_TIMEOUT}(${TIMEOUT_MAX_SECOND}s)"
             exit -1
         fi
     done

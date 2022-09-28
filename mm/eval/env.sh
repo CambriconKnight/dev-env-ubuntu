@@ -20,4 +20,3 @@ fi
 
 export MM_CPP_MIN_LOG_LEVEL=3
 export CNNL_MIN_LOG_LEVEL=3
-

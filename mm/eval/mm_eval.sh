@@ -1,18 +1,19 @@
 #!/bin/bash
 #set -e
 # -------------------------------------------------------------------------------
-# Filename:     mm_perf.sh
+# Filename:     mm_eval.sh
 # UpdateDate:   2022/09/25
-# Description:  测试整机所有板卡的性能.
-# Example:      ./mm_perf.sh
+# Description:  测试整机所有板卡的网络精度.
+# Example:      ./mm_eval.sh
 # Depends:
 #               ${TEST_SUITES_FILE};${MODEL_PATH};${DATASET_PATH};
 # Notes:
 # -------------------------------------------------------------------------------
 ######Modify according to your development environment#####
 # Test suites file
-TEST_SUITES_FILE="../testsuites/csv_cases/performance_resnet50.csv"
-#TEST_SUITES_FILE=../testsuites/csv_cases/performance_yolov3.csv
+#TEST_SUITES_FILE="../testsuites/csv_cases/accuracy.csv"
+TEST_SUITES_FILE="../testsuites/csv_cases/accuracy_resnet50.csv"
+#TEST_SUITES_FILE="../testsuites/csv_cases/accuracy_yolov3.csv"
 # Model path
 MODEL_PATH="/data/models/test_models"
 # Datasets path
@@ -69,11 +70,11 @@ test_card_all() {
     print_log_echo_info "TEST_LOG:${TEST_LOG}_*.log"
     # Update test card_list
     if [[ $# -eq 0 ]];then update_test_card_list; else update_test_card_list $1; fi
-    ############ MLU performance ############
+    ############ MLU accuracy ############
     for cardid in "${CARD_LIST[@]}";do
-        print_log_echo_info "[# Test MLU performance Card ${cardid}:"
+        print_log_echo_info "[# Test MLU accuracy Card ${cardid}:"
         export MLU_VISIBLE_DEVICES=${cardid}
-        mm_perf_benchmark --csv ${TEST_SUITES_FILE} \
+        mm_eval_benchmark --csv ${TEST_SUITES_FILE} \
             --dataset_path $DATASET_PATH --model_path $MODEL_PATH \
             --device_name $DEVICE_NAME > "${TEST_LOG}_${cardid}.log" 2>&1 &
         # Add processes to the queue
@@ -82,7 +83,7 @@ test_card_all() {
     done
     print_queue_processes
     echo -en "${green}[#"
-    check_queue_processes_bar 0
+    check_queue_processes_bar 0 0
     echo "]"
     echo -en "${none}"
     sync

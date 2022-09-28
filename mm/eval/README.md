@@ -2,7 +2,7 @@
 **该教程仅仅用于学习，打通流程； 不对效果负责，不承诺商用。**
 
 # 1. 概述
-本目录下脚本主要基于 mm_perf_benchmark 工具进行MM性能测试。
+本目录下脚本主要基于 mm_eval_benchmark 工具进行网络精度测试。
 
 **运行环境**
 
@@ -54,14 +54,15 @@ Cambricon MagicMind 支持的典型网络及性能测试流程。
 
 # 4. 根据实际环境修改配置
 ```bash
-vim ./mm_perf.sh
+vim ./mm_eval.sh
 ```
-根据上一步下载后的各个目录的实际位置修改mm_perf.sh脚本中如下全局参数配置
+根据上一步下载后的各个目录的实际位置修改 mm_eval.sh 脚本中如下全局参数配置
 ```bash
 ######Modify according to your development environment#####
 # Test suites file
-TEST_SUITES_FILE="../testsuites/csv_cases/performance_resnet50.csv"
-#TEST_SUITES_FILE=../testsuites/csv_cases/performance_yolov3.csv
+TEST_SUITES_FILE="../testsuites/csv_cases/accuracy.csv"
+#TEST_SUITES_FILE="../testsuites/csv_cases/accuracy_resnet50.csv"
+#TEST_SUITES_FILE="../testsuites/csv_cases/accuracy_yolov3.csv"
 # Model path
 MODEL_PATH="/data/models/test_models"
 # Datasets path
@@ -72,39 +73,32 @@ DATASET_PATH="/data/datasets"
 # 5. MM性能测试
 ```bash
 #MM性能测试(测试服务器上所有板卡MM性能；如需要测试单个板卡,请通过传入脚本参数$1设定.)
-./mm_perf.sh
-#./mm_perf.sh all
-#测试第一块卡的MM性能
-#./mm_perf.sh 0
+./mm_eval.sh 0
+#./mm_eval.sh all
 ```
 **测试实例:**
 ```bash
-root@localhost:/home/share/mm/perf# ./mm_perf.sh
+root@localhost:/home/share/mm/eval# ./mm_eval.sh 0
 ==================================================
 NEUWARE_HOME:/usr/local/neuware/
-CURRENT_PATH:/home/share/mm/perf
-TEST_SUITES_FILE:/home/share/mm/perf/testsuites/csv_cases/performance_resnet50.csv
-MODEL_PATH:/data/models/test_models
+CURRENT_PATH:/home/share/mm/eval
+TEST_SUITES_FILE:../testsuites/csv_cases/accuracy.csv
+MODEL_PATH:/data/models/test_models/
 DATASET_PATH:/data/datasets
 DEVICE_NAME:mlu370_S4
 TEST_LOG:output/MM_benchmark_card_*.log
-CARD_NUM: 2
+CARD_NUM: 1
 CARD_LIST[0]: 0
-CARD_LIST[1]: 1
-[# Test MLU performance Card 0:
-[# Test MLU performance Card 1:
-[#######################################################################################################################]
+[# Test MLU accuracy Card 0:
+NUM_RUN_PARALLEL: 1
+QARR_PARALLEL[0]: 20314
+[#############################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################]
 ### Print Result Card 0:
-==========================================================================================================================================================
-|  framework |              model | batch | threads | bind_cluster |       precision_mode |       qps | mlu latency(ms) | const size(MB) | workspace(MB) |
-==========================================================================================================================================================
-| tensorflow |         resnet50v1 |    48 |       1 |        False |  qint8_mixed_float16 |   10234.0 |           4.678 |      24.427612 |      41.34375 |
-### Print Result Card 1:
-==========================================================================================================================================================
-|  framework |              model | batch | threads | bind_cluster |       precision_mode |       qps | mlu latency(ms) | const size(MB) | workspace(MB) |
-==========================================================================================================================================================
-| tensorflow |         resnet50v1 |    48 |       1 |        False |  qint8_mixed_float16 |   12269.3 |          3.9014 |      24.427612 |      41.34375 |
+=========================================================================================================
+|    framework |              model |            precision_mode |                             Accuracy |
+=========================================================================================================
+|   tensorflow |         resnet50v1 |       qint8_mixed_float16 |   {'top1': 0.75002, 'top5': 0.92048} |
+|   tensorflow |             yolov3 |       qint8_mixed_float16 |                             0.523661 |
 ==================================================
-Total time: 121.654 s
-root@localhost:/home/share/mm/perf#
+Total time: 1024.747 s
 ```

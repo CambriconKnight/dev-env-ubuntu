@@ -60,3 +60,28 @@ Cambricon PyTorch 支持的典型网络及移植流程。
 #启动容器
 ./run-container-dev.sh
 ```
+
+# 6. 环境确认
+容器中，默认已安装 magicmind 和 benchmark 模块，验证方式如下：
+```bash
+#环境确认命令
+pip list |grep benchmark && pip list |grep magicmind
+```
+输出结果如下，说明环境正常。
+```bash
+root@localhost:/# pip list |grep benchmark && pip list |grep magicmind
+benchmark               0.10.0
+WARNING: You are using pip version 22.0.4; however, version 22.2.2 is available.
+You should consider upgrading via the '/usr/bin/python3.7 -m pip install --upgrade pip' command.
+magicmind               0.10.0
+WARNING: You are using pip version 22.0.4; however, version 22.2.2 is available.
+You should consider upgrading via the '/usr/bin/python3.7 -m pip install --upgrade pip' command.
+root@localhost:/#
+```
+如果没有以上输出，可自行安装 magicmind 和 benchmark
+```bash
+pip3 install magicmind_<x.y.z>-cp37-cp37m-linux_<arch>.whl
+#pip install magicmind-0.10.0-cp37-cp37m-linux_x86_64.whl
+#pip install benchmark-0.10.0-cp37-cp37m-linux_x86_64.whl
+```
+<x.y.z> 为MagicMind 版本号，<arch> 为CPU 架构。
