@@ -60,8 +60,11 @@ Cambricon PyTorch 支持的典型网络及移植流程。
 ```
 
 # 6. 交叉编译
+
 ## 6.1. 交叉编译环境准备
-参考一下操作, 根据实际SDK包位置,解压到工作目录.
+
+参考以下操作, 根据实际SDK包位置,解压到工作目录.
+
 ```bash
 # 1. 进入工作目录
 cd /home/share/edge/cross_compile
@@ -70,6 +73,7 @@ source env-ce3226.sh
 # 3. 更新BSP所需的系统依赖软件(mm镜像中中没有安装的依赖软件)
 ./update-os.sh
 ```
+
 ## 6.2. BSP交叉编译
 **分步说明**
 ```bash
@@ -98,8 +102,17 @@ ls -la ./out
 ```
 **一键编译**
 ```bash
-# 1. 进入工作目录
+# 1.1. 进入工作目录
 cd /home/share/edge/cross_compile
-# 2. 一键编译
-./build_bsp.sh
+# 1.2. 拷贝或下载sdk到[../dependent_files]目录
+#cp -rvf /data/ftp/ce3226/sdk/ce3226v100-sdk-1.1.0.tar.gz ../dependent_files
+# 2. 一键编译所有的bsp镜像文件, 编译完后,在out/目录下是生成所有的bsp镜像文件
+./build-bsp-all.sh
 ```
+**单独编译**
+单独编译详见官方发布的SDK使用开发指南.
+
+
+## 6.3. 其他模块交叉编译
+
+其他模型交叉编译详见官方发布的SDK使用开发指南.
