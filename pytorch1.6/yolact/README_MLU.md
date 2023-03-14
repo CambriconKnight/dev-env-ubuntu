@@ -69,8 +69,9 @@ YOLACT++ models (released on December 16th, 2019):
 
 ## 2.4. 模型推理
 推理前需要修改一些代码：
-1、yolact.py 480行  修改为 【state_dict = torch.load(path,map_location='cpu')】
-2、如果SSH运行的话，为了可以直接保存推理后的效果图片。可以修改 eval.py 606行，增加 【cv2.imwrite("./test.png", img_numpy)】
+1. yolact.py 480行  修改为 【state_dict = torch.load(path,map_location='cpu')】
+2. 如果SSH运行的话，为了可以直接保存推理后的效果图片。可以修改 eval.py 606行，增加 【cv2.imwrite("./test.png", img_numpy)】
+
 ```bash
 cd /home/share/pytorch1.6/yolact/yolact_mlu
 #根据实际模型名称与测试图片修改参数
