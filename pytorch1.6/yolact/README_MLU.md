@@ -8,7 +8,7 @@
 
 容器：寒武纪torch1.6容器
 
-# 2. 操作步骤
+# 2. 模型推理
 
 ## 2.1. 下载代码
 ```bash
@@ -20,7 +20,8 @@ pip install cython
 pip install opencv-python pillow pycocotools matplotlib
 ```
 
-## 2.2. 使用工具迁移代码
+## 2.2. 迁移代码
+使用该工具 `torch_gpu2mlu.py` 从GPU模型脚本迁移至MLU设备运行，转换后的模型脚本只支持MLU设备运行。该工具可对模型脚本进行转换，对模型脚本修改位置较多，会对修改位置进行统计，实现开发者快速迁移。
 - 在容器环境中，执行以下命令
 ```bash
 cd /home/share/pytorch1.6/yolact
@@ -32,6 +33,7 @@ python torch_gpu2mlu.py -i yolact
 ls -la yolact yolact_mlu
 #yolact_mlu 文件夹是转换后的代码。
 ```
+- 输出转换结果
 ```bash
 # Cambricon PyTorch Model Migration Report
 Official PyTorch model scripts:  /home/share/pytorch1.6/yolact/yolact
@@ -65,7 +67,7 @@ YOLACT++ models (released on December 16th, 2019):
 | 550        | Resnet101-FPN | [yolact_plus_base_54_800000.pth](https://drive.google.com/file/d/15id0Qq5eqRbkD-N3ZjDZXdCvRyIaHpFB/view?usp=sharing) | [Mirror](https://ucdavis365-my.sharepoint.com/:u:/g/personal/yongjaelee_ucdavis_edu/EVQ62sF0SrJPrl_68onyHF8BpG7c05A8PavV4a849sZgEA)
 
 
-## 2.4. 推理
+## 2.4. 模型推理
 推理前需要修改一些代码：
 1、yolact.py 480行  修改为 【state_dict = torch.load(path,map_location='cpu')】
 2、如果SSH运行的话，为了可以直接保存推理后的效果图片。可以修改 eval.py 606行，增加 【cv2.imwrite("./test.png", img_numpy)】
