@@ -45,11 +45,14 @@ if [ 0 -eq $num ];then
         --device /dev/cambricon_dev0 \
         --device /dev/cambricon_ipcm0 \
         --net=host --ipc=host --pid=host \
-        -v /sys/kernel/debug:/sys/kernel/debug \
-        -v /dev/cambricon:/dev/cambricon \
-        -v /mnt/:/mnt/ \
         -v /usr/bin/cnmon:/usr/bin/cnmon\
+        -v /sys/kernel/debug:/sys/kernel/debug \
         -v /tmp/.X11-unix:/tmp/.X11-unix \
+        -v /mnt/:/mnt/ \
+        -v /dev/cambricon:/dev/cambricon \
+        -p 8888:8888 \
+        -p 8025:22 \
+        -w $PATH_SHARE_DOCKER \
         -it -v $PATH_SHARE_HOST:$PATH_SHARE_DOCKER \
         -it -v $PATH_FTP_HOST:$PATH_FTP_DOCKER \
         -it -v $PATH_DATASETS_HOST:$PATH_DATASETS_DOCKER \
