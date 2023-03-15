@@ -58,7 +58,7 @@ if [ 0 -eq $num ];then
         -v /mnt/data/opt/share:/opt/share \
         -p 8888:8888 \
         -p 5025:22 \
-        -w /home/share \
+        -w $PATH_SHARE_DOCKER \
         -it -v $PATH_SHARE_HOST:$PATH_SHARE_DOCKER \
         -it -v $PATH_FTP_HOST:$PATH_FTP_DOCKER \
         -it -v $PATH_DATASETS_HOST:$PATH_DATASETS_DOCKER \

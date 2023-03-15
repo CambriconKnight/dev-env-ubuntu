@@ -31,11 +31,11 @@
 
 **下载地址:**
 
-MLU开发文档: https://developer.cambricon.com/index/document/index/classid/3.html
+前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载， 也可在官方提供的专属FTP账户指定路径下载。
 
-Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
+文档: https://developer.cambricon.com/index/document/index/classid/3.html
 
-其他开发资料, 可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载。也可在官方提供的专属FTP账户指定路径下载。
+SDK: https://sdk.cambricon.com/download?component_name=PyTorch
 
 # 2. 网络图谱
 Cambricon PyTorch 支持的典型网络及移植流程.
