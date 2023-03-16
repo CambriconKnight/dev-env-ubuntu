@@ -2,7 +2,7 @@
 set -e
 # -------------------------------------------------------------------------------
 # Filename:     run-container-dev.sh
-# UpdateDate:   2021/04/26
+# UpdateDate:   2023/03/13
 # Description:  Run docker image for IDE.
 # Example:      ./run-container-dev.sh
 # Depends:      container-${PATH_WORK}-${VERSION}-${Owner}
@@ -16,15 +16,15 @@ PATH_SHARE_HOST="$PWD/../"
 #Share path on the docker container
 PATH_SHARE_DOCKER="/home/share"
 #SDK path on the host
-PATH_FTP_HOST="/data/ftp"
+PATH_FTP_HOST="/DATA_SPACE/ftp"
 #Work path on the docker container
 PATH_FTP_DOCKER="/home/ftp"
 #Datasets path on the host
-PATH_DATASETS_HOST="/data/datasets"
+PATH_DATASETS_HOST="/DATA_SPACE/datasets"
 #Datasets path on the docker container
 PATH_DATASETS_DOCKER="/data/datasets"
 #Models path on the host
-PATH_MODELS_HOST="/data/models"
+PATH_MODELS_HOST="/DATA_SPACE/models"
 #Models path on the docker container
 PATH_MODELS_DOCKER="/data/models"
 
@@ -41,17 +41,23 @@ echo $MY_CONTAINER
 if [ 0 -eq $num ];then
     #sudo xhost +
     sudo docker run -e DISPLAY=unix$DISPLAY --privileged=true \
-        --device /dev/cambricon_ctl \
         --device /dev/cambricon_dev0 \
+        --device /dev/cambricon_dev1 \
+        --device /dev/cambricon_dev2 \
+        --device /dev/cambricon_dev3 \
+        --device /dev/cambricon_dev4 \
+        --device /dev/cambricon_dev5 \
+        --device /dev/cambricon_dev6 \
+        --device /dev/cambricon_dev7 \
+        --device /dev/cambricon_ctl \
         --device /dev/cambricon_ipcm0 \
         --net=host --ipc=host --pid=host \
-        -v /usr/bin/cnmon:/usr/bin/cnmon\
+        -v /usr/bin/cnmon:/usr/bin/cnmon \
         -v /sys/kernel/debug:/sys/kernel/debug \
         -v /tmp/.X11-unix:/tmp/.X11-unix \
-        -v /mnt/:/mnt/ \
-        -v /dev/cambricon:/dev/cambricon \
+        -v /mnt/data/opt/share:/opt/share \
         -p 8888:8888 \
-        -p 8025:22 \
+        -p 5025:22 \
         -w $PATH_SHARE_DOCKER \
         -it -v $PATH_SHARE_HOST:$PATH_SHARE_DOCKER \
         -it -v $PATH_FTP_HOST:$PATH_FTP_DOCKER \

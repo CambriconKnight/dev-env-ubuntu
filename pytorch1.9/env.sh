@@ -1,7 +1,7 @@
 # -------------------------------------------------------------------------------
 # Filename:    env.sh
 # Revision:    1.0.0
-# Date:        2022/06/06
+# Date:        2023/03/14
 # Description: Common Environment variable
 # Example:
 # Depends:
@@ -10,33 +10,38 @@
 #################### version ####################
 ## 以下信息,根据各个版本中文件实际名词填写.
 #Version
-VER="1.1.0"
+VER="1.10.0"
 Owner="kang"
 #################### docker ####################
 #Work
-PATH_WORK="magicmind"
+PATH_WORK="pytorch"
 #Dockerfile(16.04/18.04/CentOS)
 OSVer="18.04"
+#Operating system
+OS="ubuntu$OSVer-py37"
+#FrameVersion
+#FrameVer="0.15.602"
+FrameVer="v$VER-torch1.9"
 #(Dockerfile.16.04/Dockerfile.18.04/Dockerfile.CentOS)
-FILENAME_DOCKERFILE="Dockerfile.${OSVer}"
+FILENAME_DOCKERFILE="Dockerfile.$OSVer"
 DIR_DOCKER="docker"
 #Version
-#VERSION="v${VER}"  0.10.0-x86_64-ubuntu18.04-py_3_7
-VERSION="${VER}-x86_64-ubuntu$OSVer-py_3_7"
+#VERSION="v${VER}"
+VERSION="$FrameVer-$OS"
 #Organization
-ORG="yellow.hub.cambricon.com/magicmind/release/x86_64"
-#Operating system
-OS="ubuntu$OSVer"
+ORG="yellow.hub.cambricon.com/$PATH_WORK"
 #Docker image
 #MY_IMAGE="$ORG/$OS-$PATH_WORK"
-#MY_IMAGE="yellow.hub.cambricon.com/magicmind/release/x86_64/magicmind"
+#MY_IMAGE="yellow.hub.cambricon.com/pytorch/pytorch"
 MY_IMAGE="${ORG}/${PATH_WORK}"
 #Docker image name
 NAME_IMAGE="$MY_IMAGE:$VERSION"
-#FileName DockerImage  magicmind_0.10.0-1_ubuntu18.04.tar.gz
-FILENAME_IMAGE="${PATH_WORK}_${VER}-1_ubuntu$OSVer.tar.gz"
+#FileName DockerImage
+FILENAME_IMAGE="$PATH_WORK-$FrameVer-$OS.tar.gz"
+#FILENAME_IMAGE="pytorch-0.15.602-ubuntu$OSVer.tar"
 FULLNAME_IMAGE="./${FILENAME_IMAGE}"
-#Docker container name  container-magicmind-0.10.0-x86_64-ubuntu18.04-py_3_7
+#Docker container name
+#Docker container name  container-pytorch-0.15.602-ubuntu18.04-kang
 MY_CONTAINER="container-${PATH_WORK}-${VERSION}-${Owner}"
 #################### color ####################
 #Font color
