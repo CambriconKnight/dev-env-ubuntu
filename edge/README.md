@@ -35,11 +35,18 @@ Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
 
 其他开发资料, 可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载。也可在官方提供的专属FTP账户指定路径下载。
 
-# 2. 网络图谱
-Cambricon PyTorch 支持的典型网络及移植流程。
-|网络名称|操作目录|备注|
-|----|-------|-------|
+# 2. 目录结构
 
+```bash
+.
+├── clean.sh                                #清理脚本,包括清理临时目录或文件,已加载的容器等
+├── cross_compile                           #用于交叉编译的工作目录
+├── dependent_files                         #依赖库及工具下载说明.
+├── env.sh                                  #脚本全局环境变量,使用时需要根据实际修改.
+├── load-image-dev.sh                       #用作加载docker镜像的脚本
+├── README.md                               #目录说明
+└── run-container-dev.sh                    #用作启动docker容器的脚本
+```
 # 3. 下载镜像
 
 下载官方针对寒武纪边缘侧/端侧产品发布的 MagicMind 框架 Docker 容器。 可前往寒武纪开发者社区注册账号按需下载, 也可在官方提供的专属FTP账户指定路径下载。
@@ -55,7 +62,7 @@ Cambricon PyTorch 支持的典型网络及移植流程。
 
 # 5. 启动容器
 ```bash
-#启动容器
+#启动Docker容器
 ./run-container-dev.sh
 ```
 
