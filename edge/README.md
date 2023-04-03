@@ -68,7 +68,7 @@ SDK: https://sdk.cambricon.com/download?component_name=PyTorch
 
 # 6. 交叉编译
 
-## 6.1. 交叉编译环境准备
+## 6.1. 环境准备
 
 参考以下操作, 根据实际SDK包位置,解压到工作目录.
 
@@ -119,11 +119,11 @@ cd /home/share/edge/cross_compile
 **单独编译**
 单独编译详见官方发布的SDK使用开发指南.
 
-## 6.2. CNStream交叉编译
+## 6.3. CNStream交叉编译
 
 /home/share/edge/cross_compile
 
-### 6.2.1 交叉编译与打包
+### 6.3.1 交叉编译与打包
 **一键编译**
 ```bash
 # 1. 环境准备
@@ -189,7 +189,7 @@ tar -zcvf cnstream_deploy_ce3226.tar.gz ./cnstream_deploy_ce3226
 ls -la ${cnstream_dir}/cnstream_deploy_ce3226.tar.gz
 ```
 
-### 6.2.2 部署验证
+### 6.3.2 部署验证
 ```bash
 # 0. 拷贝部署包到目标板（根据实际IP地址修改实例中的IP【192.168.0.110】）
 cd ${cnstream_dir}
