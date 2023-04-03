@@ -53,7 +53,7 @@ if [ 0 -eq $num ];then
         -it -v $PATH_FTP_HOST:$PATH_FTP_DOCKER \
         -it -v $PATH_DATASETS_HOST:$PATH_DATASETS_DOCKER \
         -it -v $PATH_MODELS_HOST:$PATH_MODELS_DOCKER \
-        -w /usr/local/neuware/samples/magicmind/
+        -w /usr/local/neuware/samples/magicmind/ \
         --name $MY_CONTAINER $NAME_IMAGE /bin/bash
 else
     sudo docker start $MY_CONTAINER

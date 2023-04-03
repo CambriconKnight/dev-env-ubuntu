@@ -29,11 +29,11 @@
 
 **下载地址:**
 
-MLU开发文档: https://developer.cambricon.com/index/document/index/classid/3.html
+前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载， 也可在官方提供的专属FTP账户指定路径下载。
 
-Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
+文档: https://developer.cambricon.com/index/document/index/classid/3.html
 
-其他开发资料, 可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载。也可在官方提供的专属FTP账户指定路径下载。
+SDK: https://sdk.cambricon.com/download?component_name=PyTorch
 
 # 2. 目录结构
 
@@ -119,7 +119,99 @@ cd /home/share/edge/cross_compile
 **单独编译**
 单独编译详见官方发布的SDK使用开发指南.
 
+## 6.2. CNStream交叉编译
 
-## 6.3. 其他模块交叉编译
+/home/share/edge/cross_compile
+
+### 6.2.1 交叉编译与打包
+**一键编译**
+```bash
+# 1. 环境准备
+## 1.1. 进入工作目录
+cd /home/share/edge/cross_compile
+## 1.2. 拷贝或下载sdk到[../dependent_files]目录
+#cp -rvf /data/ftp/ce3226/sdk/ce3226v100-sdk-1.1.0.tar.gz ../dependent_files
+# 2. 一键编译cnstream, 编译完后,在cnstream目录下是生成cnstream部署包
+./build-cnstream-ce3226.sh.sh
+```
+**分步说明**
+```bash
+# 1. 下载EDGE包： 下载edge.tar.gz（EDGE fro CNStream 一体包 ）
+cd /home/share/edge/dependent_files
+wget http://video.cambricon.com/models/edge.tar.gz
+tar zxvf edge.tar.gz
+
+# 2. 下载SDK： 下载并解压mps.tar.gz inference.tar.gz
+cd /home/share/edge/dependent_files
+tar zxvf ./ce3226v100-sdk-1.1.0.tar.gz
+cd /home/share/edge/dependent_files/ce3226v100-sdk-1.1.0/board/package/
+## 2.1. 解压mps.tar.gz并设置环境变量MPS_HOME
+tar zxvf mps.tar.gz
+export MPS_HOME=/home/share/edge/dependent_files/ce3226v100-sdk-1.1.0/board/package/mps/out
+## 2.2. inference.tar.gz并同步lib库
+tar zxvf inference.tar.gz
+# 同步lib库（mm docker镜像环境中 /usr/local/neuware/edge/目录下与inference.tar.gz目录中内容还是有些差异，需要解压后更新过去）
+cp -rvf /home/share/edge/dependent_files/ce3226v100-sdk-1.1.0/board/package/inference/* /usr/local/neuware/edge
+cp -rvf /home/share/edge/dependent_files/ce3226v100-sdk-1.1.0/board/package/inference/lib64/* $MPS_HOME/lib
+cp -rvf /home/share/edge/dependent_files/ce3226v100-sdk-1.1.0/board/package/inference/include/* $MPS_HOME/include
+
+# 3. 编译并安装第三方依赖库
+cd /home/share/edge/dependent_files/edge
+#source install_edge.sh
+# To build opencv with ffmpeg for videoIO
+source install_edge.sh opencv_with_ffmpeg
+
+# 4. 设置必要的环境变量
+source env.sh
+
+# 5. 下载 CNStream 源码
+cd /home/share/edge/cross_compile
+git clone https://github.com/Cambricon/cnstream.git -b v7.1.0
+cd cnstream && git submodule update --init && cd -
+
+# 6. 编译并打包 CNStream
+cd /home/share/edge/dependent_files/edge
+export cnstream_dir="/home/share/edge/cross_compile/cnstream"
+export target_dir="${cnstream_dir}/cnstream_deploy_ce3226"
+./install_cnstream.sh ${cnstream_dir} ${target_dir}
+
+# 7. 微调并重新打包部署文件
+cd ${cnstream_dir}
+rm -rvf cnstream_deploy_ce3226.tar.gz
+#生成环境变量配置文件
+TimePackage=$(date +%Y%m%d%H%M%S) # eg:20210131230402.403666251
+echo '#!/bin/bash' > ${target_dir}/env.sh
+echo "#TimePackage:${TimePackage}" >> ${target_dir}/env.sh
+echo 'export LD_LIBRARY_PATH="$PWD/lib:$LD_LIBRARY_PATH"' >> ${target_dir}/env.sh
+#重新打包，避免包括上层目录
+tar -zcvf cnstream_deploy_ce3226.tar.gz ./cnstream_deploy_ce3226
+#查看打包文件
+ls -la ${cnstream_dir}/cnstream_deploy_ce3226.tar.gz
+```
+
+### 6.2.2 部署验证
+```bash
+# 0. 拷贝部署包到目标板（根据实际IP地址修改实例中的IP【192.168.0.110】）
+cd ${cnstream_dir}
+scp cnstream_deploy_ce3226.tar.gz root@192.168.0.110:~/
+# 1.SSH登录3226并设置环境变量
+#登录3226目标设备并解压部署包
+cd /root/
+tar zxvf cnstream_deploy_ce3226.tar.gz
+#为简单期间，如果非root账户可切换到root账户运行
+cd cnstream_deploy_ce3226/
+#设置环境变量(第一次登陆板卡需要设置环境变量，注意切换用户后，需要重新设置)
+source env.sh
+
+# 2. 运行测试实例
+## 2.1. 运行yolov3测试用例
+cd ./samples/cns_launcher/object_detection/
+./run.sh ce3226 rtsp yolov3
+## 2.2. 运行yolov5+track测试用例
+cd ./samples/cns_launcher/object_tracking
+./run.sh ce3226 rtsp yolov5
+```
+
+## 6.4. 其他模块交叉编译
 
 其他模型交叉编译详见官方发布的SDK使用开发指南.

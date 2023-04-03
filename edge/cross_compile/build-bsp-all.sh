@@ -9,6 +9,7 @@ set -e
 # Depends:      magicmind_0.13.0-1_ubuntu18.04.tar.gz
 #               env_ce3226.sh
 #               update-os.sh
+#               ce3226v100-sdk-1.1.0.tar.gz --> bsp.tar.gz
 # Notes:
 # -------------------------------------------------------------------------------
 

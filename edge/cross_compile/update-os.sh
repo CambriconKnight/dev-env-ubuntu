@@ -14,8 +14,19 @@ set -e
 apt-get update
 apt-get upgrade -y
 apt-get install -y --no-install-recommends \
-    device-tree-compiler bc
+    device-tree-compiler bc \
+    minicom tftpd-hpa nfs-kernel-server nfs-common
 
 #pip install
 pip install openpyxl
 pip install bc
+
+#编辑 tftpd-hpa && nfs 设置
+#sudo vi /etc/default/tftpd-hpa
+echo '# /etc/default/tftpd-hpa' > /etc/default/tftpd-hpa && \
+echo 'TFTP_USERNAME="tftp"' >> /etc/default/tftpd-hpa && \
+echo 'TFTP_DIRECTORY="/data/tftp"' >> /etc/default/tftpd-hpa && \
+echo 'TFTP_ADDRESS="0.0.0.0:69"' >> /etc/default/tftpd-hpa && \
+echo 'TFTP_OPTIONS="-l -c -s"' >> /etc/default/tftpd-hpa && \
+echo '/data/nfs *(rw,sync,no_root_squash)' >> /etc/exports
+#sudo service tftpd-hpa restart
