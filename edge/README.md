@@ -219,7 +219,7 @@ watch -d -n -1 'cnmon info -u -e'
 <table>
     <tr>
         <td ><center><img alt="aiknight_cars_6_20.gif" src="../res/aiknight_cars_6_20.gif" height="220" </center></td>
-        <td ><center><img alt="aiknight_cnmon_3226_10.gif" src="../res/aiknight_cnmon_3226_10.gif" height="220" </center></td>
+        <td ><center><img alt="aiknight_cnmon_3226_20.gif" src="../res/aiknight_cnmon_3226_20.gif" height="220" </center></td>
     </tr>
 </table>
 
