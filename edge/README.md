@@ -121,8 +121,6 @@ cd /home/share/edge/cross_compile
 
 ## 6.3. CNStream交叉编译
 
-/home/share/edge/cross_compile
-
 ### 6.3.1 交叉编译与打包
 **一键编译**
 ```bash
