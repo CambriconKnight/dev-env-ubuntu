@@ -94,7 +94,7 @@ cd ./dev-env-ubuntu/edge
 cd /home/share/edge/cross_compile
 # 2. 设置环境变量(首次进入容器需要设置环境变量)
 source env-ce3226.sh
-# 3. 更新BSP所需的系统依赖软件(mm镜像中中没有安装的依赖软件)
+# 3. 更新BSP所需的系统依赖软件(mm镜像中没有安装的依赖软件)
 ./update-os.sh
 ```
 
