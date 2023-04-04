@@ -130,7 +130,7 @@ cd /home/share/edge/cross_compile
 ## 1.2. 拷贝或下载sdk到[../dependent_files]目录
 #cp -rvf /data/ftp/ce3226/sdk/ce3226v100-sdk-1.1.0.tar.gz ../dependent_files
 # 2. 一键编译cnstream, 编译完后,在cnstream目录下是生成cnstream部署包
-./build-cnstream-ce3226.sh.sh
+./build-cnstream-ce3226.sh
 ```
 **分步说明**
 ```bash
