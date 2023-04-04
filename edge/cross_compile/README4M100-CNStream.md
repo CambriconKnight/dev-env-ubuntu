@@ -1,19 +1,22 @@
 
 **该教程仅仅用于学习，打通流程； 不对效果负责，不承诺商用。**
+
 <p align="center">
-    <a href="https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/edge">
-        <h1 align="center">Edge开发环境搭建及验证工具集</h1>
+    <a href="https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge/cross_compile/README4M100-CNStream.md">
+        <h1 align="center">搭建开发环境并在M100上验证CNStream</h1>
     </a>
 </p>
 
 # 1. 概述
-本目录适配于官方针对寒武纪边缘侧/端侧产品发布的 MagicMind 框架 Docker 容器。 该 Docker 容器可用于各类网络模型的量化及对应生成设备侧部署的离线模型。按照以下步骤可以快速搭建基于Docker容器的开发环境。
+
+本文基于 [Edge开发环境搭建及验证工具集](https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge) 进行环境搭建与CNStream示例验证。
 
 **硬件环境准备:**
 
 | 名称           | 数量      | 备注                  |
 | :------------ | :--------- | :------------------ |
 | 开发主机/服务器  | 一台       |主流配置即可；         |
+| M100+底板  | 一套       |[产品介绍](https://mp.weixin.qq.com/s?__biz=Mzg4OTc0MTI1Ng==&mid=2247483770&idx=1&sn=f48e23ce283d9e1008b549981e9ca339&chksm=cfe60bddf89182cb36da258d3a594348a29cea96ddfb0db9ae92d59f4dea0bd10b11d2aa94fa&token=1709753145&lang=zh_CN#rd)；         |
 
 **软件环境准备:**
 
@@ -21,6 +24,8 @@
 | :-------------------- | :-------------------------------                      | :---------------------------------- |
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                       | 宿主机操作系统                         |
 | Docker Image          | magicmind_0.13.0-1_ubuntu18.04.tar.gz                 | 官方针对寒武纪边缘侧/端侧产品发布的 MagicMind 框架 Docker 容器 |
+| CNStream              | https://github.com/Cambricon/CNStream                 | [Github地址](https://github.com/Cambricon/CNStream) |
+| Edge开发环境搭建及验证工具集              | https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge                 | [Github地址](https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge) |
 
 注: 以上软件环境中文件名词, 如有版本升级及名称变化, 可以在 [env.sh](./env.sh) 中进行修改。
 
@@ -98,47 +103,9 @@ source env-ce3226.sh
 ./update-os.sh
 ```
 
-## 7.2. BSP交叉编译
-**分步说明**
-```bash
-# 1. 进入工作目录
-cd /home/share/edge/cross_compile
-# 2. 拷贝或下载sdk到[../dependent_files]目录
-#cp -rvf /data/ftp/ce3226/sdk/ce3226v100-sdk-1.1.0.tar.gz ../dependent_files
-# 3. 解压SDK到本目录
-tar zxvf ../dependent_files/ce3226v100-sdk-1.1.0.tar.gz -C ./
-# 4. 解压bsp到本目录
-tar zxvf ./ce3226v100-sdk-1.1.0/board/package/bsp.tar.gz -C ./
-# 5. 进入bsp编译目录
-cd /home/share/edge/cross_compile/bsp/ce3226v100_build/build
-# 6.执行make
-make all
-# 7.编译完后,在out/目录下是生成所有的bsp镜像文件
-ls -la ./out
-# 8.设置权限,否则可能会导致tftp下载失败
-chmod 644 ./out/ubootenv*
-ls -la ./out
-# 9.备用操作
-## 9.1.如需要则修改用户权限
-#sudo chown cam:cam -R ./out/*
-## 9.2.拷贝到tftp目录
-#cp -rvf ./out/*.bin ./out/*.img ./out/*.itb /data/tftp
-```
-**一键编译**
-```bash
-# 1.1. 进入工作目录
-cd /home/share/edge/cross_compile
-# 1.2. 拷贝或下载sdk到[../dependent_files]目录
-#cp -rvf /data/ftp/ce3226/sdk/ce3226v100-sdk-1.1.0.tar.gz ../dependent_files
-# 2. 一键编译所有的bsp镜像文件, 编译完后,在out/目录下是生成所有的bsp镜像文件
-./build-bsp-all.sh
-```
-**单独编译**
-单独编译详见官方发布的SDK使用开发指南.
+## 7.2. CNStream交叉编译
 
-## 7.3. CNStream交叉编译
-
-### 7.3.1. 交叉编译与打包
+### 7.2.1. 交叉编译与打包
 **一键编译**
 ```bash
 # 1. 环境准备
@@ -154,7 +121,7 @@ cd /home/share/edge/cross_compile
 # 详见【build-cnstream-ce3226.sh】脚本中注释说明
 ```
 
-### 7.3.2. 部署验证
+### 7.2.2. 部署验证
 ```bash
 # 0. 拷贝部署包到目标板（根据实际IP地址修改实例中的IP【192.168.0.110】）
 cd /home/share/edge/cross_compile/cnstream
@@ -185,11 +152,7 @@ watch -d -n -1 'cnmon info -u -e'
 
 <table>
     <tr>
-        <td ><center><img alt="aiknight_cars_6_20.gif" src="../res/aiknight_cars_6_20.gif" height="220" </center></td>
-        <td ><center><img alt="aiknight_cnmon_3226_20.gif" src="../res/aiknight_cnmon_3226_20.gif" height="220" </center></td>
+        <td ><center><img alt="aiknight_cars_6_20.gif" src="../../res/aiknight_cars_6_20.gif" height="220" </center></td>
+        <td ><center><img alt="aiknight_cnmon_3226_20.gif" src="../../res/aiknight_cnmon_3226_20.gif" height="220" </center></td>
     </tr>
 </table>
-
-## 7.4. 其他模块交叉编译
-
-其他模型交叉编译详见官方发布的SDK使用开发指南.
