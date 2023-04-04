@@ -210,14 +210,17 @@ cd /root/cnstream_deploy_ce3226/samples/cns_launcher/object_detection/
 ## 2.2. 运行yolov5+track测试用例
 cd /root/cnstream_deploy_ce3226/samples/cns_launcher/object_tracking
 ./run.sh ce3226 rtsp yolov5
-#结果演示：执行启动命令后，脚本会自动下载检测模型, 之后按照 json 配置文件启动业务处理流程.
-#        最后把检测后的结果通过 RTSP 服务模块推送出去.
+#运行过程中可另启终端输入命令【watch -n -1 -c "cnmon info -u"】，查看资源占用情况。
 ```
-参考以上运行测试实例，会按照配置文件启动业务处理流程，最后把检测后的结果通过 RTSP 服务模块推送出去。
-在局域网中任意PC可启动VLC客户端，拉取视频流如下所示：
+
+**参考以上运行测试实例，测试程序会把检测后的结果通过 RTSP 服务模块推送出去。**
+
+*在局域网任意PC上启动VLC客户端，拉取视频流及资源占用情况，如下图所示：*
+
 <table>
     <tr>
-        <td ><center><img alt="aiknight_cars_6_20.gif" src="../res/aiknight_cars_6_20.gif" height="320" </center></td>
+        <td ><center><img alt="aiknight_cars_6_20.gif" src="../res/aiknight_cars_6_20.gif" height="220" </center></td>
+        <td ><center><img alt="aiknight_cnmon_3226_10.gif" src="../res/aiknight_cnmon_3226_10.gif" height="220" </center></td>
     </tr>
 </table>
 
