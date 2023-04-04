@@ -199,18 +199,27 @@ scp cnstream_deploy_ce3226.tar.gz root@192.168.0.110:~/
 cd /root/
 tar zxvf cnstream_deploy_ce3226.tar.gz
 #为简单期间，如果非root账户可切换到root账户运行
-cd cnstream_deploy_ce3226/
+cd /root/cnstream_deploy_ce3226/
 #设置环境变量(第一次登陆板卡需要设置环境变量，注意切换用户后，需要重新设置)
 source env.sh
 
 # 2. 运行测试实例
 ## 2.1. 运行yolov3测试用例
-cd ./samples/cns_launcher/object_detection/
+cd /root/cnstream_deploy_ce3226/samples/cns_launcher/object_detection/
 ./run.sh ce3226 rtsp yolov3
 ## 2.2. 运行yolov5+track测试用例
-cd ./samples/cns_launcher/object_tracking
+cd /root/cnstream_deploy_ce3226/samples/cns_launcher/object_tracking
 ./run.sh ce3226 rtsp yolov5
+#结果演示：执行启动命令后，脚本会自动下载检测模型, 之后按照 json 配置文件启动业务处理流程.
+#        最后把检测后的结果通过 RTSP 服务模块推送出去.
 ```
+参考以上运行测试实例，会按照配置文件启动业务处理流程，最后把检测后的结果通过 RTSP 服务模块推送出去。
+在局域网中任意PC可启动VLC客户端，拉取视频流如下所示：
+<table>
+    <tr>
+        <td ><center><img alt="aiknight_cars_6_20.gif" src="../res/aiknight_cars_6_20.gif" height="320" </center></td>
+    </tr>
+</table>
 
 ## 6.4. 其他模块交叉编译
 
