@@ -3,13 +3,13 @@
 
 <p align="center">
     <a href="https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge/cross_compile/README4M100-CNStream.md">
-        <h1 align="center">搭建开发环境并在M100上验证CNStream</h1>
+        <h1 align="center">搭建CNStream交叉编译环境并在M100上验证</h1>
     </a>
 </p>
 
 # 1. 概述
 
-本文基于 [Edge开发环境搭建及验证工具集](https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge) 进行环境搭建与CNStream示例验证。
+本文基于 [M100](https://mp.weixin.qq.com/s?__biz=Mzg4OTc0MTI1Ng==&mid=2247483770&idx=1&sn=f48e23ce283d9e1008b549981e9ca339&chksm=cfe60bddf89182cb36da258d3a594348a29cea96ddfb0db9ae92d59f4dea0bd10b11d2aa94fa&token=1709753145&lang=zh_CN#rd) 和 [Edge工具集](https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge) 进行交叉编译环境搭建与CNStream示例验证。
 
 *M100*： *[M100](https://mp.weixin.qq.com/s?__biz=Mzg4OTc0MTI1Ng==&mid=2247483770&idx=1&sn=f48e23ce283d9e1008b549981e9ca339&chksm=cfe60bddf89182cb36da258d3a594348a29cea96ddfb0db9ae92d59f4dea0bd10b11d2aa94fa&token=1709753145&lang=zh_CN#rd) 是算力 4TOPS，与Jetson Nano/TX2 NX/XAVIER NX模组的外形和引脚兼容，并自带Ubuntu系统及GUI界面。*
 
