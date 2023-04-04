@@ -12,6 +12,7 @@
 本文基于 [Edge开发环境搭建及验证工具集](https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge) 进行环境搭建与CNStream示例验证。
 
 *M100*： *[M100](https://mp.weixin.qq.com/s?__biz=Mzg4OTc0MTI1Ng==&mid=2247483770&idx=1&sn=f48e23ce283d9e1008b549981e9ca339&chksm=cfe60bddf89182cb36da258d3a594348a29cea96ddfb0db9ae92d59f4dea0bd10b11d2aa94fa&token=1709753145&lang=zh_CN#rd) 是算力 4TOPS，内置4核ARM A55@1.3GHz，与Jetson Nano/TX2 NX/XAVIER NX模组的外形和引脚兼容，并自带Ubuntu系统及GUI界面。*
+
 *CNStream*： *[CNStream](https://github.com/Cambricon/CNStream) 是基于管道（Pipeline）和事件总线（EventBus）实现了实时数据流分析框架。*
 
 **硬件环境准备:**
