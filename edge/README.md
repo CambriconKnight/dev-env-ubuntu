@@ -190,7 +190,7 @@ ls -la ${cnstream_dir}/cnstream_deploy_ce3226.tar.gz
 ### 6.3.2 部署验证
 ```bash
 # 0. 拷贝部署包到目标板（根据实际IP地址修改实例中的IP【192.168.0.110】）
-cd ${cnstream_dir}
+cd /home/share/edge/cross_compile/cnstream
 scp cnstream_deploy_ce3226.tar.gz root@192.168.0.110:~/
 # 1.SSH登录3226并设置环境变量
 #登录3226目标设备并解压部署包
@@ -203,12 +203,13 @@ source env.sh
 
 # 2. 运行测试实例
 ## 2.1. 运行yolov3测试用例
-cd /root/cnstream_deploy_ce3226/samples/cns_launcher/object_detection/
-./run.sh ce3226 rtsp yolov3
+#cd /root/cnstream_deploy_ce3226/samples/cns_launcher/object_detection/
+#./run.sh ce3226 rtsp yolov3
 ## 2.2. 运行yolov5+track测试用例
 cd /root/cnstream_deploy_ce3226/samples/cns_launcher/object_tracking
 ./run.sh ce3226 rtsp yolov5
-#运行过程中可另启终端输入命令【watch -n -1 -c "cnmon info -u"】，查看资源占用情况。
+#运行以上任意一个测试实例后，可再另启一个终端输入命令【watch -d -n -1 'cnmon info -u -e'】，查看资源占用情况。
+watch -d -n -1 'cnmon info -u -e'
 ```
 
 **参考以上运行测试实例，测试程序会把检测后的结果通过 RTSP 服务模块推送出去。**
