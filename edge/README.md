@@ -44,6 +44,7 @@ SDK: https://sdk.cambricon.com/download?component_name=PyTorch
 ├── README.md                               #目录说明
 └── run-container-dev.sh                    #用作启动docker容器的脚本
 ```
+
 # 3. 下载镜像
 
 下载官方针对寒武纪边缘侧/端侧产品发布的 MagicMind 框架 Docker 容器。 可前往寒武纪开发者社区注册账号按需下载, 也可在官方提供的专属FTP账户指定路径下载。

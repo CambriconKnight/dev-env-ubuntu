@@ -7,8 +7,6 @@
     </a>
 </p>
 
-[toc]
-
 # 1. 概述
 
 本文基于 [M100](https://mp.weixin.qq.com/s?__biz=Mzg4OTc0MTI1Ng==&mid=2247483770&idx=1&sn=f48e23ce283d9e1008b549981e9ca339&chksm=cfe60bddf89182cb36da258d3a594348a29cea96ddfb0db9ae92d59f4dea0bd10b11d2aa94fa&token=1709753145&lang=zh_CN#rd) 和 [Edge工具集](https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge) 进行交叉编译环境搭建与CNStream示例验证。
@@ -83,7 +81,7 @@ SDK: https://sdk.cambricon.com/download?component_name=PyTorch
 ```bash
 #下载仓库
 git clone https://github.com/CambriconKnight/dev-env-ubuntu.git
-#进入【Edge工具集目录】
+#进入对应目录
 cd ./dev-env-ubuntu/edge
 ```
 
