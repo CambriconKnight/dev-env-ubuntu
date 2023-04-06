@@ -193,3 +193,7 @@ watch -d -n -1 'cnmon info -u -e'
 ## 7.4. 其他模块交叉编译
 
 其他模型交叉编译详见官方发布的SDK使用开发指南.
+
+
+**可扫描下方二维码，关注公众号【AIKnight】，获取更多资讯。**
+>![](../res/aiknight_wechat_344.jpg)

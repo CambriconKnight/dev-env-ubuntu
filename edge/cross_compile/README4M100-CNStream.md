@@ -7,6 +7,8 @@
     </a>
 </p>
 
+[toc]
+
 # 1. 概述
 
 本文基于 [M100](https://mp.weixin.qq.com/s?__biz=Mzg4OTc0MTI1Ng==&mid=2247483770&idx=1&sn=f48e23ce283d9e1008b549981e9ca339&chksm=cfe60bddf89182cb36da258d3a594348a29cea96ddfb0db9ae92d59f4dea0bd10b11d2aa94fa&token=1709753145&lang=zh_CN#rd) 和 [Edge工具集](https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge) 进行交叉编译环境搭建与CNStream示例验证。
@@ -28,14 +30,16 @@
 | :-------------------- | :-------------------------------                      | :---------------------------------- |
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                       | 宿主机操作系统                         |
 | Docker Image          | magicmind_0.13.0-1_ubuntu18.04.tar.gz                 | 官方针对寒武纪边缘侧/端侧产品发布的 MagicMind 框架 Docker 容器 |
+| SDK                   | ce3226v100-sdk-1.1.0.tar.gz                           | SDK需联系寒武纪技术服务人员获取 |
+| EDGE交叉编译工具包      | edge.tar.gz                 | [http下载地址](http://video.cambricon.com/models/edge.tar.gz) |
 | CNStream              | https://github.com/Cambricon/CNStream                 | [Github地址](https://github.com/Cambricon/CNStream) |
 | Edge开发环境搭建及验证工具集              | https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge                 | [Github地址](https://github.com/CambriconKnight/dev-env-ubuntu/tree/master/edge) |
 
 注: 以上软件环境中文件名词, 如有版本升级及名称变化, 可以在 [env.sh](./env.sh) 中进行修改。
 
-**下载地址:**
+**相关地址:**
 
-前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载， 也可在官方提供的专属FTP账户指定路径下载。
+前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载。
 
 文档: https://developer.cambricon.com/index/document/index/classid/3.html
 
@@ -53,11 +57,27 @@ SDK: https://sdk.cambricon.com/download?component_name=PyTorch
 ├── README.md                               #目录说明
 └── run-container-dev.sh                    #用作启动docker容器的脚本
 ```
-# 3. 下载镜像
 
-下载官方针对寒武纪边缘侧/端侧产品发布的 MagicMind 框架 Docker 容器。 可前往寒武纪开发者社区注册账号按需下载, 也可在官方提供的专属FTP账户指定路径下载。
+# 3. 下载依赖库
 
-官方发布的镜像包命名格式: magicmind_<x.y.z>-1_ubuntu<a.b>.tar.gz , 其中 <x.y.z> 为MagicMind 版本号，<a.b> 为操作系统版本号。
+**下载方式**
+1. 可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载到本目录；
+2. 可通过官方技术对接人员提供的专属FTP账户指定路径下载；
+3. 关注微信公众号 AIKnight , 发送文字消息, 包含关键字(不区分大小写): **dev4m100**, 公众号会自动回复Edge依赖库的下载地址；
+
+请把下载后的依赖库放置到目录(dependent_files)下, 方便进行后续操作。
+
+```bash
+./dependent_files/
+├── ce3226v100-sdk-1.1.0.tar.gz             #SDK发布包
+├── ce3226v100-sdk-1.1.0.tar.gz.md5sum      #SDK发布包MD5值
+├── clean.sh                                #清理脚本,包括清理临时目录或文件
+├── edge.tar.gz                             #EDGE交叉编译工具包
+├── edge.tar.gz.md5sum                      #EDGE交叉编译工具包MD5值
+├── magicmind_0.13.0-1_ubuntu18.04.tar.gz   #边缘侧/端侧产品发布的 MagicMind 框架 Docker镜像
+├── magicmind_0.13.0-1_ubuntu18.04.tar.gz.md5sum    #Docker镜像MD5值
+└── README.md                               #说明
+```
 
 # 4. 下载仓库
 ```bash
@@ -69,13 +89,13 @@ cd ./dev-env-ubuntu/edge
 
 # 5. 加载镜像
 
-请提前下载好【Docker镜像】，方便以下操作加载使用。
+*请提前下载好【Docker镜像】，方便以下操作加载使用。*
 
 ```bash
 #进入【Edge工具集目录】
 cd ./dev-env-ubuntu/edge
 #加载Docker镜像
-#./load-image-dev.sh /data/ftp/ce3226/mm/0.13.0/magicmind_0.13.0-1_ubuntu18.04.tar.gz
+#./load-image-dev.sh ./dependent_files/magicmind_0.13.0-1_ubuntu18.04.tar.gz
 ./load-image-dev.sh ${FULLNAME_IMAGES}
 ```
 
@@ -94,7 +114,7 @@ cd ./dev-env-ubuntu/edge
 
 以下操作步骤均是在官方提供的Docker容器中进行。
 
-## 7.1. 环境准备
+**环境准备**
 
 参考以下操作, 根据实际SDK包位置,解压到工作目录.
 
@@ -107,10 +127,10 @@ source env-ce3226.sh
 ./update-os.sh
 ```
 
-## 7.2. CNStream交叉编译
-
-### 7.2.1. 交叉编译与打包
 **一键编译**
+
+拷贝或下载sdk到[../dependent_files]目录，然后进行一键编译与打包。
+
 ```bash
 # 1. 环境准备
 ## 1.1. 进入工作目录
@@ -119,13 +139,13 @@ cd /home/share/edge/cross_compile
 #cp -rvf /data/ftp/ce3226/sdk/ce3226v100-sdk-1.1.0.tar.gz ../dependent_files
 # 2. 一键编译cnstream, 编译完后,在cnstream目录下是生成cnstream部署包
 ./build-cnstream-ce3226.sh
+#分步说明详见【build-cnstream-ce3226.sh】脚本中注释说明
+ls -la ./cnstream/cnstream_deploy_ce3226.tar.gz
 ```
-**分步说明**
-```bash
-# 详见【build-cnstream-ce3226.sh】脚本中注释说明
-```
+*注： 以上交叉编译后的CNStream部署包【cnstream_deploy_ce3226.tar.gz】可通过关注公众号 【AIKnight】直接获取：可发送文字消息: **cnstream4ce3226** 获取，此包可直接用于M100上部署验证。*
 
-### 7.2.2. 部署验证
+# 8. 部署验证
+
 ```bash
 # 0. 拷贝部署包到目标板（根据实际IP地址修改实例中的IP【192.168.0.110】）
 cd /home/share/edge/cross_compile/cnstream
@@ -160,3 +180,6 @@ watch -d -n -1 'cnmon info -u -e'
         <td ><center><img alt="aiknight_cnmon_3226_20.gif" src="../../res/aiknight_cnmon_3226_20.gif" height="220" </center></td>
     </tr>
 </table>
+
+**可扫描下方二维码，关注公众号【AIKnight】，获取更多资讯。**
+>![](../../res/aiknight_wechat_344.jpg)
