@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+
+globals:
+  logdir: ./
+
+custom:
+- custom:
+    mlu_stress:
+      test_duration: 60       # 24小时:86400; 12小时:43200
+      target_stress: 128000   # 单位：GOPS

@@ -1,0 +1,40 @@
+%YAML 1.2
+---
+      
+globals:
+  logdir: ./
+
+custom:
+- custom:
+    targeted_stress:
+      test_duration: 60
+    mlu_stress:
+      test_duration: 60
+    targeted_power: 
+      test_duration: 60
+    memory_bandwidth: 
+      min_bandwidth: 10
+    pcie:
+      test_pinned: true
+      test_unpinned: true
+      test_p2p_on: false
+      test_p2p_off: false
+      subtests:
+        h2d_d2h_single_pinned:
+          min_pci_generation: 1.0
+          min_pci_width: 1
+          min_bandwidth: 0
+        h2d_d2h_single_unpinned:
+          min_pci_generation: 1.0
+          min_pci_width: 1.0
+          min_bandwidth: 0
+
+        h2d_d2h_concurrent_pinned:
+          min_bandwidth: 0
+        h2d_d2h_concurrent_unpinned:
+          min_bandwidth: 0
+
+        h2d_d2h_latency_pinned:
+          max_latency: 100000.0
+        h2d_d2h_latency_unpinned:
+          max_latency: 100000.0

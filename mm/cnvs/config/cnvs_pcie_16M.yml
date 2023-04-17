@@ -1,0 +1,34 @@
+%YAML 1.2
+---
+
+globals:
+  logdir: ./
+
+custom:
+- custom:
+    pcie:
+      test_pinned: true
+      test_unpinned: true
+      test_p2p_on: false
+      test_p2p_off: false
+      subtests:
+        h2d_d2h_single_pinned:
+          min_pci_generation: 1.0
+          min_pci_width: 1
+          min_bandwidth: 0
+          data_size: 16777216
+
+        h2d_d2h_single_unpinned:
+          min_pci_generation: 1.0
+          min_pci_width: 1.0
+          min_bandwidth: 0
+
+        h2d_d2h_concurrent_pinned:
+          min_bandwidth: 0
+        h2d_d2h_concurrent_unpinned:
+          min_bandwidth: 0
+
+        h2d_d2h_latency_pinned:
+          max_latency: 100000.0
+        h2d_d2h_latency_unpinned:
+          max_latency: 100000.0

@@ -1,0 +1,12 @@
+%YAML 1.2
+---
+
+globals:
+  logdir: ./
+
+custom:
+- custom:
+    memory_bandwidth:
+      min_bandwidth: 10
+      data_size: 134217728
+      iterations: 100

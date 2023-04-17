@@ -1,0 +1,11 @@
+%YAML 1.2
+---
+
+globals:
+  logdir: ./
+
+custom:
+- custom:
+    targeted_power:
+      test_duration: 60
+      target_power: 75    # 370-S4: 75W; 370-X4: 150W; 370-X8: 125W(250W/2);

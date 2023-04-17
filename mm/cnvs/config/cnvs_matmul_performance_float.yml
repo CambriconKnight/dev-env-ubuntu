@@ -1,0 +1,14 @@
+%YAML 1.2
+---
+
+globals:
+  logdir: ./
+
+custom:
+- custom:
+    matmul_performance:
+      matrix_dimension_m: 9216
+      matrix_dimension_k: 9216
+      matrix_dimension_n: 9216
+      input_data_type: float
+      iterations: 100
