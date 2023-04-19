@@ -18,7 +18,7 @@ cd /home/share/mm/cnvs
 ##########################################################
 # 安装依赖库
 apt-get update
-apt-get install -y libpci3 libpci3 pciutils
+apt-get install -y libpci3 libpci3 pciutils tree
 apt --fix-broken install
 apt-get install -y libyaml-dev
 #安装CNVS

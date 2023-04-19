@@ -59,6 +59,9 @@ dpkg -i /var/cntoolkit-3.2.2/cnvs_0.8.1-rc1.ubuntu18.04_amd64.deb
 
 # 3. 测试
 ## 3.1. 检查软硬件环境
+
+software插件可用于检查当前的软硬件环境是否配置正确，以便于执行用户的应用程序。
+
 **命令**
 ```bash
 cd /home/share/mm/cnvs
@@ -73,36 +76,84 @@ root@worker1:/home/share/mm/cnvs# cnvs -r "software" -v
 
 root@worker1:/home/share/mm/cnvs#
 ```
-
 ## 3.2. targeted_stress
+
+targeted_stress插件可根据用户设置的参数，通过调整矩阵乘算子的规模，让设备的每秒负载达到用户期望的目标性能值。该插件可用于观测在目标负载情况下设备的功耗、温度等表现。
+
+>![](../../res/note.gif) **备注：**
+>- targeted_stress插件统计的性能，是根据计算量除以执行时间得到，该执行时间包括输入、输出数据在HOST和MLU之间进行拷贝的时间。
+
 **命令**
 ```bash
 cd /home/share/mm/cnvs
 cnvs -r "targeted_stress" -c /usr/local/neuware/bin/cnvs.example.yml -v
 ```
 
+**实例**
+```bash
+cd /home/share/mm/cnvs
+#执行测试脚本
+./targeted_stress-test.sh
+```
+
 ## 3.3. mlu_stress
+
+mlu_stress插件可根据用户设置的参数，通过调整矩阵乘算子的规模，让设备的每秒负载达到用户期望的目标性能值。 该插件可用于观测在目标负载情况下，设备的功耗、温度等表现。
+
+>![](../../res/note.gif) **备注：**
+>- mlu_stress插件统计的性能，是根据计算量除以执行时间得到，但该执行时间不包括输入、输出数据在HOST和MLU之间进行拷贝的时间，这是mlu_stress插件和targeted_stress插件的区别。
+
 **命令**
 ```bash
 cd /home/share/mm/cnvs
 cnvs -r "mlu_stress" -c /usr/local/neuware/bin/cnvs.example.yml -v
 ```
 
+**实例**
+```bash
+cd /home/share/mm/cnvs
+#执行测试脚本
+./mlu_stress-test.sh
+```
+
 ## 3.4. targeted_power
+
+targeted_power插件可根据用户设置的参数，通过逐步增加计算任务的负载，使设备运行在用户期望的功耗下。 该插件可用于帮助用户发现特定功耗下是否可能出现超温降频等问题。
+
 **命令**
 ```bash
 cd /home/share/mm/cnvs
 cnvs -r "targeted_power" -c /usr/local/neuware/bin/cnvs.example.yml -v
 ```
 
+**实例**
+```bash
+cd /home/share/mm/cnvs
+#执行测试脚本
+./targeted_power-test.sh
+```
+
 ## 3.5. memory_bandwidth
+
+memory_bandwidth插件会在MLU Core上执行读写GDRAM的内存带宽测试。
+
 **命令**
 ```bash
 cd /home/share/mm/cnvs
 cnvs -r "memory_bandwidth" -c /usr/local/neuware/bin/cnvs.example.yml -v
 ```
 
+**实例**
+```bash
+cd /home/share/mm/cnvs
+#执行测试脚本
+./memory-test.sh
+```
+
 ## 3.6. matmul_performance
+
+matmul_performance插件会执行一个特定规模的矩阵乘算子，以便用户得到MLU设备的矩阵乘算子性能。
+
 **命令**
 ```bash
 cd /home/share/mm/cnvs
@@ -110,7 +161,17 @@ cd /home/share/mm/cnvs
 cnvs -r "matmul_performance" -v
 ```
 
+**实例**
+```bash
+cd /home/share/mm/cnvs
+#执行测试脚本
+./matmul-test.sh
+```
+
 ## 3.7. peak_performance
+
+peak_performance插件会执行一个特定规模的conv计算，以便用户得到MLU设备的峰值运算性能。
+
 **命令**
 ```bash
 cd /home/share/mm/cnvs
@@ -118,11 +179,29 @@ cd /home/share/mm/cnvs
 cnvs -r "peak_performance" -v
 ```
 
+**实例**
+```bash
+cd /home/share/mm/cnvs
+#执行测试脚本
+./peak-test.sh
+```
+
 ## 3.8. pcie
+
+pcie插件用于测试各种情况下的PCIe拷贝带宽及延迟。
+
 **命令**
 ```bash
 cd /home/share/mm/cnvs
 cnvs -r "pcie" -c /usr/local/neuware/bin/cnvs.example.yml -v
 ```
 
-详细使用请参考CNVS手册： https://www.cambricon.com/docs/sdk_1.10.0/cntoolkit_3.2.2/cnvs_0.8.1/index.html
+**实例**
+```bash
+cd /home/share/mm/cnvs
+#执行测试脚本
+./peak-test.sh
+```
+
+>![](../../res/note.gif) **备注：**
+>- 有关各个测试插件的详细使用，请参考CNVS手册： https://www.cambricon.com/docs/sdk_1.10.0/cntoolkit_3.2.2/cnvs_0.8.1/index.html

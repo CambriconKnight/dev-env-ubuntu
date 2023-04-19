@@ -18,7 +18,7 @@ print_log_echo_info "=================================================="
 #进入测试目录
 cd /home/share/mm/cnvs
 # 0. 配置待测试板卡
-export MLU_VISIBLE_DEVICES=2
+export MLU_VISIBLE_DEVICES=0,1
 # 1.开始测试前，打印cnmon信息
 #cnmon && sleep 1
 cnmon >> $RUNNING_LOG_FILE
