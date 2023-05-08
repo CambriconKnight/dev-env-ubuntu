@@ -1,7 +1,7 @@
 # -------------------------------------------------------------------------------
 # Filename:    env.sh
 # Revision:    1.0.0
-# Date:        2023/03/14
+# Date:        2023/03/13
 # Description: Common Environment variable
 # Example:
 # Depends:
@@ -9,18 +9,17 @@
 # -------------------------------------------------------------------------------
 #################### version ####################
 ## 以下信息,根据各个版本中文件实际名词填写.
-#Version
-VER="1.10.0"
+#pytorch镜像的版本号，如【pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz】则取作【1.13.0】。
+VER="1.13.0"
 Owner="kang"
 #################### docker ####################
 #Work
 PATH_WORK="pytorch"
 #Dockerfile(16.04/18.04/CentOS)
 OSVer="18.04"
-#Operating system
+#Operating system，如【pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz】则取作【ubuntu18.04-py37】。
 OS="ubuntu$OSVer-py37"
-#FrameVersion
-#FrameVer="0.15.602"
+#FrameVersion，如【pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz】则取作【v1.13.0-torch1.6】。
 FrameVer="v$VER-torch1.9"
 #(Dockerfile.16.04/Dockerfile.18.04/Dockerfile.CentOS)
 FILENAME_DOCKERFILE="Dockerfile.$OSVer"

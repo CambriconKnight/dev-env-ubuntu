@@ -8,6 +8,7 @@
 
 ## 2.1. 下载代码
 ```bash
+cd /home/share/pytorch1.6/yolact
 # Clone
 git clone https://github.com/dbolya/yolact.git -b master
 cd yolact && git checkout 57b8f2d95e62e2e649b382f516ab41f949b57239 && cd -
