@@ -1,9 +1,65 @@
 
 **该教程仅仅用于学习，打通流程； 不对效果负责，不承诺商用。**
 
-# 1. 环境说明
+# 1. 环境准备
 
-参考[../README.md](../README.md)
+参考[../README.md](https://gitee.com/cambriconknight/dev-env-ubuntu/blob/master/pytorch1.9/README.md)
+
+## 1.1. 硬件环境
+
+| 名称           | 数量      | 备注                  |
+| :------------ | :--------- | :------------------ |
+| 服务器         | 一台       | 采用已完成适配的服务器；PCIe Gen.4 x16 |
+| MLU370-S4/X4/x8  | 一套       |使用板卡自带的8pin连接器连接主机电源|
+
+## 1.2. 软件环境
+
+| 名称                   | 版本/文件                                                 | 备注                                 |
+| :-------------------- | :-------------------------------                         | :---------------------------------- |
+| Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                          | 宿主机操作系统                         |
+| Docker Image          | pytorch-v1.10.0-torch1.9-ubuntu18.04-py37.tar.gz         | 官方发布的 Pytorch 框架 Docker 镜像文件 |
+| Driver_MLU370         | cambricon-mlu-driver-ubuntu18.04-dkms_4.20.18_amd64.deb  | 依操作系统选择                         |
+| 工具包                 | https://github.com/CambriconKnight/dev-env-ubuntu        | [Github地址](https://github.com/CambriconKnight/dev-env-ubuntu) |
+
+**下载地址:**
+- 前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载， 也可在官方提供的专属FTP账户指定路径下载。
+- 文档: https://developer.cambricon.com/index/document/index/classid/3.html
+- SDK: https://sdk.cambricon.com/download?component_name=PyTorch
+
+**AIKnight公众号**
+>![](../../res/aiknight_wechat_344.jpg)
+
+## 1.3. 下载仓库
+```bash
+#进入裸机工作目录，以【/data/github】工作目录为例
+cd /data/github
+#下载仓库
+git clone https://github.com/CambriconKnight/dev-env-ubuntu.git
+#进入【工具包目录】
+cd ./dev-env-ubuntu/pytorch1.9
+```
+## 1.4. 加载镜像
+
+请提前下载好【Docker镜像】，方便以下操作加载使用。
+
+```bash
+#进入【工具包目录】
+cd ./dev-env-ubuntu/pytorch1.9
+#加载Docker镜像
+#./load-image-dev.sh /DATA_SPACE/kang/ftp/docker/pytorch-v1.10.0-torch1.9-ubuntu18.04-py37.tar.gz
+./load-image-dev.sh ${FULLNAME_IMAGES}
+```
+
+## 1.5. 启动容器
+
+镜像加载完成后，运行脚本，进入Docker容器。
+
+```bash
+#进入【工具包目录】
+cd ./dev-env-ubuntu/edge
+#启动Docker容器
+./run-container-dev.sh
+```
 
 # 2. 模型推理
 ## 2.1. 安装LFS
@@ -49,8 +105,6 @@ cp -rvf /data/models/chatglm-6b/pretrained_model/chatglm-6b/ice_text.model ./cha
 cp -rvf /data/baidudisk/chatglm-6b ./
 #mv -f /DATA_SPACE/baidudisk/chatglm-6b ./
 ```
-**AIKnight公众号**
->![](../../res/aiknight_wechat_344.jpg)
 
 ## 2.3. 模型适配
 ### 2.3.1. 自动迁移代码
