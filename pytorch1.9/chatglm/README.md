@@ -3,8 +3,6 @@
 
 # 1. 环境准备
 
-参考[../README.md](https://gitee.com/cambriconknight/dev-env-ubuntu/blob/master/pytorch1.9/README.md)
-
 ## 1.1. 硬件环境
 
 | 名称           | 数量      | 备注                  |
