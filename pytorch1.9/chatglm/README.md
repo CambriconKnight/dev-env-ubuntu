@@ -258,7 +258,7 @@ This share link expires in 72 hours. For free permanent hosting and GPU upgrades
     <img alt="aiknight_mlu_chatglm.gif" src="./res/aiknight_mlu_chatglm.gif" height="360" />
 </p>
 
-### 2.4.3. 性能测试
+### 2.4.3. 测试推理性能
 ```bash
 # 进入ChatGLM-6B_mlu路径（以实际为准）
 cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu
