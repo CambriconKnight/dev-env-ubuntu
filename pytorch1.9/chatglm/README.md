@@ -54,7 +54,7 @@ cd ./dev-env-ubuntu/pytorch1.9
 
 ```bash
 #进入【工具包目录】
-cd ./dev-env-ubuntu/edge
+cd ./dev-env-ubuntu/pytorch1.9
 #启动Docker容器
 ./run-container-dev.sh
 ```
@@ -87,7 +87,7 @@ cd /home/share/pytorch1.9/chatglm
 git clone -b v4.27.4 https://github.com/huggingface/transformers
 # 2. 下载 chatglm-6b 源码
 git clone https://github.com/THUDM/ChatGLM-6B
-cd chatglm-6b && git checkout 82c084b1cb5f2c2973cfb2119fb154f4dbc825b6 && cd -
+cd ChatGLM-6B && git checkout 82c084b1cb5f2c2973cfb2119fb154f4dbc825b6 && cd -
 # 3. 下载 chatglm-6b 模型
 ##第一种方式： 不推荐使用以下命令。直接 git clone 大模型文件的话，下载模型时间较长.
 # git clone https://huggingface.co/THUDM/chatglm-6b
@@ -190,7 +190,7 @@ key_layer = torch.cat([k1, k2], dim=(k1.ndim - 1))
 
 ```bash
 # 安装 ChatGLM-6B 依赖库
-cd ChatGLM-6B_mlu
+cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu
 sed -i 's/torch/# torch/' requirements.txt
 pip install -r requirements.txt
 # 安装 transformers
@@ -201,7 +201,7 @@ pip install -e .
 ## 2.4. 测试验证
 ```bash
 # 进入ChatGLM-6B_mlu路径（以实际为准）
-cd ../ChatGLM-6B_mlu
+cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu
 
 # 根据使用的demo，修改cli_demo.py或web_demo.py或api.py中的预训练模型路径“THUDM/chatglm-6b”为实际路径，本教程中此路径修改为【../chatglm-6b】。
 # tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True)
@@ -258,6 +258,57 @@ This share link expires in 72 hours. For free permanent hosting and GPU upgrades
     <img alt="aiknight_mlu_chatglm.gif" src="./res/aiknight_mlu_chatglm.gif" height="360" />
 </p>
 
+### 2.4.3. 性能测试
+```bash
+# 进入ChatGLM-6B_mlu路径（以实际为准）
+cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu
+# 同步
+cp -rvf /home/share/pytorch1.9/chatglm/inference.py /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/
+# 测试验证
+python inference.py
+```
+**测试实例**
+```bash
+(pytorch) root@worker1:/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu# python inference.py
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████| 8/8 [00:10<00:00,  1.28s/it]
+/home/share/pytorch1.9/chatglm/transformers_mlu/src/transformers/tokenization_utils_base.py:759: UserWarning:  MLU operators dont support 64-bit calculation. so the 64 bit data will be forcibly converted to 32-bit for calculation.  (Triggered internally at  /torch/catch/torch_mlu/csrc/aten/util/tensor_util.cpp:153.)
+  self.data = {k: v.to(device=device) for k, v in self.data.items()}
+The dtype of attention mask (torch.int64) is not bool
+Hello! How can I assist you today?
+==================================================
+question:  ChatGLM-6B 是啥?
+response:  ChatGLM-6B 是一个基于语言模型的人工智能助手，由清华大学 KEG 实验室和智谱 AI 公司于 2023 年共同训练的语言模型 GLM-6B 开发而成。该助手旨在为用户提供的帮助和回答。
+len(response):  97
+time_end-time_start:  7.061268091201782
+token:  13.736909397457989
+==================================================
+==================================================
+question:  CharGPT 是啥?
+response:  CharGPT 是由 OpenAI 于 2022 年 11 月推出的一个人工智能聊天机器人程序，该程序基于大型语言模型 GPT-3.5，使用指令微调(Instruction Tuning)和基于人类反馈的强化学习技术(RLHF)训练而成。
+len(response):  119
+time_end-time_start:  8.150062799453735
+token:  14.6011144856425
+==================================================
+==================================================
+question:  ChatGLM-6B 与 CharGPT 有什么区别?
+response:  ChatGLM-6B 和 CharGPT 都是基于语言模型的人工智能助手，但它们在以下几个方面有所不同：
+
+1. 模型大小：ChatGLM-6B 是一个基于 GLM-6B 语言模型的人工智能助手，而 CharGPT 是一个基于 GPT-3.5 语言模型的人工智能助手。
+
+2. 训练数据：ChatGLM-6B 和 CharGPT 的训练数据都来自于互联网上的大量文本数据，但它们的训练数据有所不同。ChatGLM-6B 的训练数据包括了多种不同的主题和语言风格，而 CharGPT 的训练数据则更加多样化，它包括了多种不同的文本类型和语言风格。
+
+3. 功能：ChatGLM-6B 和 CharGPT 的功能也有所不同。ChatGLM-6B 是一个实时的人工智能助手，它可以帮助用户回答各种问题，提供各种帮助。而 CharGPT 则是一种聊天机器人程序，它可以与用户进行对话，回答用户的问题，并提供一些娱乐性的内容。
+
+总的来说，ChatGLM-6B 和 CharGPT 都是基于语言模型的人工智能助手，但它们在模型大小、训练数据、功能等方面有所不同。
+len(response):  476
+time_end-time_start:  34.9201123714447
+token:  13.631113065639516
+==================================================
+(pytorch) root@worker1:/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu#
+```
 
 # 3. 模型训练
 
