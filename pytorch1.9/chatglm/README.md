@@ -27,7 +27,7 @@
 | 工具包                 | https://github.com/CambriconKnight/dev-env-ubuntu        | [Github地址](https://github.com/CambriconKnight/dev-env-ubuntu) |
 | ChatGLM-6B 源码         | https://github.com/THUDM/ChatGLM-6B  | commit：82c084b1cb5f2c2973cfb2119fb154f4dbc825b6 |
 | Transformers 源码         | https://github.com/huggingface/transformers  | v4.27.4                          |
-| ChatGLM-6B 模型         | https://huggingface.co/THUDM/chatglm-6b  | https://cloud.tsinghua.edu.cn/d/fb9f16d6dc8f482596c2/ |
+| ChatGLM-6B 模型         | https://huggingface.co/THUDM/chatglm-6b  | 直接clone 速度慢，可从[Tsinghua Cloud](https://cloud.tsinghua.edu.cn/d/fb9f16d6dc8f482596c2)下载；也可关注微信公众号 【 AIKnight 】, 发送关键字 **chatglm-6b** 自动获取。|
 
 **下载地址:**
 - 前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载， 也可在官方提供的专属FTP账户指定路径下载。
@@ -107,7 +107,7 @@ GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/THUDM/chatglm-6b 下载�
 cp -rvf /data/models/chatglm-6b/pretrained_model/chatglm-6b/pytorch_model-0000*.bin ./chatglm-6b
 cp -rvf /data/models/chatglm-6b/pretrained_model/chatglm-6b/ice_text.model ./chatglm-6b
 # 注意： 如果后续操作中，有shape mismatch之类报错，多半是模型更新了，需要下载对应的模型。
-##第三种方式： 为保证与以上代码对应的模型，也可以通过关注微信公众号 【AIKnight】,
+##第三种方式： 为保证与以上代码对应的模型，也可通过关注微信公众号 【AIKnight】,
 # 发送关键字(不区分大小写): **chatglm-6b**, 公众号会自动回复对应下载地址.
 # 下载完毕后，可把下载后的【chatglm-6b】目录拷贝到当前目录。
 cp -rvf /data/baidudisk/chatglm-6b ./
