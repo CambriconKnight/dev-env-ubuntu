@@ -1,4 +1,11 @@
 
+<p align="center">
+    <a href="https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch1.9/chatglm">
+        <img alt="chatglm-logo" src="./res/chatglm-6b.jpg" height="140" />
+        <h1 align="center">ChatGLM模型移植教程</h1>
+    </a>
+</p>
+
 **该教程仅仅用于学习，打通流程； 不对效果负责，不承诺商用。**
 
 # 1. 环境准备
