@@ -15,8 +15,8 @@
 | 名称                   | 版本/文件                                                 | 备注                                 |
 | :-------------------- | :-------------------------------                         | :---------------------------------- |
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                          | 宿主机操作系统                         |
-| Docker Image          | pytorch-v1.10.0-torch1.9-ubuntu18.04-py37.tar.gz         | 官方发布的 Pytorch 框架 Docker 镜像文件 |
-| Driver_MLU370         | cambricon-mlu-driver-ubuntu18.04-dkms_4.20.18_amd64.deb  | 依操作系统选择                         |
+| Docker Image          | pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz         | 官方发布的 Pytorch 框架 Docker 镜像文件 |
+| Driver_MLU370         | cambricon-mlu-driver-centos7-5.10.10-1.x86_64.rpm	       | 依操作系统选择                         |
 | 工具包                 | https://github.com/CambriconKnight/dev-env-ubuntu        | [Github地址](https://github.com/CambriconKnight/dev-env-ubuntu) |
 
 **下载地址:**
@@ -255,7 +255,7 @@ This share link expires in 72 hours. For free permanent hosting and GPU upgrades
 
 **Web展示效果**
 <p align="left">
-    <img alt="aiknight_mlu_chatglm.gif" src="./res/aiknight_mlu_chatglm.gif" height="360" />
+    <img alt="aiknight_mlu_chatglm" src="./res/aiknight_mlu_chatglm.gif" height="360" />
 </p>
 
 ### 2.4.3. 测试推理性能
@@ -263,11 +263,11 @@ This share link expires in 72 hours. For free permanent hosting and GPU upgrades
 # 进入ChatGLM-6B_mlu路径（以实际为准）
 cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu
 # 同步
-cp -rvf /home/share/pytorch1.9/chatglm/inference.py /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/
+cp -rvf /home/share/pytorch1.9/chatglm/tools/inference.py /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/
 # 测试验证
 python inference.py
 ```
-**测试实例**
+**实例**
 ```bash
 (pytorch) root@worker1:/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu# python inference.py
 Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
@@ -311,5 +311,158 @@ token:  13.631113065639516
 ```
 
 # 3. 模型训练
+## 3.1. P-Tuning v2
+### 3.1.1. 安装软件依赖
+运行微调需要4.27.1版本的`transformers`。除 ChatGLM-6B 的依赖之外，还需要安装以下依赖
+```bash
+pip install rouge_chinese nltk jieba datasets
+```
+### 3.1.2. 下载数据集
+ADGEN 数据集任务为根据输入（content）生成一段广告词（summary）。
+
+```json
+{
+    "content": "类型#上衣*版型#宽松*版型#显瘦*图案#线条*衣样式#衬衫*衣袖型#泡泡袖*衣款式#抽绳",
+    "summary": "这件衬衫的款式非常的宽松，利落的线条可以很好的隐藏身材上的小缺点，穿在身上有着很好的显瘦效果。领口装饰了一个可爱的抽绳，漂亮的绳结展现出了十足的个性，配合时尚的泡泡袖型，尽显女性甜美可爱的气息。"
+}
+```
+
+从 [Google Drive](https://drive.google.com/file/d/13_vf0xRTQsyneRKdD1bZIr93vBGOczrk/view?usp=sharing) 或者 [Tsinghua Cloud](https://cloud.tsinghua.edu.cn/f/b3f119a008264b1cabd1/?dl=1) 下载处理好的 ADGEN 数据集，将解压后的 `AdvertiseGen` 目录放到本目录下。
+
+```bash
+#数据集下载完成后解压
+tar zxvf AdvertiseGen.tar.gz
+#拷贝数据集到指定目录(以下为 docker 容器内部目录)
+cp -rvf AdvertiseGen /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/
+```
+
+### 3.1.3. 修改训练代码
+
+1. 修改 trainer.py
+
+需要把以下两个文件中的 torch.mlu.random 全部改成 torch_mlu.core.random 。否则会报错【AttributeError: module 'torch.mlu' has no attribute 'random'】。
+```bash
+#查找目录中所有相关文件
+cd /home/share/pytorch1.9/chatglm/
+grep -rn torch.mlu.core.random
+```
+主要包括如下两个文件，替换后，保存文件。
+```bash
+ChatGLM-6B_mlu/ptuning/trainer.py:2275:                torch.mlu.core.random.set_rng_state(checkpoint_rng_state["mlu"])
+ChatGLM-6B_mlu/ptuning/trainer.py:2278:                    torch.mlu.core.random.set_rng_state_all(checkpoint_rng_state["mlu"])
+ChatGLM-6B_mlu/ptuning/trainer.py:2370:                rng_states["mlu"] = torch.mlu.core.random.get_rng_state_all()
+ChatGLM-6B_mlu/ptuning/trainer.py:2372:                rng_states["mlu"] = torch.mlu.core.random.get_rng_state()
+transformers_mlu/src/transformers/trainer.py:2273:                torch.mlu.core.random.set_rng_state(checkpoint_rng_state["mlu"])
+transformers_mlu/src/transformers/trainer.py:2276:                    torch.mlu.core.random.set_rng_state_all(checkpoint_rng_state["mlu"])
+transformers_mlu/src/transformers/trainer.py:2368:                rng_states["mlu"] = torch.mlu.core.random.get_rng_state_all()
+transformers_mlu/src/transformers/trainer.py:2370:                rng_states["mlu"] = torch.mlu.core.random.get_rng_state()
+```
+
+2. 训练脚本修改
+
+基于 docker 容器中目录 /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/ptuning 下的 `train.sh` 脚本，修改并增加了一份可用于 MLU 的训练启动脚本 `train_mlu.sh`。
+```bash
+#拷贝脚本到指定目录
+cp -rvf /home/share/pytorch1.9/chatglm/tools/train_mlu.sh /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/ptuning
+```
+`train_mlu.sh` 脚本中的相关参数可以根据实际情况修改，保存文件后，即可进行接下来的训练。
+`train_mlu.sh` 脚本内容如下：
+```bash
+PRE_SEQ_LEN=128
+LR=2e-2
+
+MLU_VISIBLE_DEVICES=0 python3 main.py \
+    --do_train \
+    --train_file ../AdvertiseGen/train.json \
+    --validation_file ../AdvertiseGen/dev.json \
+    --prompt_column content \
+    --response_column summary \
+    --overwrite_cache \
+    --model_name_or_path ../../chatglm-6b \
+    --output_dir output/adgen-chatglm-6b-pt-$PRE_SEQ_LEN-$LR \
+    --overwrite_output_dir \
+    --max_source_length 64 \
+    --max_target_length 64 \
+    --per_device_train_batch_size 1 \
+    --per_device_eval_batch_size 1 \
+    --gradient_accumulation_steps 16 \
+    --predict_with_generate \
+    --max_steps 3000 \
+    --logging_steps 10 \
+    --save_steps 1000 \
+    --learning_rate $LR \
+    --pre_seq_len $PRE_SEQ_LEN
+```
+
+### 3.1.4. 执行训练
+
+运行以下指令进行训练：
+
+*加载比较慢，大概需要10分钟，可耐心等待。*
+
+```bash
+cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/ptuning
+bash train_mlu.sh
+```
+**实例**
+```bash
+(pytorch) root@worker1:/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/ptuning# bash train_mlu.sh
+05/25/2023 13:07:42 - WARNING - __main__ - Process rank: -1, device: mlu:0, n_gpu: 1distributed training: False, 16-bits training: False
+05/25/2023 13:07:42 - INFO - __main__ - Training/evaluation parameters Seq2SeqTrainingArguments(
+......
+)
+05/25/2023 13:07:43 - WARNING - datasets.builder - Found cached dataset json (/root/.cache/huggingface/datasets/json/default-3060c7e219b54699/0.0.0/e347ab1c932092252e717ff3f949105a4dd28b27e842dd53157d2f72e276c2e4)
+100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:00<00:00, 626.67it/s]
+[INFO|configuration_utils.py:667] 2023-05-25 13:07:43,955 >> loading configuration file ../../chatglm-6b/config.json
+[WARNING|configuration_auto.py:906] 2023-05-25 13:07:43,955 >> Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
+[INFO|configuration_utils.py:667] 2023-05-25 13:07:43,990 >> loading configuration file ../../chatglm-6b/config.json
+[INFO|configuration_utils.py:721] 2023-05-25 13:07:43,991 >> Model config ChatGLMConfig {
+......
+}
+
+[WARNING|tokenization_auto.py:653] 2023-05-25 13:07:43,992 >> Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+[INFO|tokenization_utils_base.py:1801] 2023-05-25 13:07:44,030 >> loading file ice_text.model
+[INFO|tokenization_utils_base.py:1801] 2023-05-25 13:07:44,030 >> loading file added_tokens.json
+[INFO|tokenization_utils_base.py:1801] 2023-05-25 13:07:44,030 >> loading file special_tokens_map.json
+[INFO|tokenization_utils_base.py:1801] 2023-05-25 13:07:44,030 >> loading file tokenizer_config.json
+[WARNING|auto_factory.py:457] 2023-05-25 13:07:44,240 >> Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
+[INFO|modeling_utils.py:2401] 2023-05-25 13:07:44,342 >> loading weights file ../../chatglm-6b/pytorch_model.bin.index.json
+[INFO|configuration_utils.py:575] 2023-05-25 13:07:44,343 >> Generate config GenerationConfig {
+  "_from_model_config": true,
+  "bos_token_id": 130004,
+  "eos_token_id": 130005,
+  "pad_token_id": 3,
+  "transformers_version": "4.27.4"
+}
+
+Loading checkpoint shards: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████| 8/8 [00:09<00:00,  1.19s/it]
+[INFO|modeling_utils.py:3035] 2023-05-25 13:11:12,453 >> All model checkpoint weights were used when initializing ChatGLMForConditionalGeneration.
+
+[WARNING|modeling_utils.py:3038] 2023-05-25 13:11:12,453 >> Some weights of ChatGLMForConditionalGeneration were not initialized from the model checkpoint at ../../chatglm-6b and are newly initialized: ['transformer.prefix_encoder.embedding.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[INFO|modeling_utils.py:2694] 2023-05-25 13:11:12,518 >> Generation config file not found, using a generation config created from the model config.
+input_ids [5, 65421, 61, 67329, 32, 98339, 61, 72043, 32, 65347, 61, 70872, 32, 69768, 61, 68944, 32, 67329, 64103, 61, 96914, 130001, 130004, 5, 87052, 96914, 81471, 64562, 65759, 64493, 64988, 6, 65840, 65388, 74531, 63825, 75786, 64009, 63823, 65626, 63882, 64619, 65388, 6, 64480, 65604, 85646, 110945, 10, 64089, 65966, 87052, 67329, 65544, 6, 71964, 70533, 64417, 63862, 89978, 63991, 63823, 77284, 88473, 64219, 63848, 112012, 6, 71231, 65099, 71252, 66800, 85768, 64566, 64338, 100323, 75469, 63823, 117317, 64218, 64257, 64051, 74197, 6, 63893, 130005, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+inputs 类型#裤*版型#宽松*风格#性感*图案#线条*裤型#阔腿裤 宽松的阔腿裤这两年真的吸粉不少,明星时尚达人的心头爱。毕竟好穿时尚,谁都能穿出腿长2米的效果宽松的裤腿,当然是遮肉小能手啊。上身随性自然不拘束,面料亲肤舒适贴身体验感棒棒哒。系带部分增加设计看点,还
+label_ids [-100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, 130004, 5, 87052, 96914, 81471, 64562, 65759, 64493, 64988, 6, 65840, 65388, 74531, 63825, 75786, 64009, 63823, 65626, 63882, 64619, 65388, 6, 64480, 65604, 85646, 110945, 10, 64089, 65966, 87052, 67329, 65544, 6, 71964, 70533, 64417, 63862, 89978, 63991, 63823, 77284, 88473, 64219, 63848, 112012, 6, 71231, 65099, 71252, 66800, 85768, 64566, 64338, 100323, 75469, 63823, 117317, 64218, 64257, 64051, 74197, 6, 63893, 130005, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100]
+labels <image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100> 宽松的阔腿裤这两年真的吸粉不少,明星时尚达人的心头爱。毕竟好穿时尚,谁都能穿出腿长2米的效果宽松的裤腿,当然是遮肉小能手啊。上身随性自然不拘束,面料亲肤舒适贴身体验感棒棒哒。系带部分增加设计看点,还<image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100>
+/home/share/pytorch1.9/chatglm/transformers_mlu/src/transformers/optimization.py:396: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  FutureWarning,
+  0%|                                                                                                                                      | 0/3000 [00:00<?, ?it/s]/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/ptuning/trainer.py:2578: UserWarning:  MLU operators dont support 64-bit calculation. so the 64 bit data will be forcibly converted to 32-bit for calculation.  (Triggered internally at  /torch/catch/torch_mlu/csrc/aten/util/tensor_util.cpp:153.)
+  return data.to(**kwargs)
+05/25/2023 13:13:11 - WARNING - transformers_modules.chatglm-6b.modeling_chatglm - `use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`...
+/torch/venv3/pytorch/lib/python3.7/site-packages/torch/cuda/amp/autocast_mode.py:134: UserWarning: If running in mlu, torch.cuda.amp is deprecated and will be removed in the future release, please use [torch.mlu.amp] instead. Ignore warning if running in cuda.
+  warnings.warn("If running in mlu, torch.cuda.amp is deprecated and will be removed in the future release, please use [torch.mlu.amp] instead. Ignore warning if running in cuda.")
+{'loss': 5.5885, 'learning_rate': 0.019933333333333334, 'epoch': 0.0}
+{'loss': 5.1672, 'learning_rate': 0.019866666666666668, 'epoch': 0.0}
+{'loss': 4.9893, 'learning_rate': 0.0198, 'epoch': 0.0}
+{'loss': 4.7983, 'learning_rate': 0.019733333333333335, 'epoch': 0.01}
+{'loss': 4.8502, 'learning_rate': 0.019666666666666666, 'epoch': 0.01}
+  2%|██                                                                                                                         | 51/3000 [07:22<7:05:22,  8.65s/it]
+```
+
+**训练期间MLU资源占用情况**
+<p align="left">
+    <img alt="aiknight_mlu_chatglm_train_cnmon" src="./res/aiknight_mlu_chatglm_train_cnmon.gif" height="360" />
+</p>
 
 *待补充*
