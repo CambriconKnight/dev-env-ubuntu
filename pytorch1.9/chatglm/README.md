@@ -18,6 +18,9 @@
 | Docker Image          | pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz         | 官方发布的 Pytorch 框架 Docker 镜像文件 |
 | Driver_MLU370         | cambricon-mlu-driver-centos7-5.10.10-1.x86_64.rpm	       | 依操作系统选择                         |
 | 工具包                 | https://github.com/CambriconKnight/dev-env-ubuntu        | [Github地址](https://github.com/CambriconKnight/dev-env-ubuntu) |
+| ChatGLM-6B 源码         | https://github.com/THUDM/ChatGLM-6B  | commit：82c084b1cb5f2c2973cfb2119fb154f4dbc825b6 |
+| Transformers 源码         | https://github.com/huggingface/transformers  | v4.27.4                          |
+| ChatGLM-6B 模型         | https://huggingface.co/THUDM/chatglm-6b  | https://cloud.tsinghua.edu.cn/d/fb9f16d6dc8f482596c2/ |
 
 **下载地址:**
 - 前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载， 也可在官方提供的专属FTP账户指定路径下载。
