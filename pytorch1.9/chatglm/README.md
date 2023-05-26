@@ -267,7 +267,7 @@ This share link expires in 72 hours. For free permanent hosting and GPU upgrades
 
 **Web展示效果**
 <p align="left">
-    <img alt="aiknight_mlu_chatglm" src="./res/aiknight_mlu_chatglm.gif" height="360" />
+    <img alt="aiknight_mlu_chatglm" src="./res/aiknight_mlu_chatglm.gif" width="640" />
 </p>
 
 ### 2.4.3. 测试推理性能
@@ -470,11 +470,35 @@ labels <image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><
 {'loss': 4.7983, 'learning_rate': 0.019733333333333335, 'epoch': 0.01}
 {'loss': 4.8502, 'learning_rate': 0.019666666666666666, 'epoch': 0.01}
   2%|██                                                                                                                         | 51/3000 [07:22<7:05:22,  8.65s/it]
+......
+......
+......
+......
+......
+{'loss': 4.0408, 'learning_rate': 0.0002, 'epoch': 0.41}
+{'loss': 4.1562, 'learning_rate': 0.00013333333333333334, 'epoch': 0.42}
+{'loss': 4.1267, 'learning_rate': 6.666666666666667e-05, 'epoch': 0.42}
+{'loss': 4.06, 'learning_rate': 0.0, 'epoch': 0.42}
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 3000/3000 [7:41:34<00:00,  9.44s/it]Saving PrefixEncoder
+[INFO|configuration_utils.py:458] 2023-05-25 20:54:45,103 >> Configuration saved in output/adgen-chatglm-6b-pt-128-2e-2/checkpoint-3000/config.json
+[INFO|configuration_utils.py:362] 2023-05-25 20:54:45,107 >> Configuration saved in output/adgen-chatglm-6b-pt-128-2e-2/checkpoint-3000/generation_config.json
+[INFO|modeling_utils.py:1763] 2023-05-25 20:54:45,400 >> Model weights saved in output/adgen-chatglm-6b-pt-128-2e-2/checkpoint-3000/pytorch_model.bin
+[INFO|tokenization_utils_base.py:2164] 2023-05-25 20:54:45,401 >> tokenizer config file saved in output/adgen-chatglm-6b-pt-128-2e-2/checkpoint-3000/tokenizer_config.json
+[INFO|tokenization_utils_base.py:2171] 2023-05-25 20:54:45,402 >> Special tokens file saved in output/adgen-chatglm-6b-pt-128-2e-2/checkpoint-3000/special_tokens_map.json
+{'train_runtime': 27694.8538, 'train_samples_per_second': 1.733, 'train_steps_per_second': 0.108, 'train_loss': 4.3326422932942705, 'epoch': 0.42}
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 3000/3000 [7:41:34<00:00,  9.23s/it]
+***** train metrics *****
+  epoch                    =       0.42
+  train_loss               =     4.3326
+  train_runtime            = 7:41:34.85
+  train_samples            =     114599
+  train_samples_per_second =      1.733
+  train_steps_per_second   =      0.108
 ```
 
 **训练期间MLU资源占用情况**
 <p align="left">
-    <img alt="aiknight_mlu_chatglm_train_cnmon" src="./res/aiknight_mlu_chatglm_train_cnmon.gif" height="360" />
+    <img alt="aiknight_mlu_chatglm_train_cnmon" src="./res/aiknight_mlu_chatglm_train_cnmon.gif" width="640" />
 </p>
 
 *待补充*
