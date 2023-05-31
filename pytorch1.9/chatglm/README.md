@@ -55,8 +55,9 @@ cd ./dev-env-ubuntu/pytorch1.9
 ```bash
 #进入【工具包目录】
 cd ./dev-env-ubuntu/pytorch1.9
+#下载Docker镜像后，可以mv到当前docker目录
 #加载Docker镜像
-#./load-image-dev.sh /DATA_SPACE/kang/ftp/docker/pytorch-v1.10.0-torch1.9-ubuntu18.04-py37.tar.gz
+#./load-image-dev.sh ./docker/pytorch-v1.10.0-torch1.9-ubuntu18.04-py37.tar.gz
 ./load-image-dev.sh ${FULLNAME_IMAGES}
 ```
 
@@ -100,19 +101,20 @@ git clone -b v4.27.4 https://github.com/huggingface/transformers
 # 2. 下载 chatglm-6b 源码
 git clone https://github.com/THUDM/ChatGLM-6B
 cd ChatGLM-6B && git checkout 82c084b1cb5f2c2973cfb2119fb154f4dbc825b6 && cd -
-# 3. 下载 chatglm-6b 模型
+# 3. 下载 chatglm-6b 模型实现
 ##第一种方式： 不推荐使用以下命令。直接 git clone 大模型文件的话，下载模型时间较长.
 # git clone https://huggingface.co/THUDM/chatglm-6b
 ##第二种方式： 采用如下方式， git clone 并手动下载或拷贝过来模型，会更方便些。
-GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/THUDM/chatglm-6b 下载模型实现
+GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/THUDM/chatglm-6b
 # 然后从 https://cloud.tsinghua.edu.cn/d/fb9f16d6dc8f482596c2/ 手动下载的模型和参数文件，替换到本地的 chatglm-6b 目录下。
-cp -rvf /data/models/chatglm-6b/pretrained_model/chatglm-6b/pytorch_model-0000*.bin ./chatglm-6b
-cp -rvf /data/models/chatglm-6b/pretrained_model/chatglm-6b/ice_text.model ./chatglm-6b
+#cp -rvf /data/models/chatglm-6b/pretrained_model/chatglm-6b/pytorch_model-0000*.bin ./chatglm-6b
+#cp -rvf /data/models/chatglm-6b/pretrained_model/chatglm-6b/ice_text.model ./chatglm-6b
 # 注意： 如果后续操作中，有shape mismatch之类报错，多半是模型更新了，需要下载对应的模型。
-##第三种方式： 为保证与以上代码对应的模型，也可通过关注微信公众号 【AIKnight】,
+##第三种方式(推荐)： 为保证与以上代码对应的模型，也可通过关注微信公众号 【AIKnight】,
 # 发送关键字(不区分大小写): **chatglm-6b**, 公众号会自动回复对应下载地址.
 # 下载完毕后，可把下载后的【chatglm-6b】目录拷贝到当前目录。
 cp -rvf /data/baidudisk/chatglm-6b ./
+#cp -rvf /data/models/chatglm-6b/ ./
 #mv -f /DATA_SPACE/baidudisk/chatglm-6b ./
 ```
 
@@ -159,12 +161,19 @@ Migration Report:  /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/report.md
 - torch.c.jit_xx
 - torch.concat
 
-进入如下目录，修改 modeling_chatglm.py 源码。
+进入工作目录，拷贝修改后的代码到【chatglm-6b】目录。
+```bash
+# 进入工作目录
+cd /home/share/pytorch1.9/chatglm
+cp -rvf /home/share/pytorch1.9/chatglm/tools/modeling_chatglm.py ./chatglm-6b
+```
+也可按照以下流程，直接手动修改 modeling_chatglm.py 源码。
 ```bash
 # 进入预训练模型路径（以实际为准）
-cd ../chatglm-6b
+cd ./chatglm-6b
 vim modeling_chatglm.py
 ```
+
 1. 注释 skip_init 相关代码（注意：不同版本可能会不同）
 
 源码 modeling_chatglm.py 中 skip_init 不支持， skip_init 是 pytorch 1.10.0 版本增加的功能. 而 cambricon pytorch 适配的官方 pytorch 版本为 1.9.0 , 没有 skip_init 。
@@ -216,13 +225,17 @@ pip install -e .
 cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu
 
 # 根据使用的demo，修改cli_demo.py或web_demo.py或api.py中的预训练模型路径“THUDM/chatglm-6b”为实际路径，本教程中此路径修改为【../chatglm-6b】。
-# tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True)
-# model = AutoModel.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True).half().mlu()
-
-# 测试验证
+#tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True)
+#model = AutoModel.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True).half().mlu()
+#也可执行以下命令，直接拷贝修改后的文件
+cp -rvf /home/share/pytorch1.9/chatglm/tools/cli_demo.py ./
+# CLI测试验证
 python cli_demo.py
+
 # 或python web_demo.py 或python api.py
 # 注意：如使用web_demo.py，需修改demo.queue().launch(share=False, inbrowser=True)中share=True，否则无法看到gradio地址
+cp -rvf /home/share/pytorch1.9/chatglm/tools/web_demo.py ./
+# WEB测试验证
 python web_demo.py
 ```
 
