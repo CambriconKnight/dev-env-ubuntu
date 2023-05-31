@@ -243,7 +243,7 @@ python web_demo.py
 
 使用 cli_demo.py测试。
 
-加载比较慢，大概需要10分钟，可耐心等待。
+*加载比较慢，大概需要10分钟，可耐心等待。*
 ```bash
 (pytorch) root@worker1:/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu# python cli_demo.py
 Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
