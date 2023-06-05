@@ -19,6 +19,7 @@ PATH_WORK="pytorch"
 OSVer="18.04"
 #Operating system，如【pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz】则取作【ubuntu18.04-py37】。
 OS="ubuntu$OSVer-py37"
+#OS="ubuntu$OSVer-py37-20230531210906-20230531220906"
 #FrameVersion，如【pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz】则取作【v1.13.0-torch1.6】。
 FrameVer="v$VER-torch1.9"
 #(Dockerfile.16.04/Dockerfile.18.04/Dockerfile.CentOS)
@@ -37,8 +38,8 @@ MY_IMAGE="${ORG}/${PATH_WORK}"
 NAME_IMAGE="$MY_IMAGE:$VERSION"
 #FileName DockerImage
 FILENAME_IMAGE="$PATH_WORK-$FrameVer-$OS.tar.gz"
-#FILENAME_IMAGE="pytorch-0.15.602-ubuntu$OSVer.tar"
-FULLNAME_IMAGE="./${FILENAME_IMAGE}"
+#FILENAME_IMAGE="image-ubuntu18.04-py37-pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz"
+FULLNAME_IMAGE="./docker/${FILENAME_IMAGE}"
 #Docker container name
 #Docker container name  container-pytorch-0.15.602-ubuntu18.04-kang
 MY_CONTAINER="container-${PATH_WORK}-${VERSION}-${Owner}"

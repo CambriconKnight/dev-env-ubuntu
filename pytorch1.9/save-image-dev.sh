@@ -11,6 +11,8 @@ set -e
 # -------------------------------------------------------------------------------
 #CMD_TIME=$(date +%Y%m%d%H%M%S.%N) # eg:20210402230402.403666251
 CMD_TIME=$(date +%Y%m%d%H%M%S) # eg:20210402230402
+# 0.Check param
+if [[ $# -eq 1 ]];then CMD_TIME="${1}";fi
 
 # 1.Source env
 source "./env.sh"

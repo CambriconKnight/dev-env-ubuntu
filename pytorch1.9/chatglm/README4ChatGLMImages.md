@@ -2,7 +2,7 @@
 <p align="center">
     <a href="https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch1.9/chatglm">
         <img alt="chatglm-logo" src="./res/chatglm-6b.jpg" height="140" />
-        <h1 align="center">ChatGLM模型移植教程</h1>
+        <h1 align="center">ChatGLM模型移植教程-基于ChatGLM镜像</h1>
     </a>
 </p>
 
@@ -11,6 +11,8 @@
 [TOC]
 
 # 1. 环境准备
+
+为方便ChatGLM快速验证，可直接按照以下方式，基于已打包好的ChatGLM镜像进行推理和训练验证。
 
 ## 1.1. 硬件环境
 
@@ -24,12 +26,12 @@
 | 名称                   | 版本/文件                                                 | 备注                                 |
 | :-------------------- | :-------------------------------                         | :---------------------------------- |
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                          | 宿主机操作系统                         |
-| Docker Image          | pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz         | 官方发布的 Pytorch 框架 Docker 镜像文件 |
+| ChatGLM Docker Image | pytorch-v1.13.0-torch1.9-ubuntu18.04-py37-ChatGLM.tar.gz         | 环境已配置并集成好的 Docker 镜像文件；此镜像文件可关注微信公众号 【 AIKnight 】, 发送关键字 **chatglm-6b-image** 自动获取；镜像文件大约23G，请安排时间下载； |
 | Driver_MLU370         | cambricon-mlu-driver-centos7-5.10.10-1.x86_64.rpm	       | 依操作系统选择                         |
 | 工具包                 | https://github.com/CambriconKnight/dev-env-ubuntu        | [Github地址](https://github.com/CambriconKnight/dev-env-ubuntu) |
 | ChatGLM-6B 源码         | https://github.com/THUDM/ChatGLM-6B  | commit：82c084b1cb5f2c2973cfb2119fb154f4dbc825b6 |
 | Transformers 源码         | https://github.com/huggingface/transformers  | v4.27.4                          |
-| ChatGLM-6B 模型         | https://huggingface.co/THUDM/chatglm-6b  | 直接clone 速度慢，可从[Tsinghua Cloud](https://cloud.tsinghua.edu.cn/d/fb9f16d6dc8f482596c2)下载；为保持版本对应，也可关注微信公众号 【 AIKnight 】, 发送关键字 **chatglm-6b** 自动获取。|
+| ChatGLM-6B 模型         | https://huggingface.co/THUDM/chatglm-6b  | 直接clone 速度慢，可从[Tsinghua Cloud](https://cloud.tsinghua.edu.cn/d/fb9f16d6dc8f482596c2)下载； 为保持版本对应，也可关注微信公众号 【 AIKnight 】, 发送关键字 **chatglm-6b** 自动获取。|
 
 **下载地址:**
 - 前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载， 也可在官方提供的专属FTP账户指定路径下载。
@@ -57,8 +59,7 @@ cd ./dev-env-ubuntu/pytorch1.9
 cd ./dev-env-ubuntu/pytorch1.9
 #下载Docker镜像后，可以mv到当前docker目录
 #加载Docker镜像
-#./load-image-dev.sh ./docker/pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz
-./load-image-dev.sh ${FULLNAME_IMAGES}
+./load-image-dev.sh ./docker/pytorch-v1.10.0-torch1.9-ubuntu18.04-py37-ChatGLM.tar.gz
 ```
 
 ## 1.5. 启动容器
@@ -71,181 +72,33 @@ cd ./dev-env-ubuntu/pytorch1.9
 #启动Docker容器
 ./run-container-dev.sh
 ```
+操作实例
+```bash
+[kangshaopeng@worker1 pytorch1.9]$ ./run-container-dev.sh
+0
+container-pytorch-v1.13.0-torch1.9-ubuntu18.04-py37-ChatGLM-kang
+WARNING: Published ports are discarded when using host network mode
+(pytorch) root@worker1:/home/share#
+```
+
+以上基于已经搭建好的Docker镜像，方便后续直接测试验证。
 
 # 2. 模型推理
-## 2.1. 安装LFS
-
-安装 Git LFS，实现 Git 对大文件的支持.
-```bash
-# 进到容器后，切换到工作目录
-cd /home/share/pytorch1.9/chatglm
-apt-get update
-# 安装 Git LFS，实现 Git 对大文件的支持
-apt-get install git-lfs
-#yum install git-lfs
-# Silence all safe.directory warnings
-git config --global --add safe.directory '*'
-# 执行如下命令后，如果显示Git LFS initialized说明安装成功
-git lfs install
-# 升级numpy版本
-pip install numpy --upgrade
-```
-## 2.2. 下载代码
-
-下载 transformers 及 chatglm-6b 源码及对应版本的 chatglm-6b 模型（模型较大，下载时间比较长）。
-```bash
-# 进到容器后，切换到工作目录
-cd /home/share/pytorch1.9/chatglm
-# 1. 下载 transformers 源码: 基于 transformer 模型结构提供的预训练语言库
-git clone -b v4.27.4 https://github.com/huggingface/transformers
-# 2. 下载 chatglm-6b 源码
-git clone https://github.com/THUDM/ChatGLM-6B
-cd ChatGLM-6B && git checkout 82c084b1cb5f2c2973cfb2119fb154f4dbc825b6 && cd -
-# 3. 下载 chatglm-6b 模型实现
-##第一种方式： 不推荐使用以下命令。直接 git clone 大模型文件的话，下载模型时间较长.
-# git clone https://huggingface.co/THUDM/chatglm-6b
-##第二种方式： 采用如下方式， git clone 并手动下载或拷贝过来模型，会更方便些。
-GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/THUDM/chatglm-6b
-# 然后从 https://cloud.tsinghua.edu.cn/d/fb9f16d6dc8f482596c2/ 手动下载的模型和参数文件，替换到本地的 chatglm-6b 目录下。
-#cp -rvf /data/models/chatglm-6b/pretrained_model/chatglm-6b/pytorch_model-0000*.bin ./chatglm-6b
-#cp -rvf /data/models/chatglm-6b/pretrained_model/chatglm-6b/ice_text.model ./chatglm-6b
-# 注意： 如果后续操作中，有shape mismatch之类报错，多半是模型更新了，需要下载对应的模型。
-##第三种方式(推荐)： 为保证与以上代码对应的模型，也可通过关注微信公众号 【AIKnight】,
-# 发送关键字(不区分大小写): **chatglm-6b**, 公众号会自动回复对应下载地址.
-# 下载完毕后，可把下载后的【chatglm-6b】目录拷贝到当前目录。
-cp -rvf /data/baidudisk/chatglm-6b ./
-#cp -rvf /data/models/chatglm-6b/ ./
-#mv -f /DATA_SPACE/baidudisk/chatglm-6b ./
-```
-
-## 2.3. 模型适配
-### 2.3.1. 自动迁移代码
-
-使用工具 `torch_gpu2mlu.py` 从 GPU 模型脚本迁移至 MLU 设备运行，转换后的模型脚本只支持 MLU 设备运行。该工具可对模型脚本进行转换，对模型脚本修改位置较多，会对修改位置进行统计，实现开发者快速迁移。
-
-- 在容器环境中，执行以下命令
-```bash
-cd /home/share/pytorch1.9/chatglm
-#建立软连接
-ln -s /torch/src/catch/tools/torch_gpu2mlu.py ./
-#执行转换模型脚本, 自动修改 transformers 源码
-python torch_gpu2mlu.py -i transformers
-#执行转换模型脚本, 自动修改  ChatGLM-6B 源码
-python torch_gpu2mlu.py -i ChatGLM-6B
-#显示转换后的代码。
-#ls -lh transformers transformers_mlu ChatGLM-6B ChatGLM-6B_mlu
-ls -la
-```
-
-- 输出转换结果
-```bash
-(pytorch) root@worker1:/home/share/pytorch1.9/chatglm# python torch_gpu2mlu.py -i transformers
-copy error:  /home/share/pytorch1.9/chatglm/transformers/examples/legacy/seq2seq/test_data/test_data
-# Cambricon PyTorch Model Migration Report
-Official PyTorch model scripts:  /home/share/pytorch1.9/chatglm/transformers
-Cambricon PyTorch model scripts:  /home/share/pytorch1.9/chatglm/transformers_mlu
-Migration Report:  /home/share/pytorch1.9/chatglm/transformers_mlu/report.md
-(pytorch) root@worker1:/home/share/pytorch1.9/chatglm# python torch_gpu2mlu.py -i ChatGLM-6B
-# Cambricon PyTorch Model Migration Report
-Official PyTorch model scripts:  /home/share/pytorch1.9/chatglm/ChatGLM-6B
-Cambricon PyTorch model scripts:  /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu
-Migration Report:  /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/report.md
-(pytorch) root@worker1:/home/share/pytorch1.9/chatglm#
-```
-
-### 2.3.2. 手动修改代码
-
-由于 chatglm-6b 要求使用 torch >=1.10，其中有 pytorch 不支持的特性包括如下。需要在【自动迁移代码】基础上再进行如下修改。
-
-- torch.nn.utils.skip_init
-- torch.c.jit_xx
-- torch.concat
-
-进入工作目录，拷贝修改后的代码到【chatglm-6b】目录。
-```bash
-# 进入工作目录
-cd /home/share/pytorch1.9/chatglm
-cp -rvf /home/share/pytorch1.9/chatglm/tools/modeling_chatglm.py ./chatglm-6b
-```
-也可按照以下流程，直接手动修改 modeling_chatglm.py 源码。
-```bash
-# 进入预训练模型路径（以实际为准）
-cd ./chatglm-6b
-vim modeling_chatglm.py
-```
-
-1. 注释 skip_init 相关代码（注意：不同版本可能会不同）
-
-源码 modeling_chatglm.py 中 skip_init 不支持， skip_init 是 pytorch 1.10.0 版本增加的功能. 而 cambricon pytorch 适配的官方 pytorch 版本为 1.9.0 , 没有 skip_init 。
-*以下修改涉及5处，需要全部修改。*
-```bash
-#from torch.nn.utils import skip_init
-
-#if empty_init:
-#    init_method = skip_init
-#else:
-#    init_method = default_init
-init_method = default_init
-```
-2. 使用 torch.cat 替换 torch.concat
-
-torch 1.9中没有torch.concat, 查询pytorch手册后发现torch 1.10中使用torch.concat替换了torch.cat，因此需要将原代码中的torch.concat改为torch.cat。
-```bash
-# query_layer = torch.concat([q1, q2], dim=(q1.ndim - 1))
-# key_layer = torch.concat([k1, k2], dim=(k1.ndim - 1))
-query_layer = torch.cat([q1, q2], dim=(q1.ndim - 1))
-key_layer = torch.cat([k1, k2], dim=(k1.ndim - 1))
-```
-3. 注释掉 jit fusion
-
-把jit fusion相关都注释掉，mlu不支持。
-```bash
-#if sys.platform != 'darwin':
-#    torch._C._jit_set_profiling_mode(False)
-#    torch._C._jit_set_profiling_executor(False)
-#    torch._C._jit_override_can_fuse_on_cpu(True)
-#    torch._C._jit_override_can_fuse_on_gpu(True)
-```
-
-### 2.3.3. 安装依赖库
-
-```bash
-# 安装 ChatGLM-6B 依赖库
-cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu
-sed -i 's/torch/# torch/' requirements.txt
-pip install -r requirements.txt
-# 安装 transformers
-cd ../transformers_mlu/
-pip install -e .
-```
-
-## 2.4. 测试验证
-```bash
-# 进入ChatGLM-6B_mlu路径（以实际为准）
-cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu
-
-# 根据使用的demo，修改cli_demo.py或web_demo.py或api.py中的预训练模型路径“THUDM/chatglm-6b”为实际路径，本教程中此路径修改为【../chatglm-6b】。
-#tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True)
-#model = AutoModel.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True).half().mlu()
-#也可执行以下命令，直接拷贝修改后的文件
-cp -rvf /home/share/pytorch1.9/chatglm/tools/cli_demo.py ./
-# CLI测试验证
-python cli_demo.py
-
-# 或python web_demo.py 或python api.py
-# 注意：如使用web_demo.py，需修改demo.queue().launch(share=False, inbrowser=True)中share=True，否则无法看到gradio地址
-cp -rvf /home/share/pytorch1.9/chatglm/tools/web_demo.py ./
-# WEB测试验证
-python web_demo.py
-```
-
-### 2.4.1. 测试CLI实例
+## 2.1. 测试CLI实例
 
 使用 cli_demo.py测试。
 
-*加载比较慢，大概需要10分钟，可耐心等待。*
 ```bash
-(pytorch) root@worker1:/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu# python cli_demo.py
+# 进入ChatGLM-6B_mlu路径（以实际为准）
+cd /workspace/chatglm/ChatGLM-6B_mlu
+# CLI测试验证
+python cli_demo.py
+```
+
+*加载比较慢，大概需要10分钟，可耐心等待。*
+
+```bash
+(pytorch) root@worker1:/workspace/chatglm/ChatGLM-6B_mlu# python cli_demo.py
 Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
 Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
 Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
@@ -257,17 +110,25 @@ Loading checkpoint shards: 100%|████████████████
 ChatGLM-6B：ChatGPT是美国人工智能研究实验室OpenAI于2022年11月推出的一个人工智能聊天机器人程序，该程序基于大型语言模型GPT-3.5，使用指令微调(Instruction Tuning)和基于人类反馈的强化学习技术(RLHF)训练而成。
 
 用户：stop
-(pytorch) root@worker1:/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu#
+(pytorch) root@worker1:/workspace/chatglm/ChatGLM-6B_mlu#
 ```
 
-### 2.4.2. 测试WEB实例
+## 2.2. 测试WEB实例
 
 使用 web_demo.py测试 ，需修改 demo.queue().launch(share=False, inbrowser=True) 中 share=True ，否则无法看到 gradio 地址。
+
+使用 cli_demo.py测试。
+```bash
+# 进入ChatGLM-6B_mlu路径（以实际为准）
+cd /workspace/chatglm/ChatGLM-6B_mlu
+# WEB测试验证
+python web_demo.py
+```
 
 *加载比较慢，大概需要10分钟，可耐心等待。*
 
 ```bash
-(pytorch) root@worker1:/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu# python web_demo.py
+(pytorch) root@worker1:/workspace/chatglm/ChatGLM-6B_mlu# python web_demo.py
 Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
 Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
 Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
@@ -283,23 +144,23 @@ This share link expires in 72 hours. For free permanent hosting and GPU upgrades
     <img alt="aiknight_mlu_chatglm" src="./res/aiknight_mlu_chatglm.gif" width="640" />
 </p>
 
-### 2.4.3. 测试推理性能
+## 2.3. 测试推理性能
 ```bash
 # 进入ChatGLM-6B_mlu路径（以实际为准）
-cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu
+cd /workspace/chatglm/ChatGLM-6B_mlu
 # 同步
-cp -rvf /home/share/pytorch1.9/chatglm/tools/inference.py /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/
+cp -rvf /workspace/chatglm/tools/inference.py /workspace/chatglm/ChatGLM-6B_mlu/
 # 测试验证
 python inference.py
 ```
 **实例**
 ```bash
-(pytorch) root@worker1:/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu# python inference.py
+(pytorch) root@worker1:/workspace/chatglm/ChatGLM-6B_mlu# python inference.py
 Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
 Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
 Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
 Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████| 8/8 [00:10<00:00,  1.28s/it]
-/home/share/pytorch1.9/chatglm/transformers_mlu/src/transformers/tokenization_utils_base.py:759: UserWarning:  MLU operators dont support 64-bit calculation. so the 64 bit data will be forcibly converted to 32-bit for calculation.  (Triggered internally at  /torch/catch/torch_mlu/csrc/aten/util/tensor_util.cpp:153.)
+/workspace/chatglm/transformers_mlu/src/transformers/tokenization_utils_base.py:759: UserWarning:  MLU operators dont support 64-bit calculation. so the 64 bit data will be forcibly converted to 32-bit for calculation.  (Triggered internally at  /torch/catch/torch_mlu/csrc/aten/util/tensor_util.cpp:153.)
   self.data = {k: v.to(device=device) for k, v in self.data.items()}
 The dtype of attention mask (torch.int64) is not bool
 Hello! How can I assist you today?
@@ -332,13 +193,13 @@ len(response):  476
 time_end-time_start:  34.9201123714447
 token:  13.631113065639516
 ==================================================
-(pytorch) root@worker1:/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu#
+(pytorch) root@worker1:/workspace/chatglm/ChatGLM-6B_mlu#
 ```
 
 # 3. 模型训练
 ## 3.1. P-Tuning v2
 ### 3.1.1. 安装软件依赖
-运行微调需要4.27.1版本的`transformers`。除 ChatGLM-6B 的依赖之外，还需要安装以下依赖
+运行微调需要4.27.1版本的`transformers`。除 ChatGLM-6B 的依赖之外，还需要安装以下依赖（如果基于打包好的Docker测试镜像，以下可不执行）。
 ```bash
 pip install rouge_chinese nltk jieba datasets
 ```
@@ -358,7 +219,7 @@ ADGEN 数据集任务为根据输入（content）生成一段广告词（summary
 #数据集下载完成后解压
 tar zxvf AdvertiseGen.tar.gz
 #拷贝数据集到指定目录(以下为 docker 容器内部目录)
-cp -rvf AdvertiseGen /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/
+cp -rvf AdvertiseGen /workspace/chatglm/ChatGLM-6B_mlu/
 ```
 
 ### 3.1.3. 修改训练代码
@@ -368,7 +229,7 @@ cp -rvf AdvertiseGen /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/
 需要把以下两个文件中的 torch.mlu.random 全部改成 torch_mlu.core.random 。否则会报错【AttributeError: module 'torch.mlu' has no attribute 'random'】。
 ```bash
 #查找目录中所有相关文件
-cd /home/share/pytorch1.9/chatglm/
+cd /workspace/chatglm/
 grep -rn torch.mlu.core.random
 ```
 主要包括如下两个文件，替换后，保存文件。
@@ -385,10 +246,10 @@ transformers_mlu/src/transformers/trainer.py:2370:                rng_states["ml
 
 2. 训练脚本修改
 
-基于 docker 容器中目录 /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/ptuning 下的 `train.sh` 脚本，修改并增加了一份可用于 MLU 的训练启动脚本 `train_mlu.sh`。
+基于 docker 容器中目录 /workspace/chatglm/ChatGLM-6B_mlu/ptuning 下的 `train.sh` 脚本，修改并增加了一份可用于 MLU 的训练启动脚本 `train_mlu.sh`。
 ```bash
 #拷贝脚本到指定目录
-cp -rvf /home/share/pytorch1.9/chatglm/tools/train_mlu.sh /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/ptuning
+cp -rvf /workspace/chatglm/tools/train_mlu.sh /workspace/chatglm/ChatGLM-6B_mlu/ptuning
 ```
 `train_mlu.sh` 脚本中的相关参数可以根据实际情况修改，保存文件后，即可进行接下来的训练。
 `train_mlu.sh` 脚本内容如下：
@@ -426,12 +287,12 @@ MLU_VISIBLE_DEVICES=0 python3 main.py \
 *加载比较慢，大概需要10分钟，可耐心等待。*
 
 ```bash
-cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/ptuning
+cd /workspace/chatglm/ChatGLM-6B_mlu/ptuning
 bash train_mlu.sh
 ```
 **实例**
 ```bash
-(pytorch) root@worker1:/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/ptuning# bash train_mlu.sh
+(pytorch) root@worker1:/workspace/chatglm/ChatGLM-6B_mlu/ptuning# bash train_mlu.sh
 05/25/2023 13:07:42 - WARNING - __main__ - Process rank: -1, device: mlu:0, n_gpu: 1distributed training: False, 16-bits training: False
 05/25/2023 13:07:42 - INFO - __main__ - Training/evaluation parameters Seq2SeqTrainingArguments(
 ......
@@ -470,9 +331,9 @@ input_ids [5, 65421, 61, 67329, 32, 98339, 61, 72043, 32, 65347, 61, 70872, 32, 
 inputs 类型#裤*版型#宽松*风格#性感*图案#线条*裤型#阔腿裤 宽松的阔腿裤这两年真的吸粉不少,明星时尚达人的心头爱。毕竟好穿时尚,谁都能穿出腿长2米的效果宽松的裤腿,当然是遮肉小能手啊。上身随性自然不拘束,面料亲肤舒适贴身体验感棒棒哒。系带部分增加设计看点,还
 label_ids [-100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, 130004, 5, 87052, 96914, 81471, 64562, 65759, 64493, 64988, 6, 65840, 65388, 74531, 63825, 75786, 64009, 63823, 65626, 63882, 64619, 65388, 6, 64480, 65604, 85646, 110945, 10, 64089, 65966, 87052, 67329, 65544, 6, 71964, 70533, 64417, 63862, 89978, 63991, 63823, 77284, 88473, 64219, 63848, 112012, 6, 71231, 65099, 71252, 66800, 85768, 64566, 64338, 100323, 75469, 63823, 117317, 64218, 64257, 64051, 74197, 6, 63893, 130005, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100, -100]
 labels <image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100> 宽松的阔腿裤这两年真的吸粉不少,明星时尚达人的心头爱。毕竟好穿时尚,谁都能穿出腿长2米的效果宽松的裤腿,当然是遮肉小能手啊。上身随性自然不拘束,面料亲肤舒适贴身体验感棒棒哒。系带部分增加设计看点,还<image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100><image_-100>
-/home/share/pytorch1.9/chatglm/transformers_mlu/src/transformers/optimization.py:396: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+/workspace/chatglm/transformers_mlu/src/transformers/optimization.py:396: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
   FutureWarning,
-  0%|                                                                                                                                      | 0/3000 [00:00<?, ?it/s]/home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu/ptuning/trainer.py:2578: UserWarning:  MLU operators dont support 64-bit calculation. so the 64 bit data will be forcibly converted to 32-bit for calculation.  (Triggered internally at  /torch/catch/torch_mlu/csrc/aten/util/tensor_util.cpp:153.)
+  0%|                                                                                                                                      | 0/3000 [00:00<?, ?it/s]/workspace/chatglm/ChatGLM-6B_mlu/ptuning/trainer.py:2578: UserWarning:  MLU operators dont support 64-bit calculation. so the 64 bit data will be forcibly converted to 32-bit for calculation.  (Triggered internally at  /torch/catch/torch_mlu/csrc/aten/util/tensor_util.cpp:153.)
   return data.to(**kwargs)
 05/25/2023 13:13:11 - WARNING - transformers_modules.chatglm-6b.modeling_chatglm - `use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`...
 /torch/venv3/pytorch/lib/python3.7/site-packages/torch/cuda/amp/autocast_mode.py:134: UserWarning: If running in mlu, torch.cuda.amp is deprecated and will be removed in the future release, please use [torch.mlu.amp] instead. Ignore warning if running in cuda.
