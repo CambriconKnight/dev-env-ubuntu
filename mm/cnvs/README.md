@@ -47,6 +47,17 @@ CNVS（Cambricon Validation Suite，寒武纪验证套件）用于如下场景�
 ```
 
 # 2. 安装
+## 2.1. 一键执行
+```bash
+#以下操作步骤均是在官方提供的Docker容器中进行
+#进入测试目录
+cd /home/share/mm/cnvs
+#一键安装依赖库及CNVS工具包
+./init-cnvs.sh
+```
+
+## 2.2. 分步执行
+一键执行后，就不需要分步执行了。以下为分步操作：
 ```bash
 # 安装依赖库
 apt-get update
