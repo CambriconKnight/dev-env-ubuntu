@@ -230,6 +230,7 @@ cd /home/share/pytorch1.9/chatglm/ChatGLM-6B_mlu
 #也可执行以下命令，直接拷贝修改后的文件
 cp -rvf /home/share/pytorch1.9/chatglm/tools/cli_demo.py ./
 # CLI测试验证
+export MLU_VISIBLE_DEVICES=0
 python cli_demo.py
 
 # 或python web_demo.py 或python api.py
