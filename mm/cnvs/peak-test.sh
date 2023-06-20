@@ -12,6 +12,9 @@ set -e
 source "./env.sh"
 TEST_PLUGIN="peak_performance"
 TEST_TITLE="cnvs_${TEST_PLUGIN}_float"
+#TEST_TITLE="cnvs_${TEST_PLUGIN}_half"
+#TEST_TITLE="cnvs_${TEST_PLUGIN}_int16"
+#TEST_TITLE="cnvs_${TEST_PLUGIN}_int8"
 
 print_log_echo_info "=================================================="
 #以下操作步骤均是在官方提供的Docker容器中进行
