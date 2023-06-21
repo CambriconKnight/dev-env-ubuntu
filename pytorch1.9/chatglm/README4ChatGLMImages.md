@@ -2,7 +2,7 @@
 <p align="center">
     <a href="https://gitee.com/cambriconknight/dev-env-ubuntu/blob/master/pytorch1.9/chatglm/README4ChatGLMImages.md">
         <img alt="chatglm-logo" src="./res/chatglm-6b.jpg" height="140" />
-        <h1 align="center">ChatGLM模型MLU验证流程-基于ChatGLM镜像</h1>
+        <h1 align="center">ChatGLM模型MLU验证流程-基于离线验证镜像</h1>
     </a>
 </p>
 

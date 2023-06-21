@@ -14,8 +14,8 @@ print(response)
 
 for question in [
     "ChatGLM-6B 是啥?",
-    "CharGPT 是啥?",
-    "ChatGLM-6B 与 CharGPT 有什么区别?"
+    "ChatGPT 是啥?",
+    "ChatGLM-6B 与 ChatGPT 有什么区别?"
 ]:
 
     time_start = time.time()
