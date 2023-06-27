@@ -28,7 +28,7 @@
 | 工具包                 | https://github.com/CambriconKnight/dev-env-ubuntu        | [Github地址](https://github.com/CambriconKnight/dev-env-ubuntu) |
 | BaiChuan-7B 源码       | https://github.com/baichuan-inc/baichuan-7B  | commit：4247c4ab03f6cd5baa7c752e057662f9e4bb4a2c |
 | Transformers 源码     | https://github.com/huggingface/transformers  | v4.29.1                          |
-| BaiChuan-7B 模型       | https://huggingface.co/baichuan-inc/baichuan-7B  | 直接clone 速度慢，为保持版本对应，也可关注微信公众号 【 AIKnight 】, 发送关键字 **baichuan-7B** 自动获取。。|
+| BaiChuan-7B 模型       | https://huggingface.co/baichuan-inc/baichuan-7B  | 直接clone 速度慢，为保持版本对应，也可关注微信公众号 【 AIKnight 】, 发送关键字 **baichuan-7B-Model** 自动获取。。|
 
 **下载地址:**
 - 前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载， 也可在官方提供的专属FTP账户指定路径下载。
