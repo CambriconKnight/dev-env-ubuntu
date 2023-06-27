@@ -18,7 +18,7 @@ if [[ $# -eq 1 ]];then CMD_TIME="${1}";fi
 source "./env.sh"
 #New Docker image name
 NAME_IMAGE_NEW="$MY_IMAGE:$VERSION-$CMD_TIME"
-FILENAME_IMAGE_NEW="image-$OS-$PATH_WORK-$VERSION-$CMD_TIME.tar.gz"
+FILENAME_IMAGE_NEW="$PATH_WORK-$VERSION-$CMD_TIME.tar.gz"
 
 # 2.commit docker container
 echo -e "${green}[# Docker images: ${none}"

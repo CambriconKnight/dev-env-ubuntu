@@ -45,7 +45,7 @@ FILENAME_IMAGE="$PATH_WORK-$FrameVer-$OS-$TestModel.tar.gz"
 FULLNAME_IMAGE="./docker/${FILENAME_IMAGE}"
 #Docker container name
 #Docker container name  container-pytorch-0.15.602-ubuntu18.04-kang
-MY_CONTAINER="container-${PATH_WORK}-${VERSION}-${Owner}-${TestModel}"
+MY_CONTAINER="container-${PATH_WORK}-${VERSION}-${Owner}"
 #################### color ####################
 #Font color
 none="\033[0m"

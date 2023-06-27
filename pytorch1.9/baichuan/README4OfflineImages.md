@@ -23,7 +23,7 @@
 | 名称                   | 版本/文件                                                 | 备注                                 |
 | :-------------------- | :-------------------------------                         | :---------------------------------- |
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                          | 宿主机操作系统                         |
-| Docker Image          | pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz         | 官方发布的 Pytorch 框架 Docker 镜像文件 |
+| Docker Image          | pytorch-v1.13.0-torch1.9-ubuntu18.04-py37-BaiChuan-7B.tar.gz         | 环境已配置并集成好的 Docker 镜像文件(不包含BaiChuan-7B 模型，需要自行下载后，按照下面步骤说明放置到指定路径)；此镜像文件可关注微信公众号 【 AIKnight 】, 发送关键字 **baichuan-7b-image** 自动获取；镜像文件大约9G，请安排时间下载； |
 | Driver_MLU370         | cambricon-mlu-driver-centos7-5.10.10-1.x86_64.rpm	       | 依操作系统选择                         |
 | 工具包                 | https://github.com/CambriconKnight/dev-env-ubuntu        | [Github地址](https://github.com/CambriconKnight/dev-env-ubuntu) |
 | BaiChuan-7B 源码       | https://github.com/baichuan-inc/baichuan-7B  | commit：4247c4ab03f6cd5baa7c752e057662f9e4bb4a2c |
@@ -46,6 +46,8 @@ cd /data/github
 git clone https://github.com/CambriconKnight/dev-env-ubuntu.git
 #进入【工具包目录】
 cd ./dev-env-ubuntu/pytorch1.9
+#拷贝针对baichuan大模型的env.sh文件到当前目录(非必须，也可手动修改)
+cp -rvf ./baichuan/tools/env.sh ./
 ```
 ## 1.4. 加载镜像
 
@@ -56,8 +58,7 @@ cd ./dev-env-ubuntu/pytorch1.9
 cd ./dev-env-ubuntu/pytorch1.9
 #下载Docker镜像后，可以mv到当前docker目录
 #加载Docker镜像
-#./load-image-dev.sh ./docker/pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz
-./load-image-dev.sh ${FULLNAME_IMAGES}
+./load-image-dev.sh ./docker/pytorch-v1.13.0-torch1.9-ubuntu18.04-py37-BaiChuan-7B.tar.gz
 ```
 
 ## 1.5. 启动容器
@@ -73,8 +74,9 @@ cd ./dev-env-ubuntu/pytorch1.9
 操作实例
 ```bash
 [kangshaopeng@worker1 pytorch1.9]$ ./run-container-dev.sh
+[sudo] password for kangshaopeng:
 0
-container-pytorch-v1.13.0-torch1.9-ubuntu18.04-py37-ChatGLM-kang
+container-pytorch-v1.13.0-torch1.9-ubuntu18.04-py37-BaiChuan-7B-kang
 WARNING: Published ports are discarded when using host network mode
 (pytorch) root@worker1:/home/share#
 ```
