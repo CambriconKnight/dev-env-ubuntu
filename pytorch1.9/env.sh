@@ -12,22 +12,24 @@
 #pytorch镜像的版本号，如【pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz】则取作【1.13.0】。
 VER="1.13.0"
 Owner="kang"
+TestModel="-ChatGLM"
 #################### docker ####################
 #Work
 PATH_WORK="pytorch"
 #Dockerfile(16.04/18.04/CentOS)
 OSVer="18.04"
 #Operating system，如【pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz】则取作【ubuntu18.04-py37】。
-OS="ubuntu$OSVer-py37"
+OS="ubuntu${OSVer}-py37"
 #OS="ubuntu$OSVer-py37-20230531210906-20230531220906"
 #FrameVersion，如【pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz】则取作【v1.13.0-torch1.6】。
-FrameVer="v$VER-torch1.9"
+FrameVer="v${VER}-torch1.9"
 #(Dockerfile.16.04/Dockerfile.18.04/Dockerfile.CentOS)
-FILENAME_DOCKERFILE="Dockerfile.$OSVer"
+FILENAME_DOCKERFILE="Dockerfile.${OSVer}"
 DIR_DOCKER="docker"
 #Version
 #VERSION="v${VER}"
-VERSION="$FrameVer-$OS"
+#VERSION="$FrameVer-$OS"
+VERSION="${FrameVer}-${OS}${TestModel}"
 #Organization
 ORG="yellow.hub.cambricon.com/$PATH_WORK"
 #Docker image
@@ -37,8 +39,10 @@ MY_IMAGE="${ORG}/${PATH_WORK}"
 #Docker image name
 NAME_IMAGE="$MY_IMAGE:$VERSION"
 #FileName DockerImage
-FILENAME_IMAGE="$PATH_WORK-$FrameVer-$OS.tar.gz"
-#FILENAME_IMAGE="image-ubuntu18.04-py37-pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz"
+#FILENAME_IMAGE="$PATH_WORK-$FrameVer-$OS.tar.gz"
+#FILENAME_IMAGE="pytorch-v1.13.0-torch1.9-ubuntu18.04-py37.tar.gz"
+FILENAME_IMAGE="$PATH_WORK-$FrameVer-$OS${TestModel}.tar.gz"
+#FILENAME_IMAGE="pytorch-v1.13.0-torch1.9-ubuntu18.04-py37-ChatGLM.tar.gz"
 FULLNAME_IMAGE="./docker/${FILENAME_IMAGE}"
 #Docker container name
 #Docker container name  container-pytorch-0.15.602-ubuntu18.04-kang

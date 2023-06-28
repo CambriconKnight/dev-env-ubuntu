@@ -172,23 +172,23 @@ time_end-time_start:  7.061268091201782
 token:  13.736909397457989
 ==================================================
 ==================================================
-question:  CharGPT 是啥?
-response:  CharGPT 是由 OpenAI 于 2022 年 11 月推出的一个人工智能聊天机器人程序，该程序基于大型语言模型 GPT-3.5，使用指令微调(Instruction Tuning)和基于人类反馈的强化学习技术(RLHF)训练而成。
+question:  ChatGPT 是啥?
+response:  ChatGPT 是由 OpenAI 于 2022 年 11 月推出的一个人工智能聊天机器人程序，该程序基于大型语言模型 GPT-3.5，使用指令微调(Instruction Tuning)和基于人类反馈的强化学习技术(RLHF)训练而成。
 len(response):  119
 time_end-time_start:  8.150062799453735
 token:  14.6011144856425
 ==================================================
 ==================================================
-question:  ChatGLM-6B 与 CharGPT 有什么区别?
-response:  ChatGLM-6B 和 CharGPT 都是基于语言模型的人工智能助手，但它们在以下几个方面有所不同：
+question:  ChatGLM-6B 与 ChatGPT 有什么区别?
+response:  ChatGLM-6B 和 ChatGPT 都是基于语言模型的人工智能助手，但它们在以下几个方面有所不同：
 
-1. 模型大小：ChatGLM-6B 是一个基于 GLM-6B 语言模型的人工智能助手，而 CharGPT 是一个基于 GPT-3.5 语言模型的人工智能助手。
+1. 模型大小：ChatGLM-6B 是一个基于 GLM-6B 语言模型的人工智能助手，而 ChatGPT 是一个基于 GPT-3.5 语言模型的人工智能助手。
 
-2. 训练数据：ChatGLM-6B 和 CharGPT 的训练数据都来自于互联网上的大量文本数据，但它们的训练数据有所不同。ChatGLM-6B 的训练数据包括了多种不同的主题和语言风格，而 CharGPT 的训练数据则更加多样化，它包括了多种不同的文本类型和语言风格。
+2. 训练数据：ChatGLM-6B 和 ChatGPT 的训练数据都来自于互联网上的大量文本数据，但它们的训练数据有所不同。ChatGLM-6B 的训练数据包括了多种不同的主题和语言风格，而 ChatGPT 的训练数据则更加多样化，它包括了多种不同的文本类型和语言风格。
 
-3. 功能：ChatGLM-6B 和 CharGPT 的功能也有所不同。ChatGLM-6B 是一个实时的人工智能助手，它可以帮助用户回答各种问题，提供各种帮助。而 CharGPT 则是一种聊天机器人程序，它可以与用户进行对话，回答用户的问题，并提供一些娱乐性的内容。
+3. 功能：ChatGLM-6B 和 ChatGPT 的功能也有所不同。ChatGLM-6B 是一个实时的人工智能助手，它可以帮助用户回答各种问题，提供各种帮助。而 ChatGPT 则是一种聊天机器人程序，它可以与用户进行对话，回答用户的问题，并提供一些娱乐性的内容。
 
-总的来说，ChatGLM-6B 和 CharGPT 都是基于语言模型的人工智能助手，但它们在模型大小、训练数据、功能等方面有所不同。
+总的来说，ChatGLM-6B 和 ChatGPT 都是基于语言模型的人工智能助手，但它们在模型大小、训练数据、功能等方面有所不同。
 len(response):  476
 time_end-time_start:  34.9201123714447
 token:  13.631113065639516
@@ -230,18 +230,38 @@ cp -rvf AdvertiseGen /workspace/chatglm/ChatGLM-6B_mlu/
 ```bash
 #查找目录中所有相关文件
 cd /workspace/chatglm/
-grep -rn torch.mlu.core.random
+grep -rn torch.mlu.random
+#指定目录下所有文件， torch.mlu.random 全部改成 torch_mlu.core.random
+#sed -i "s/torch.mlu.random/torch_mlu.core.random/g" `grep torch.mlu.random -rl /workspace/chatglm`
+#替换指定文件的字符串
+sed -i "s/torch.mlu.random/torch_mlu.core.random/g" /workspace/chatglm/ChatGLM-6B_mlu/ptuning/trainer.py
+sed -i "s/torch.mlu.random/torch_mlu.core.random/g" /workspace/chatglm/transformers_mlu/src/transformers/trainer.py
+#检查已经替换的文件
+grep -rn torch_mlu.core.random
 ```
 主要包括如下两个文件，替换后，保存文件。
 ```bash
-ChatGLM-6B_mlu/ptuning/trainer.py:2275:                torch.mlu.core.random.set_rng_state(checkpoint_rng_state["mlu"])
-ChatGLM-6B_mlu/ptuning/trainer.py:2278:                    torch.mlu.core.random.set_rng_state_all(checkpoint_rng_state["mlu"])
-ChatGLM-6B_mlu/ptuning/trainer.py:2370:                rng_states["mlu"] = torch.mlu.core.random.get_rng_state_all()
-ChatGLM-6B_mlu/ptuning/trainer.py:2372:                rng_states["mlu"] = torch.mlu.core.random.get_rng_state()
-transformers_mlu/src/transformers/trainer.py:2273:                torch.mlu.core.random.set_rng_state(checkpoint_rng_state["mlu"])
-transformers_mlu/src/transformers/trainer.py:2276:                    torch.mlu.core.random.set_rng_state_all(checkpoint_rng_state["mlu"])
-transformers_mlu/src/transformers/trainer.py:2368:                rng_states["mlu"] = torch.mlu.core.random.get_rng_state_all()
-transformers_mlu/src/transformers/trainer.py:2370:                rng_states["mlu"] = torch.mlu.core.random.get_rng_state()
+ChatGLM-6B_mlu/ptuning/trainer.py:2275:                torch.mlu.random.set_rng_state(checkpoint_rng_state["mlu"])
+ChatGLM-6B_mlu/ptuning/trainer.py:2278:                    torch.mlu.random.set_rng_state_all(checkpoint_rng_state["mlu"])
+ChatGLM-6B_mlu/ptuning/trainer.py:2370:                rng_states["mlu"] = torch.mlu.random.get_rng_state_all()
+ChatGLM-6B_mlu/ptuning/trainer.py:2372:                rng_states["mlu"] = torch.mlu.random.get_rng_state()
+transformers_mlu/src/transformers/trainer.py:2273:                torch.mlu.random.set_rng_state(checkpoint_rng_state["mlu"])
+transformers_mlu/src/transformers/trainer.py:2276:                    torch.mlu.random.set_rng_state_all(checkpoint_rng_state["mlu"])
+transformers_mlu/src/transformers/trainer.py:2368:                rng_states["mlu"] = torch.mlu.random.get_rng_state_all()
+transformers_mlu/src/transformers/trainer.py:2370:                rng_states["mlu"] = torch.mlu.random.get_rng_state()
+```
+替换后的检查
+```bash
+(pytorch) root@worker1:/workspace/chatglm# grep -rn torch_mlu.core.random
+ChatGLM-6B_mlu/ptuning/trainer.py:2275:                torch_mlu.core.random.set_rng_state(checkpoint_rng_state["mlu"])
+ChatGLM-6B_mlu/ptuning/trainer.py:2278:                    torch_mlu.core.random.set_rng_state_all(checkpoint_rng_state["mlu"])
+ChatGLM-6B_mlu/ptuning/trainer.py:2370:                rng_states["mlu"] = torch_mlu.core.random.get_rng_state_all()
+ChatGLM-6B_mlu/ptuning/trainer.py:2372:                rng_states["mlu"] = torch_mlu.core.random.get_rng_state()
+transformers_mlu/src/transformers/trainer.py:2273:                torch_mlu.core.random.set_rng_state(checkpoint_rng_state["mlu"])
+transformers_mlu/src/transformers/trainer.py:2276:                    torch_mlu.core.random.set_rng_state_all(checkpoint_rng_state["mlu"])
+transformers_mlu/src/transformers/trainer.py:2368:                rng_states["mlu"] = torch_mlu.core.random.get_rng_state_all()
+transformers_mlu/src/transformers/trainer.py:2370:                rng_states["mlu"] = torch_mlu.core.random.get_rng_state()
+(pytorch) root@worker1:/workspace/chatglm#
 ```
 
 2. 训练脚本修改
@@ -249,7 +269,7 @@ transformers_mlu/src/transformers/trainer.py:2370:                rng_states["ml
 基于 docker 容器中目录 /workspace/chatglm/ChatGLM-6B_mlu/ptuning 下的 `train.sh` 脚本，修改并增加了一份可用于 MLU 的训练启动脚本 `train_mlu.sh`。
 ```bash
 #拷贝脚本到指定目录
-cp -rvf /workspace/chatglm/tools/train_mlu.sh /workspace/chatglm/ChatGLM-6B_mlu/ptuning
+cp -rvf /home/share/pytorch1.9/chatglm/tools/train_mlu.sh /workspace/chatglm/ChatGLM-6B_mlu/ptuning
 ```
 `train_mlu.sh` 脚本中的相关参数可以根据实际情况修改，保存文件后，即可进行接下来的训练。
 `train_mlu.sh` 脚本内容如下：
@@ -288,6 +308,8 @@ MLU_VISIBLE_DEVICES=0 python3 main.py \
 
 ```bash
 cd /workspace/chatglm/ChatGLM-6B_mlu/ptuning
+#根据实际情况指定对应的卡
+export MLU_VISIBLE_DEVICES=8
 bash train_mlu.sh
 ```
 **实例**
