@@ -13,6 +13,7 @@
 VER="1.13.0"
 Owner="kang"
 TestModel="-ChatGLM"
+#TestModel=""
 #################### docker ####################
 #Work
 PATH_WORK="pytorch"

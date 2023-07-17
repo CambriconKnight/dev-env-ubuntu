@@ -202,6 +202,7 @@ token:  13.631113065639516
 运行微调需要4.27.1版本的`transformers`。除 ChatGLM-6B 的依赖之外，还需要安装以下依赖（如果基于打包好的Docker测试镜像，以下可不执行）。
 ```bash
 pip install rouge_chinese nltk jieba datasets
+#pip download rouge_chinese nltk jieba datasets
 ```
 ### 3.1.2. 下载数据集
 ADGEN 数据集任务为根据输入（content）生成一段广告词（summary）。
