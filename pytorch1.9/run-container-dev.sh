@@ -30,17 +30,17 @@ PATH_MODELS_DOCKER="/data/models"
 
 ##########################################################
 #Check docker images
-[ ! -z $(sudo docker images -q $NAME_IMAGE) ] || (echo -e "${red}ERROR: Images(${NAME_IMAGE}) does not exist! ${none}" &&  exit -1)
+[ ! -z $(docker images -q $NAME_IMAGE) ] || (echo -e "${red}ERROR: Images(${NAME_IMAGE}) does not exist! ${none}" &&  exit -1)
 
 #Check docker container
-num=`sudo docker ps -a|grep -w "$MY_CONTAINER$"|wc -l`
+num=`docker ps -a|grep -w "$MY_CONTAINER$"|wc -l`
 echo $num
 echo $MY_CONTAINER
 
 #Run docker
 if [ 0 -eq $num ];then
     #sudo xhost +
-    sudo docker run -e DISPLAY=unix$DISPLAY --privileged=true \
+    docker run -e DISPLAY=unix$DISPLAY --privileged=true \
         --device /dev/cambricon_dev0 \
         --device /dev/cambricon_dev1 \
         --device /dev/cambricon_dev2 \
@@ -65,6 +65,6 @@ if [ 0 -eq $num ];then
         -it -v $PATH_MODELS_HOST:$PATH_MODELS_DOCKER \
         --name $MY_CONTAINER $NAME_IMAGE /bin/bash
 else
-    sudo docker start $MY_CONTAINER
-    sudo docker exec -ti $MY_CONTAINER /bin/bash
+    docker start $MY_CONTAINER
+    docker exec -ti $MY_CONTAINER /bin/bash
 fi
