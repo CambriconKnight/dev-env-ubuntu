@@ -17,7 +17,7 @@
 | :-------------------- | :-------------------------------                      | :---------------------------------- |
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                       | 宿主机操作系统                         |
 | Docker Image          | magicmind_1.6.0-1_ubuntu18.04.tar.gz                  | 官方发布的 MagicMind 框架 Docker 镜像文件 |
-| Driver_MLU370         | cambricon-mlu-driver-ubuntu18.04-dkms_5.10.13_amd64.deb| 依操作系统选择                         |
+| Driver_MLU370         | cambricon-mlu-driver-ubuntu18.04-dkms_5.10.13_amd64.deb | 依操作系统选择                         |
 
 注: 以上软件环境中文件名词, 如有版本升级及名称变化, 可以在 [env.sh](./env.sh) 中进行修改。
 
