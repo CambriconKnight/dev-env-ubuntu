@@ -16,8 +16,8 @@
 | 名称                   | 版本/文件                                              | 备注                                 |
 | :-------------------- | :-------------------------------                      | :---------------------------------- |
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                       | 宿主机操作系统                         |
-| Docker Image          | magicmind_1.1.0-1_ubuntu18.04.tar.gz                 | 官方发布的 MagicMind 框架 Docker 镜像文件 |
-| Driver_MLU370         | cambricon-mlu-driver-ubuntu18.04-dkms_4.20.18_amd64.deb| 依操作系统选择                         |
+| Docker Image          | magicmind_1.6.0-1_ubuntu18.04.tar.gz                  | 官方发布的 MagicMind 框架 Docker 镜像文件 |
+| Driver_MLU370         | cambricon-mlu-driver-ubuntu18.04-dkms_5.10.13_amd64.deb| 依操作系统选择                         |
 
 注: 以上软件环境中文件名词, 如有版本升级及名称变化, 可以在 [env.sh](./env.sh) 中进行修改。
 
@@ -53,8 +53,8 @@ SDK: https://sdk.cambricon.com/download?component_name=MagicMind
 
 ```bash
 ./dependent_files/
-├── magicmind_1.1.0-1_ubuntu18.04.tar.gz        #MagicMind 框架 Docker镜像
-├── magicmind_1.1.0-1_ubuntu18.04.tar.gz.md5sum #Docker镜像MD5值
+├── magicmind_1.6.0-1_ubuntu18.04.tar.gz        #MagicMind 框架 Docker镜像
+├── magicmind_1.6.0-1_ubuntu18.04.tar.gz.md5sum #Docker镜像MD5值
 └── README.md
 ```
 
@@ -69,7 +69,7 @@ cd ./dev-env-ubuntu/mm
 # 5. 加载镜像
 ```bash
 #加载Docker镜像
-#./load-image-dev.sh ./dependent_files/magicmind_1.1.0-1_ubuntu18.04.tar.gz
+#./load-image-dev.sh ./dependent_files/magicmind_1.6.0-1_ubuntu18.04.tar.gz
 ./load-image-dev.sh ${FULLNAME_IMAGES}
 ```
 
@@ -93,18 +93,18 @@ pip list |grep benchmark && pip list |grep magicmind
 输出结果如下，说明环境正常。
 ```bash
 root@localhost:/# pip list |grep benchmark && pip list |grep magicmind
-benchmark               0.10.0
-WARNING: You are using pip version 22.0.4; however, version 22.2.2 is available.
-You should consider upgrading via the '/usr/bin/python3.7 -m pip install --upgrade pip' command.
-magicmind               0.10.0
-WARNING: You are using pip version 22.0.4; however, version 22.2.2 is available.
-You should consider upgrading via the '/usr/bin/python3.7 -m pip install --upgrade pip' command.
+benchmark               1.6.0
+[notice] A new release of pip available: 22.3.1 -> 23.2.1
+[notice] To update, run: pip install --upgrade pip
+magicmind               1.6.0
+[notice] A new release of pip available: 22.3.1 -> 23.2.1
+[notice] To update, run: pip install --upgrade pip
 root@localhost:/#
 ```
 如果没有以上输出，可自行安装 magicmind 和 benchmark
 ```bash
 pip3 install magicmind_<x.y.z>-cp37-cp37m-linux_<arch>.whl
-#pip install magicmind-1.1.0-cp37-cp37m-linux_x86_64.whl
+#pip install magicmind-1.6.0-cp37-cp37m-linux_x86_64.whl
 #pip install benchmark-1.1.0-cp37-cp37m-linux_x86_64.whl
 ```
 <x.y.z> 为MagicMind 版本号，<arch> 为CPU 架构。
