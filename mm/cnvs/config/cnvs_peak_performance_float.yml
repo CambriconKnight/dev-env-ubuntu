@@ -7,4 +7,6 @@ globals:
 custom:
 - custom:
     peak_performance:
-       data_type: float   # 该插件执行卷积操作时输入, 输出数据类型: int8; int16; half; float; tfloat;
+       data_type: float   # 该插件执行卷积操作时输入, 输出数据类型: int8; int16; half; bfloat16; float; tfloat
+       kernel_width: 4
+       kernel_height: 3

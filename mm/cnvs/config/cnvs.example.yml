@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-      
+
 globals:
   logdir: ./
 
@@ -10,10 +10,12 @@ custom:
       test_duration: 60
     mlu_stress:
       test_duration: 60
-    targeted_power: 
+    targeted_power:
       test_duration: 60
-    memory_bandwidth: 
+    memory_bandwidth:
       min_bandwidth: 10
+    peak_performance:
+       data_type: bfloat16   # 该插件执行卷积操作时输入, 输出数据类型: int8; int16; half; float; tfloat; bfloat16
     pcie:
       test_pinned: true
       test_unpinned: true

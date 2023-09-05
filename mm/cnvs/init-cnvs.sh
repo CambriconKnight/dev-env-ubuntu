@@ -22,7 +22,7 @@ apt-get install -y libpci3 libpci3 pciutils tree
 apt --fix-broken install
 apt-get install -y libyaml-dev
 #安装CNVS
-dpkg -i /var/cntoolkit-3.2.2/cnvs_0.8.1-rc1.ubuntu18.04_amd64.deb
+dpkg -i /var/cntoolkit-3.6.1/cnvs_0.12.0-1.ubuntu18.04_amd64.deb
 ##########################################################
 #结束时间
 main_time_end=$(date +"%s.%N")

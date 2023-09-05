@@ -11,7 +11,9 @@ set -e
 # -------------------------------------------------------------------------------
 source "./env.sh"
 TEST_PLUGIN="peak_performance"
-TEST_TITLE="cnvs_${TEST_PLUGIN}_float"
+ARRAY_TEST_TITLE=("cnvs_${TEST_PLUGIN}_int8" "cnvs_${TEST_PLUGIN}_int16" "cnvs_${TEST_PLUGIN}_half" "cnvs_${TEST_PLUGIN}_bfloat16" "cnvs_${TEST_PLUGIN}_float")
+#TEST_TITLE="cnvs_${TEST_PLUGIN}_bfloat16"
+#TEST_TITLE="cnvs_${TEST_PLUGIN}_float"
 #TEST_TITLE="cnvs_${TEST_PLUGIN}_half"
 #TEST_TITLE="cnvs_${TEST_PLUGIN}_int16"
 #TEST_TITLE="cnvs_${TEST_PLUGIN}_int8"
@@ -27,11 +29,19 @@ export MLU_VISIBLE_DEVICES=0,1
 cnmon >> $RUNNING_LOG_FILE
 # 2. 执行cnvs测试
 ##########################################################
-print_log_echo_info "[# ${TEST_TITLE}: "
+for element in ${ARRAY_TEST_TITLE[@]}
+do
+    print_log_echo_info "[# ${element}: "
+    #压入后台执行cnvs。
+    cnvs -r ${TEST_PLUGIN} -c "./config/${element}.yml" -v >> ${RUNNING_LOG_FILE} 2>&1 &
+    #进程压入队列
+    push_queue_processes $! && sleep 0.1
+done
+#print_log_echo_info "[# ${TEST_TITLE}: "
 #压入后台执行cnvs。
-cnvs -r ${TEST_PLUGIN} -c "./config/${TEST_TITLE}.yml" -v >> ${RUNNING_LOG_FILE} 2>&1 &
+#cnvs -r ${TEST_PLUGIN} -c "./config/${TEST_TITLE}.yml" -v >> ${RUNNING_LOG_FILE} 2>&1 &
 #进程压入队列
-push_queue_processes $! && sleep 0.1
+#push_queue_processes $! && sleep 0.1
 ##########################################################
 #启动【进度条】显示执行进度。直到后台进程执行完成。
 print_queue_processes && echo -en "${green}[#" && check_queue_processes_bar 0 0 && echo "]" && echo -en "${none}" && sync && sync
