@@ -2,7 +2,7 @@
 <p align="center">
     <a href="https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch1.9/chinese-llama-alpaca-2">
         <img alt="logo" src="./res/llama-alpaca.jpg" height="140" />
-        <h1 align="center">Chinese-LLaMA-Alpaca-2模型移植教程</h1>
+        <h1 align="center">Chinese-LLaMA-Alpaca-2模型验证教程</h1>
     </a>
 </p>
 
