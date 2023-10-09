@@ -107,7 +107,8 @@ cd ChatGLM2-6B && git checkout 3d0225f969d56c058f052f6800a21630d14a1184 && cd -
 # git clone https://huggingface.co/THUDM/chatglm2-6b
 ##第二种方式： 采用如下方式， git clone 并手动下载或拷贝过来模型，会更方便些。
 GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/THUDM/chatglm2-6b
-# 然后从 https://cloud.tsinghua.edu.cn/d/fb9f16d6dc8f482596c2/ 手动下载的模型和参数文件，替换到本地的 chatglm2-6b 目录下。
+# 此方式仅下载一个模型标识文件，然后从https://huggingface.co/THUDM/chatglm2-6b/tree/main（或国内站点）手动下载模型和参数文件，替换到本地的 chatglm2-6b 目录下。
+# 国内可以从https://cloud.tsinghua.edu.cn/d/674208019e314311ab5c/ 手动下载模型参数文件，并将下载的文件替换到本地的 chatglm2-6b 目录下。
 #cp -rvf /data/models/chatglm2-6b/pretrained_model/chatglm2-6b/pytorch_model-0000*.bin ./chatglm2-6b
 #cp -rvf /data/models/chatglm2-6b/pretrained_model/chatglm2-6b/ice_text.model ./chatglm2-6b
 # 注意： 如果后续操作中，有shape mismatch之类报错，多半是模型更新了，需要下载对应的模型。
@@ -140,7 +141,17 @@ ls -la
 
 - 输出转换结果
 ```bash
-
+(pytorch) root@worker1:/workspace/chatglm2# python torch_gpu2mlu.py -i transformers
+# Cambricon PyTorch Model Migration Report
+Official PyTorch model scripts:  /workspace/chatglm2/transformers
+Cambricon PyTorch model scripts:  /workspace/chatglm2/transformers_mlu
+Migration Report:  /workspace/chatglm2/transformers_mlu/report.md
+(pytorch) root@worker1:/workspace/chatglm2# python torch_gpu2mlu.py -i ChatGLM2-6B
+# Cambricon PyTorch Model Migration Report
+Official PyTorch model scripts:  /workspace/chatglm2/ChatGLM2-6B
+Cambricon PyTorch model scripts:  /workspace/chatglm2/ChatGLM2-6B_mlu
+Migration Report:  /workspace/chatglm2/ChatGLM2-6B_mlu/report.md
+(pytorch) root@worker1:/workspace/chatglm2#
 ```
 
 ### 2.3.2. 手动修改代码
@@ -149,94 +160,30 @@ ls -la
 
 进入工作目录，拷贝修改后的代码到【chatglm2-6b】目录。
 ```bash
-# 进入工作目录
+# 进入工作目录  /home/share/pytorch1.9/chatglm2/tools/modeling_chatglm.py
 cd /workspace/chatglm2
-cp -rvf /workspace/chatglm2/tools/modeling_chatglm.py ./chatglm2-6b
+cp -rvf /home/share/pytorch1.9/chatglm2/tools/modeling_chatglm.py ./chatglm2-6b
 ```
-也可按照以下流程，直接手动修改 modeling_chatglm.py 源码。
-```bash
-# 进入预训练模型路径（以实际为准）
-cd ./chatglm2-6b
-vim modeling_chatglm.py
-```
-*注：不同版本可能有差异，根据实际行数修改*
-
-```bash
-diff --git a/modeling_chatglm.py b/modeling_chatglm.py
-index 7eda1a4..1ec6a59 100644
---- a/modeling_chatglm.py
-+++ b/modeling_chatglm.py
-@@ -11,7 +11,10 @@ import torch.utils.checkpoint
- import torch.nn.functional as F
- from torch import nn
- from torch.nn import CrossEntropyLoss, LayerNorm
--from torch.nn.utils import skip_init
-+#from torch.nn.utils import skip_init
-+def skip_init(cls, *args, **kwargs):
-+    return cls(*args, **kwargs)
-+
- from typing import Optional, Tuple, Union, List, Callable, Dict, Any
-
- from transformers.modeling_outputs import (
-@@ -27,11 +30,11 @@ from .configuration_chatglm import ChatGLMConfig
-
- # flags required to enable jit fusion kernels
-
--if sys.platform != 'darwin':
--    torch._C._jit_set_profiling_mode(False)
--    torch._C._jit_set_profiling_executor(False)
--    torch._C._jit_override_can_fuse_on_cpu(True)
--    torch._C._jit_override_can_fuse_on_gpu(True)
-+#if sys.platform != 'darwin':
-+#    torch._C._jit_set_profiling_mode(False)
-+#    torch._C._jit_set_profiling_executor(False)
-+#    torch._C._jit_override_can_fuse_on_cpu(True)
-+#    torch._C._jit_override_can_fuse_on_gpu(True)
-
- logger = logging.get_logger(__name__)
-
-@@ -154,7 +157,7 @@ class RMSNorm(torch.nn.Module):
-         input_dtype = hidden_states.dtype
-         variance = hidden_states.to(torch.float32).pow(2).mean(-1, keepdim=True)
-         hidden_states = hidden_states * torch.rsqrt(variance + self.eps)
--
-+        hidden_states = hidden_states.to(input_dtype)
-         return (self.weight * hidden_states).to(input_dtype)
-
-
-@@ -696,7 +699,8 @@ class ChatGLMModel(ChatGLMPreTrainedModel):
-         )
-
-         self.rotary_pos_emb = RotaryEmbedding(rotary_dim // 2, original_impl=config.original_rope, device=device,
--                                              dtype=config.torch_dtype)
-+                                              dtype=torch.float32)
-+                                              #dtype=config.torch_dtype)
-         self.encoder = init_method(GLMTransformer, config, **init_kwargs)
-         self.output_layer = init_method(nn.Linear, config.hidden_size, config.padded_vocab_size, bias=False,
-                                         dtype=config.torch_dtype, **init_kwargs)
-@@ -729,7 +733,7 @@ class ChatGLMModel(ChatGLMPreTrainedModel):
-             inputs_embeds = self.embedding(input_ids)
-
-         if full_attention_mask is None:
--            if (attention_mask is not None and not attention_mask.all()) or (past_key_values and seq_length != 1):
-+            if (attention_mask is not None and not attention_mask.cpu().all()) or (past_key_values and seq_length != 1):
-                 full_attention_mask = self.get_masks(input_ids, past_key_values, padding_mask=attention_mask)
-
-         # Rotary positional embeddings
-```
-
 
 ### 2.3.3. 安装依赖库
 
 ```bash
+# 安装 transformers
+cd /workspace/chatglm2/transformers_mlu/
+pip install -e .
+
 # 安装 ChatGLM2-6B 依赖库
 cd /workspace/chatglm2/ChatGLM2-6B_mlu
 sed -i 's/torch/# torch/' requirements.txt
 sed -i 's/transformers/# transformer/' requirements.txt
 pip install -r requirements.txt
-# 安装 transformers
-cd ../transformers_mlu/
-pip install -e .
+
+#使用 pip 安装 sentencepiece gradio
+pip install sse-starlette mdtex2html sentencepiece gradio
+#pip install mdtex2html
+#pip install sentencepiece
+# gradio安装时间长，耐心等待。
+#pip install gradio
 ```
 
 ## 2.4. 测试验证
@@ -250,20 +197,21 @@ cd /workspace/chatglm2/ChatGLM2-6B_mlu
 tokenizer = AutoTokenizer.from_pretrained("../chatglm2-6b", trust_remote_code=True)
 model = AutoModel.from_pretrained("../chatglm2-6b", trust_remote_code=True).mlu()
 #也可执行以下命令，直接拷贝修改后的文件
-cp -rvf /workspace/chatglm2/tools/cli_demo.py ./
+cp -rvf /home/share/pytorch1.9/chatglm2/tools/cli_demo.py ./
 # CLI测试验证
 export MLU_VISIBLE_DEVICES=0
 python cli_demo.py
+#pip install sentencepiece gradio
 
 # 或python web_demo.py 或python api.py
 # 注意：如使用web_demo.py，需修改demo.queue().launch(share=False, inbrowser=True)中share=True，否则无法看到gradio地址
-cp -rvf /workspace/chatglm2/tools/web_demo.py ./
+#cp -rvf /home/share/pytorch1.9/chatglm2/tools/web_demo.py ./
 # WEB测试验证
-python web_demo.py
+#python web_demo.py
 
 # API测试验证
-cp -rvf /workspace/chatglm2/tools/api.py ./
-python api.py
+#cp -rvf /home/share/pytorch1.9/chatglm2/tools/api.py ./
+#python api.py
 ```
 
 ### 2.4.1. 测试CLI实例
@@ -273,15 +221,34 @@ python api.py
 *加载比较慢，大概需要10分钟，可耐心等待。*
 ```bash
 (pytorch) root@worker1:/workspace/chatglm2/ChatGLM2-6B_mlu# python cli_demo.py
-Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
-Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
-Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
-Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████| 8/8 [00:11<00:00,  1.41s/it]
+Loading checkpoint shards: 100%|██████████████████████████████████████████████████████████████████████████████████| 7/7 [00:08<00:00,  1.25s/it]
 欢迎使用 ChatGLM2-6B 模型，输入内容即可进行对话，clear 清空对话历史，stop 终止程序
 
-用户：chatGPT是啥?
+用户：你好
 
-ChatGLM2-6B：ChatGPT是美国人工智能研究实验室OpenAI于2022年11月推出的一个人工智能聊天机器人程序，该程序基于大型语言模型GPT-3.5，使用指令微调(Instruction Tuning)和基于人类反馈的强化学习技术(RLHF)训练而成。
+ChatGLM：/workspace/chatglm2/transformers_mlu/src/transformers/tokenization_utils_base.py:773: UserWarning:  MLU operators dont support 64-bit calculation. so the 64 bit data will be forcibly converted to 32-bit for calculation.  (Triggered internally at  /torch/catch/torch_mlu/csrc/aten/util/tensor_util.cpp:153.)
+  self.data = {k: v.to(device=device) for k, v in self.data.items()}
+你好👋！我是人工智能助手 ChatGLM2-6B，很高兴见到你，欢迎问我任何问题。
+
+用户：中国的首都是哪里?
+
+ChatGLM：中国的首都是北京市。
+
+用户：详细介绍下这个城市吧
+
+ChatGLM：北京，简称“京”，是中国的首都，是全国的政治中心、文化中心，是世界著名古都和现代化国际城市。
+
+北京地处中国北部、华北平原北部，东与天津毗连，其余均与河北相邻，中心位置东经 116°20′、北纬 39°54′，是世界著名古都和现代化国际城市，
+
+北京中国历史文化名城和古都之一，拥有许多历史名胜和现代化建筑，是中国乃至世界上最具代表性和吸引力的大都市之一。
+
+北京是一个拥有悠久历史和丰富文化的名城，曾经是明、清两朝的国都，拥有丰富的历史遗产，如紫禁城、长城等。此外，北京还拥有许多现代化建筑和设施，如鸟巢、水立方等标志性建筑，以及高速公路、高铁、机场等交通设施。
+
+北京是一个充满活力和吸引力的城市，吸引了来自世界各地的人们前来探索、观光、学习、交流。
+
+用户：退下吧
+
+ChatGLM：好的，如果您还有其他问题，请随时提出。
 
 用户：stop
 (pytorch) root@worker1:/workspace/chatglm2/ChatGLM2-6B_mlu#
@@ -295,20 +262,13 @@ ChatGLM2-6B：ChatGPT是美国人工智能研究实验室OpenAI于2022年11月�
 
 ```bash
 (pytorch) root@worker1:/workspace/chatglm2/ChatGLM2-6B_mlu# python web_demo.py
-Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
-Explicitly passing a `revision` is encouraged when loading a configuration with custom code to ensure no malicious code has been contributed in a newer revision.
-Explicitly passing a `revision` is encouraged when loading a model with custom code to ensure no malicious code has been contributed in a newer revision.
-Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████| 8/8 [00:10<00:00,  1.29s/it]
-Running on local URL:  http://127.0.0.1:7860
-Running on public URL: https://6d2496501bb4bd4466.gradio.live
+Loading checkpoint shards: 100%|██████████████████████████████████████████████████████████████████████████████████| 7/7 [00:08<00:00,  1.26s/it]
+Running on local URL:  http://127.0.0.1:7000
+Running on public URL: https://d770ab15d67f55c617.gradio.live
 
-This share link expires in 72 hours. For free permanent hosting and GPU upgrades (NEW!), check out Spaces: https://huggingface.co/spaces
+This share link expires in 72 hours. For free permanent hosting and GPU upgrades, run `gradio deploy` from Terminal to deploy to Spaces (https://huggingface.co/spaces)
 ```
 
 **Web展示效果**
-<p align="left">
-    <img alt="aiknight_mlu_chatglm2" src="./res/aiknight_mlu_chatglm2.gif" width="640" />
-</p>
-
 
 *待补充*
