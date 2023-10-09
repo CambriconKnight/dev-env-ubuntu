@@ -107,4 +107,4 @@ with gr.Blocks() as demo:
 
 #demo.queue().launch(share=False, inbrowser=True)
 #如使用web_demo.py，需修改demo.queue().launch(share=False, inbrowser=True)中share=True，否则无法看到gradio地址
-demo.queue().launch(share=True, inbrowser=True)
+demo.queue().launch(share=True, inbrowser=True, server_port=19200)
