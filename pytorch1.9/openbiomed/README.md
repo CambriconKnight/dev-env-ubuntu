@@ -120,6 +120,8 @@ cp -rvf ../../pytorch_geometric/torch_geometric/utils/sparse.py /torch/venv3/pyt
 
 ## 2.2. 测试验证
 ```bash
+# 根据需要设置被测试板卡
+export MLU_VISIBLE_DEVICES=0
 # 推理测试: 在OpenBioMed/examples目录下，运行 python biomedgpt_inference.py 即可进行推理测试。
 cd /workspace/openbiomed/OpenBioMed/examples
 python biomedgpt_inference.py
@@ -145,4 +147,7 @@ Assistant:  One of the essential components for the initiation of protein synthe
 (pytorch) root@worker1:/workspace/openbiomed/OpenBioMed/examples#
 ```
 
-*待补充*
+**推理期间MLU资源占用情况**
+<p align="left">
+    <img alt="aiknight_openbiomed_cnmon" src="./res/aiknight_openbiomed_cnmon.gif" width="640" />
+</p>
