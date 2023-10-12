@@ -107,8 +107,6 @@ git clone https://gitee.com/xiaoqi25478/open-codes-mlu.git
 
 **安装第三方依赖库**
 ```bash
-# 进到容器后，切换到工作目录
-cd /home/share/pytorch1.9/chatglm
 apt-get update
 # 安装 Git LFS，实现 Git 对大文件的支持
 apt-get install git-lfs
@@ -126,7 +124,6 @@ pip install numpy --upgrade
 **安装MLU适配后的代码依赖库**
 ```bash
 # 进到容器后，切换到工作目录
-cd /workspace/chinese-llama-alpaca-2
 # 安装 accelerate 依赖库
 cd /workspace/chinese-llama-alpaca-2/open-codes-mlu/accelerate_0.20.3_mlu
 pip install -e .
