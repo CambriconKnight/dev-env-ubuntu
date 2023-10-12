@@ -79,7 +79,6 @@ cd ./dev-env-ubuntu/pytorch1.9
 安装 Git LFS，实现 Git 对大文件的支持.
 ```bash
 # 进到容器后，切换到工作目录
-mkdir -p /workspace/chatglm2 && cd /workspace/chatglm2
 apt-get update
 # 安装 Git LFS，实现 Git 对大文件的支持
 apt-get install git-lfs
@@ -96,7 +95,7 @@ pip install numpy --upgrade
 下载 transformers 及 chatglm2-6b 源码及对应版本的 chatglm2-6b 模型（模型较大，下载时间比较长）。
 ```bash
 # 进到容器后，切换到工作目录
-cd /workspace/chatglm2
+mkdir -p /workspace/chatglm2 && cd /workspace/chatglm2
 # 1. 下载 transformers 源码: 基于 transformer 模型结构提供的预训练语言库
 git clone -b v4.30.2 https://github.com/huggingface/transformers
 # 2. 下载 chatglm2-6b 源码

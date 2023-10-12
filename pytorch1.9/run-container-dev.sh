@@ -41,14 +41,6 @@ echo $MY_CONTAINER
 if [ 0 -eq $num ];then
     #sudo xhost +
     docker run -e DISPLAY=unix$DISPLAY --privileged=true \
-        --device /dev/cambricon_dev0 \
-        --device /dev/cambricon_dev1 \
-        --device /dev/cambricon_dev2 \
-        --device /dev/cambricon_dev3 \
-        --device /dev/cambricon_dev4 \
-        --device /dev/cambricon_dev5 \
-        --device /dev/cambricon_dev6 \
-        --device /dev/cambricon_dev7 \
         --device /dev/cambricon_ctl \
         --device /dev/cambricon_ipcm0 \
         --net=host --ipc=host --pid=host \
