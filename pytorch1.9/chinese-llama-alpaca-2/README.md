@@ -196,6 +196,12 @@ cat ${eval_output}/take0/summary.json
     <img alt="aiknight_cla2_inference_web" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.9/chinese-llama-alpaca-2/res/aiknight_cla2_inference_web.gif" width="640" />
 </p>
 
+**推理期间MLU资源占用情况**
+<p align="left">
+    <img alt="aiknight_cla2_inference_web_cnmon" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.9/chinese-llama-alpaca-2/res/aiknight_cla2_inference_web_cnmon.gif" width="640" />
+</p>
+
+
 ## 3.6. 微调训练
 ```bash
 # 微调训练
@@ -219,6 +225,8 @@ ls -lh ${chinese_alpcae_2_model_train_done_13b}
 
 
 ## 3.7. 微调训练后推理验证
+
+微调训练后推理验证与之前推理流程类似，注意确认对应模型位置。以下推理脚本已经修改为微调+Merge后的模型位置了，直接运行推理即可验证。
 ```bash
 # gradio 推理对话
 cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/cambricon
