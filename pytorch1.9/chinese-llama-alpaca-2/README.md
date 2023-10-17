@@ -12,6 +12,8 @@
 
 # 1. 环境准备
 
+[中文LLaMA&Alpaca大模型2](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2)是基于Meta发布的可商用大模型[Llama-2](https://github.com/facebookresearch/llama)开发，是[中文LLaMA&Alpaca大模型](https://github.com/ymcui/Chinese-LLaMA-Alpaca)的第二期项目，开源了**中文LLaMA-2基座模型和Alpaca-2指令精调大模型**。这些模型**在原版Llama-2的基础上扩充并优化了中文词表**，使用了大规模中文数据进行增量预训练，进一步提升了中文基础语义和指令理解能力，相比一代相关模型获得了显著性能提升。相关模型**支持FlashAttention-2训练**。标准版模型支持4K上下文长度，**长上下文版模型支持16K上下文长度**，并可通过NTK方法最高扩展至24K+上下文长度。
+
 ## 1.1. 硬件环境
 
 | 名称           | 数量      | 备注                  |
@@ -91,7 +93,7 @@ sudo ./run-container-dev.sh
 # 3. 模型验证
 ## 3.1. 下载适配代码
 
-为方便用户快速上手验证使用，可直接clone 适配MLU后代码，安装依赖库，若要了解复现适配细节，请阅读【代码适配】章节。
+为方便用户快速上手验证使用，可直接clone 适配MLU后代码，安装依赖库，若要了解复现适配细节，请阅读[📝代码适配](#2.代码适配)章节。
 
 ```bash
 # 创建工作目录
@@ -189,6 +191,11 @@ bash run_mlu_eval.sh
 cat ${eval_output}/take0/summary.json
 ```
 
+**Web展示效果**
+<p align="left">
+    <img alt="aiknight_cla2_inference_web" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.9/chinese-llama-alpaca-2/res/aiknight_cla2_inference_web.gif" width="640" />
+</p>
+
 ## 3.6. 微调训练
 ```bash
 # 微调训练
@@ -204,6 +211,12 @@ cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/merge_trainmodel_13b
 bash merge_trainmodel_13b.sh
 ls -lh ${chinese_alpcae_2_model_train_done_13b}
 ```
+
+**训练期间MLU资源占用情况**
+<p align="left">
+    <img alt="aiknight_cla2_cnmon" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.9/chinese-llama-alpaca-2/res/aiknight_cla2_cnmon.gif" width="640" />
+</p>
+
 
 ## 3.7. 微调训练后推理验证
 ```bash
