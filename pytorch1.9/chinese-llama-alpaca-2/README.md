@@ -159,6 +159,8 @@ cd /workspace/chinese-llama-alpaca-2/models
 ##第二种方式： 采用如下方式， git clone 并手动下载或拷贝过来模型，会更方便些。
 GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/ziqingyang/chinese-alpaca-2-13b
 # 然后参考如下表格中下载链接手动下载的模型和参数文件，替换到本地的 chinese-alpaca-2-13b 目录下。
+# 聊天模型Chinese-Alpaca-2-13B地址： https://huggingface.co/ziqingyang/chinese-alpaca-2-13b
+#cp -rvf /data/models/chinese-alpaca-2-13b /workspace/chinese-llama-alpaca-2/models/chinese_alpaca_2_model_to_train_13b
 ```
 以下是完整版Chinese-Alpaca-2-13B模型，直接下载即可使用，无需其他合并步骤。推荐网络带宽充足的用户。
 

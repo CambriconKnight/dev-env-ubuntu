@@ -1,0 +1,1 @@
+**[资源独立存放路径](https://gitee.com/cambriconknight/dev-open-res/tree/main/dev-env-ubuntu/pytorch1.9/chinese-llama-alpaca-2/res)**
