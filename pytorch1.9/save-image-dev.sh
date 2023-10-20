@@ -6,6 +6,12 @@ set -e
 # Description:  1. commit: 提交容器到镜像，实现容器持久化；
 #               2. save: 导出镜像文件，实现镜像内容持久化。
 # Example:      ./save-image-dev.sh
+#               ./save-image-dev.sh $Suffix_FILENAME
+#                   $Suffix_FILENAME: 保存的镜像文件后缀名。
+#                   如：执行 【./save-image-dev.sh ChatGLM】 成功后：
+#                  【镜像文件】默认为： pytorch-v1.10.0-torch1.9-ubuntu18.04-py37-ChatGLM.tar.gz
+#                  【镜像名称】默认为： yellow.hub.cambricon.com/pytorch/pytorch:v1.15.0-torch1.9-ubuntu18.04-py37-ChatGLM
+#                  【容器名称】默认为： container-pytorch-v1.13.0-torch1.9-ubuntu18.04-py37-ChatGLM-kang
 # Depends:
 # Notes:
 # -------------------------------------------------------------------------------
