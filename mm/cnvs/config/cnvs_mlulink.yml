@@ -1,0 +1,10 @@
+%YAML 1.2
+---
+
+globals:
+  logdir: ./
+
+custom:
+- custom:
+    mlulink:
+      data_size: 33554432.0   #执行单次测试使用的int数量，实际的数据量为 data_size * sizeof(int) 。
