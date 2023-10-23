@@ -257,5 +257,22 @@ cd /home/share/mm/cnvs
 ./peak-test.sh
 ```
 
+## 3.9. mlulink
+
+mlulink插件用于测试mlulink性能，报告异常数据。该插件统计单主机下，多设备之间的mlulink单向、双向拷贝带宽，以及单向拷贝延迟。
+
+**命令**
+```bash
+cd /home/share/mm/cnvs
+cnvs -r "mlulink" -c /usr/local/neuware/bin/cnvs.example.yml -v
+```
+
+**实例**
+```bash
+cd /home/share/mm/cnvs
+#执行测试脚本
+./mlulink-test.sh
+```
+
 >![](../../res/note.gif) **备注：**
->- 有关各个测试插件的详细使用，请参考CNVS手册： https://www.cambricon.com/docs/sdk_1.10.0/cntoolkit_3.2.2/cnvs_0.8.1/index.html
+>- 有关各个测试插件的详细使用，请参考CNVS手册： https://www.cambricon.com/docs/sdk_1.14.0/cntoolkit_3.6.1/cnvs_0.12.0/index.html
