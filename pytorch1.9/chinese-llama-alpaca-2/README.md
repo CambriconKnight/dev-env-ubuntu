@@ -71,6 +71,8 @@ cd ./dev-env-ubuntu/pytorch1.9
 #加载Docker镜像
 #./load-image-dev.sh ./docker/pytorch-v1.15.0-torch1.9-ubuntu18.04-py37.tar.gz
 sudo ./load-image-dev.sh ${FULLNAME_IMAGES}
+#加载打包好验证环境的Docker镜像
+#./load-image-dev.sh ./docker/pytorch-v1.15.0-torch1.9-ubuntu18.04-py37-CLA2.tar.gz
 ```
 
 ## 1.5. 启动容器

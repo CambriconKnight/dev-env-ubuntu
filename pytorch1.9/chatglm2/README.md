@@ -175,14 +175,17 @@ pip install -e .
 cd /workspace/chatglm2/ChatGLM2-6B_mlu
 sed -i 's/torch/# torch/' requirements.txt
 sed -i 's/transformers/# transformer/' requirements.txt
+#安装>=1.24.0版本会失败，当前环境下默认安装streamlit的话是安装streamlit-1.23.1-py2.py3-none-any.whl版本
+sed -i 's/streamlit>=1.24.0/# streamlit>=1.24.0/' requirements.txt
 pip install -r requirements.txt
 
-#使用 pip 安装 sentencepiece gradio
-pip install sse-starlette mdtex2html sentencepiece gradio
-#pip install mdtex2html
-#pip install sentencepiece
+#使用 pip 安装 streamlit sentencepiece gradio, 如果出现类似报错【ERROR: Could not install packages due to an OSError: 】，可尝试一个一个安装。
+#pip install streamlit sse-starlette mdtex2html sentencepiece gradio
+pip install mdtex2html
+pip install sentencepiece
 # gradio安装时间长，耐心等待。
-#pip install gradio
+pip install gradio
+pip install streamlit
 ```
 
 ## 2.4. 测试验证
@@ -193,8 +196,8 @@ cd /workspace/chatglm2/ChatGLM2-6B_mlu
 # 根据使用的demo，修改cli_demo.py或web_demo.py或api.py中的预训练模型路径“THUDM/chatglm2-6b”为实际路径，本教程中此路径修改为【../chatglm2-6b】。
 #tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
 #model = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True).half().mlu()
-tokenizer = AutoTokenizer.from_pretrained("../chatglm2-6b", trust_remote_code=True)
-model = AutoModel.from_pretrained("../chatglm2-6b", trust_remote_code=True).mlu()
+#tokenizer = AutoTokenizer.from_pretrained("../chatglm2-6b", trust_remote_code=True)
+#model = AutoModel.from_pretrained("../chatglm2-6b", trust_remote_code=True).mlu()
 #也可执行以下命令，直接拷贝修改后的文件
 cp -rvf /home/share/pytorch1.9/chatglm2/tools/cli_demo.py ./
 # CLI测试验证
