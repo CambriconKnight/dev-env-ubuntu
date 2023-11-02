@@ -142,6 +142,27 @@ bash run_mlu_eval.sh
 cat ${eval_output}/take0/summary.json
 ```
 
+## 3.2.3. 性能验证
+```bash
+#安装依赖库
+pip install shortuuid
+#验证
+cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/scripts/openai_server_demo
+cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/openai_api_server.py ./
+python openai_api_server.py --base_model /workspace/chinese-llama-alpaca-2/models/chinese_alpaca_2_model_to_train_13b --gpus "0,1"
+```
+openai_api启动后，用户可以再另外一个终端，发送如下curl消息。可通过openai_api_server.py的启动终端日志看到打印出的性能数据(tokens/s)。
+```bash
+curl http://localhost:19327/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [
+      {"role": "user","message": "请详细介绍下中国的首都。"}
+    ],
+    "repetition_penalty": 1.0
+  }'
+```
+
 ## 3.3. 指令精调
 ### 3.3.1. 微调训练
 训练代码参考了[Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca)项目中数据集处理的相关部分，使用方法见[📖指令精调脚本Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/sft_scripts_zh)
@@ -187,9 +208,8 @@ bash run_mlu_eval_2.sh
 #查看精度结果
 cat ${eval_output}/take0/summary.json
 ```
-
-
 ## 3.4. 预训练
+**如需验证预训练，可以参考如下步骤**
 ### 3.4.1. LoRA预训练
 训练代码参考了🤗transformers中的[run_clm.py](https://github.com/huggingface/transformers/blob/main/examples/pytorch/language-modeling/run_clm.py)，使用方法见[📖预训练脚本Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/pt_scripts_zh)
 ```bash
