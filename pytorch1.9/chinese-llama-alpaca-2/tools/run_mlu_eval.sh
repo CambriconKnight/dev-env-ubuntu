@@ -17,7 +17,7 @@ pushd ../scripts/ceval
 # 官方模型
 model_path=${chinese_alpaca_2_model_to_train_13b}
 # 训练后模型
-#model_path=${chinese_alpcae_2_model_train_done_13b}
+#model_path=${chinese_alpaca_2_model_train_done_13b}
 
 python eval.py \
     --model_path ${model_path} \

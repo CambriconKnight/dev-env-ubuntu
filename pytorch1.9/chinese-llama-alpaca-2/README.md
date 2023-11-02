@@ -93,106 +93,34 @@ sudo ./run-container-dev.sh
 [寒武纪 PyTorch v1.6⽹络移植⼿册](https://www.cambricon.com/docs/sdk_1.13.0/cambricon_pytorch_1.15.0/porting_1.6/index.html)
 
 # 3. 模型验证
-## 3.1. 下载适配代码
+## 3.1. 环境搭建
 
-为方便用户快速上手验证使用，可直接clone 适配MLU后代码，安装依赖库，若要了解复现适配细节，请阅读[📝代码适配](#2.代码适配)章节。
+执行一键自动化环境部署脚本即可完成基础环境搭建。
 
-```bash
-# 创建工作目录
-mkdir -p /workspace/chinese-llama-alpaca-2
-# 进到容器后，切换到工作目录
-#cd /home/share/pytorch1.9/chinese-llama-alpaca-2
-cd /workspace/chinese-llama-alpaca-2
-# 1. 下载 chinese-llama-alpaca-2-13B 源码
-git clone https://gitee.com/xiaoqi25478/Chinese-LLaMA-Alpaca-2_mlu.git
-# 2. 下载适配后的依赖库源码 accelerate_mlu、transformers_mlu、peft_mlu
-git clone https://gitee.com/xiaoqi25478/open-codes-mlu.git
-```
-
-## 3.2. 安装依赖库
-
-**安装第三方依赖库**
-```bash
-apt-get update
-# 安装 Git LFS，实现 Git 对大文件的支持
-apt-get install git-lfs
-#yum install git-lfs
-# Silence all safe.directory warnings
-git config --global --add safe.directory '*'
-# 执行如下命令后，如果显示Git LFS initialized说明安装成功
-git lfs install
-# 升级numpy版本
-pip install numpy --upgrade
-# 安装 gradio
-#pip install gradio
-```
-
-**安装MLU适配后的代码依赖库**
 ```bash
 # 进到容器后，切换到工作目录
-# 安装 accelerate 依赖库
-cd /workspace/chinese-llama-alpaca-2/open-codes-mlu/accelerate_0.20.3_mlu
-pip install -e .
-# 安装 transformers 依赖库
-#cd /workspace/chinese-llama-alpaca-2/open-codes-mlu/transformers_4.30.0_mlu
-cd /workspace/chinese-llama-alpaca-2/open-codes-mlu/transformers_4.30.0_llama_mlu
-pip install -e .
-# 安装 peft 依赖库
-cd /workspace/chinese-llama-alpaca-2/open-codes-mlu/peft_0.3.0.dev0_mlu
-pip install -e .
-# 安装 cndsp(Cambricon DeepSpeed）
-cd /workspace/chinese-llama-alpaca-2
-wget https://sdk.cambricon.com/static/Basis/MLU370_X86_ubuntu18.04/cndsp-0.8.0-py3-none-any.whl
-pip install cndsp-0.8.0-py3-none-any.whl
-# 安装 Chinese-LLaMA-Alpaca-2 依赖库
-#cd /home/share/pytorch1.9/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu
+cd /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/
+./deploy_env.sh
+#bash deploy_env.sh
+# 激活环境变量
 cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu
-pip install -r requirements.txt
+# 激活环境变量，请注意下载模型，并根据实际环境，修改模型路径。
+source env.sh
 ```
-
-## 3.3. 模型下载
-*注：以下步骤以Alpaca-2聊天13B模型为例，其他模型操作类似。*
-```bash
-mkdir -p /workspace/chinese-llama-alpaca-2/models
-cd /workspace/chinese-llama-alpaca-2/models
-# 下载模型
-##第一种方式： 不推荐使用以下命令。直接 git clone 大模型文件的话，下载模型时间较长.
-# git clone https://huggingface.co/ziqingyang/chinese-alpaca-2-13b
-##第二种方式： 采用如下方式， git clone 并手动下载或拷贝过来模型，会更方便些。
-GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/ziqingyang/chinese-alpaca-2-13b
-# 然后参考如下表格中下载链接手动下载的模型和参数文件，替换到本地的 chinese-alpaca-2-13b 目录下。
-# 聊天模型Chinese-Alpaca-2-13B地址： https://huggingface.co/ziqingyang/chinese-alpaca-2-13b
-#cp -rvf /data/models/chinese-alpaca-2-13b /workspace/chinese-llama-alpaca-2/models/chinese_alpaca_2_model_to_train_13b
-```
-以下是完整版Chinese-Alpaca-2-13B模型，直接下载即可使用，无需其他合并步骤。推荐网络带宽充足的用户。
+以下是完整版Chinese-Alpaca-2-13B模型，直接下载即可使用，无需其他合并步骤。推荐网络带宽充足的用户。下载完成后放置到此目录【/data/models/chinese-alpaca-2-13b】，方便后续一键自动化环境部署脚本执行。
 
 | 模型名称                  |   类型   | 大小 |                    下载地址                    |
 | :------------------------ | :------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | Chinese-Alpaca-2-13B | 指令模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1MT_Zlap1OtdYMgoBNTS3dg?pwd=9xja) [[Google]](https://drive.google.com/drive/folders/1MTsKlzR61xmbTR4hBWzQas_MOpUZsogN?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-13b) |
 
-## 3.4. 激活环境变量
-```bash
-# 进入 Chinese-LLaMA-Alpaca-2_mlu 路径（以实际为准）
-#cd /home/share/pytorch1.9/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu
-cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu
-# 激活环境变量，请注意下载模型，并根据实际环境，修改模型路径。
-cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/env.sh ./
-source env.sh
-```
-
-## 3.5. 模型推理
+## 3.2. 模型推理
+## 3.2.1. 推理验证
 ```bash
 # gradio 推理对话
 cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/cambricon
 # model_path=/workspace/chinese-llama-alpaca-2/models/chinese-alpaca-2-13b
 cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_inference_13b.sh ./
 bash run_inference_13b.sh
-
-# 跑精度, 13b测试需要2卡。
-cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_mlu_eval.sh ./
-bash run_mlu_eval.sh
-#查看精度结果
-cat ${eval_output}/take0/summary.json
 ```
 
 **Web展示效果**
@@ -205,21 +133,25 @@ cat ${eval_output}/take0/summary.json
     <img alt="aiknight_cla2_inference_web_cnmon" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.9/chinese-llama-alpaca-2/res/aiknight_cla2_inference_web_cnmon.gif" width="640" />
 </p>
 
+## 3.2.2. 精度验证
+```bash
+# 跑精度, 13b测试需要2卡。
+cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_mlu_eval.sh ./
+bash run_mlu_eval.sh
+#查看精度结果
+cat ${eval_output}/take0/summary.json
+```
 
-## 3.6. 微调训练
+## 3.3. 指令精调
+### 3.3.1. 微调训练
+训练代码参考了[Stanford Alpaca](https://github.com/tatsu-lab/stanford_alpaca)项目中数据集处理的相关部分，使用方法见[📖指令精调脚本Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/sft_scripts_zh)
 ```bash
 # 微调训练
 cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/cambricon
 cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_finetuning_13b.sh ./
 bash run_finetuning_13b.sh
-#ls -lh ${train_output}
-ls -lh ${train_output}/checkpoint-*/pytorch_model.bin
-
-# 合并lore权重：微调后的模型+sample_lora_13b，merge后生成的模型。
-cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/cambricon
-cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/merge_trainmodel_13b.sh ./
-bash merge_trainmodel_13b.sh
-ls -lh ${chinese_alpcae_2_model_train_done_13b}
+#ls -lh ${train_output_finetuning_13b}
+ls -lh ${train_output_finetuning_13b}/checkpoint-*/pytorch_model.bin
 ```
 
 **训练期间MLU资源占用情况**
@@ -227,8 +159,17 @@ ls -lh ${chinese_alpcae_2_model_train_done_13b}
     <img alt="aiknight_cla2_cnmon" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.9/chinese-llama-alpaca-2/res/aiknight_cla2_cnmon.gif" width="640" />
 </p>
 
+### 3.3.2. 模型合并
 
-## 3.7. 微调训练后推理验证
+```bash
+# 合并lore权重：微调后的模型+sample_lora_13b，merge后生成的模型。
+cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/cambricon
+cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/merge_trainmodel_13b.sh ./
+bash merge_trainmodel_13b.sh
+ls -lh ${chinese_alpaca_2_model_train_done_13b}
+```
+
+### 3.3.3. 推理验证
 
 微调训练后推理验证与之前推理流程类似，注意确认对应模型位置。以下推理脚本已经修改为微调+Merge后的模型位置了，直接运行推理即可验证。
 ```bash
@@ -236,10 +177,60 @@ ls -lh ${chinese_alpcae_2_model_train_done_13b}
 cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/cambricon
 cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_inference_13b_2.sh ./
 bash run_inference_13b_2.sh
+```
 
+### 3.3.4. 精度验证
+```bash
 # 跑精度, 13b测试需要2卡
 cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_mlu_eval_2.sh ./
 bash run_mlu_eval_2.sh
 #查看精度结果
 cat ${eval_output}/take0/summary.json
+```
+
+
+## 3.4. 预训练
+### 3.4.1. LoRA预训练
+训练代码参考了🤗transformers中的[run_clm.py](https://github.com/huggingface/transformers/blob/main/examples/pytorch/language-modeling/run_clm.py)，使用方法见[📖预训练脚本Wiki](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2/wiki/pt_scripts_zh)
+```bash
+# LoRA预训练
+cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/cambricon
+cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_pretraining_13b.sh ./
+bash run_pretraining_13b.sh
+#ls -lh ${train_output_pretraining_13b}
+ls -lh ${train_output_pretraining_13b}/checkpoint-*/pytorch_model.bin
+```
+
+**训练期间MLU资源占用情况**
+<p align="left">
+    <img alt="aiknight_cla2_cnmon" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.9/chinese-llama-alpaca-2/res/aiknight_cla2_cnmon.gif" width="640" />
+</p>
+
+### 3.3.2. 模型合并
+
+```bash
+# 合并lore权重：微调后的模型+sample_lora_13b，merge后生成的模型。
+cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/cambricon
+cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/merge_pretrain_model_13b.sh ./
+bash merge_pretrain_model_13b.sh
+ls -lh ${chinese_alpaca_2_model_pretrain_done_13b}
+```
+
+### 3.3.3. 推理验证
+
+预训练后推理验证与之前推理流程类似，注意确认对应模型位置。以下推理脚本已经修改为预训练+Merge后的模型位置了，直接运行推理即可验证。
+```bash
+# gradio 推理对话
+cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/cambricon
+cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_inference_13b_2_pretrain.sh ./
+bash run_inference_13b_2_pretrain.sh
+```
+
+### 3.3.4. 精度验证
+```bash
+# 跑精度, 13b测试需要2卡
+cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_mlu_eval_2_pretrain.sh ./
+bash run_mlu_eval_2_pretrain.sh
+#查看精度结果
+cat ${eval_output_pretrain}/take0/summary.json
 ```

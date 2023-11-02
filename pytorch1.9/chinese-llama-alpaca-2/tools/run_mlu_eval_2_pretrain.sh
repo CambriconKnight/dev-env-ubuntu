@@ -2,10 +2,10 @@
 set -ex
 #set -e
 # -------------------------------------------------------------------------------
-# Filename:     run_mlu_eval_2.sh
+# Filename:     run_mlu_eval_2_pretrain.sh
 # UpdateDate:   2023/10/14
-# Description:  微调+merge完后，精度评测脚本
-# Example:      ./run_mlu_eval_2.sh
+# Description:  预训练+merge完后，精度评测脚本
+# Example:      ./run_mlu_eval_2_pretrain.sh
 # Depends:
 # Notes:
 # -------------------------------------------------------------------------------
@@ -13,10 +13,8 @@ set -ex
 export MLU_VISIBLE_DEVICES=0,1
 pushd ../scripts/ceval
 
-# 官方模型
-#model_path=${chinese_alpaca_2_model_to_train_13b}
 # 训练后模型
-model_path=${chinese_alpaca_2_model_train_done_13b}
+model_path=${chinese_alpaca_2_model_pretrain_done_13b}
 
 python eval.py \
     --model_path ${model_path} \
@@ -29,7 +27,7 @@ python eval.py \
     --ntrain 5 \
     --do_save_csv False \
     --do_test False \
-    --output_dir /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/eval_output
+    --output_dir /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/eval_output_pretrain
 popd
 
 

@@ -23,11 +23,16 @@ export chinese_alpaca_2_lora_13b=${Model_DIR}/chinese-alpaca-2-lora-13b
 # 聊天模型Chinese-Alpaca-2-13B地址： https://huggingface.co/ziqingyang/chinese-alpaca-2-13b
 #cp -rvf /data/models/chinese-alpaca-2-13b ${Model_DIR}/chinese_alpaca_2_model_to_train_13b
 export chinese_alpaca_2_model_to_train_13b=${Model_DIR}/chinese_alpaca_2_model_to_train_13b
+# 经过微调并merge后的模型：pretrain后的模型 + sample_lora_pt_13b ，merge后生成的模型。
+export chinese_alpaca_2_model_pretrain_done_13b=${Model_DIR}/chinese_alpaca_2_model_pretrain_done_13b
 # 经过微调并merge后的模型：微调后的模型+sample_lora_13b，merge后生成的模型。
-export chinese_alpcae_2_model_train_done_13b=${Model_DIR}/chinese_alpcae_2_model_train_done_13b
+export chinese_alpaca_2_model_train_done_13b=${Model_DIR}/chinese_alpaca_2_model_train_done_13b
 #####################################
-export train_output=/workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/train_output
+export train_output_finetuning_13b=/workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/train_output_finetuning_13b
+export train_output_pretraining_13b=/workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/train_output_pretraining_13b
 export eval_output=/workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/eval_output
+export eval_output_pretrain=/workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/eval_output_pretrain
+export eval_output_finetuning=/workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/eval_output_finetuning
 #####################################
 # 数据集路径
 export DATASETS_DIR=${ROOT_PATH}/data/drama
@@ -35,7 +40,10 @@ export DATASETS_TXT_DIR=${ROOT_PATH}/data/drama_txt_data
 export VAILDATION_FILE=${DATASETS_DIR=$}/drama.json
 echo "${ROOT_PATH}"
 echo "${Model_DIR}"
-echo "${train_output}"
+echo "${train_output_finetuning_13b}"
+echo "${train_output_pretraining_13b}"
 echo "${eval_output}"
+echo "${eval_output_pretrain}"
+echo "${eval_output_finetuning}"
 
 
