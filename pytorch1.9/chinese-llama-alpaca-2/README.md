@@ -114,7 +114,7 @@ source env.sh
 | Chinese-Alpaca-2-13B | 指令模型 | 24.7 GB | [[百度]](https://pan.baidu.com/s/1MT_Zlap1OtdYMgoBNTS3dg?pwd=9xja) [[Google]](https://drive.google.com/drive/folders/1MTsKlzR61xmbTR4hBWzQas_MOpUZsogN?usp=share_link) [[🤗HF]](https://huggingface.co/ziqingyang/chinese-alpaca-2-13b) |
 
 ## 3.2. 模型推理
-## 3.2.1. 推理验证
+### 3.2.1. 推理验证
 ```bash
 # gradio 推理对话
 cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/cambricon
@@ -133,7 +133,7 @@ bash run_inference_13b.sh
     <img alt="aiknight_cla2_inference_web_cnmon" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.9/chinese-llama-alpaca-2/res/aiknight_cla2_inference_web_cnmon.gif" width="640" />
 </p>
 
-## 3.2.2. 精度验证
+### 3.2.2. 精度验证
 ```bash
 # 跑精度, 13b测试需要2卡。
 cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_mlu_eval.sh ./
@@ -142,7 +142,7 @@ bash run_mlu_eval.sh
 cat ${eval_output}/take0/summary.json
 ```
 
-## 3.2.3. 性能验证
+### 3.2.3. 性能验证
 ```bash
 #安装依赖库
 pip install shortuuid
@@ -226,17 +226,17 @@ ls -lh ${train_output_pretraining_13b}/checkpoint-*/pytorch_model.bin
     <img alt="aiknight_cla2_cnmon" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.9/chinese-llama-alpaca-2/res/aiknight_cla2_cnmon.gif" width="640" />
 </p>
 
-### 3.3.2. 模型合并
+### 3.4.2. 模型合并
 
 ```bash
-# 合并lore权重：微调后的模型+sample_lora_13b，merge后生成的模型。
+# 合并lore权重：预训练后的模型+sample_lora_13b，merge后生成的模型。
 cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu/cambricon
 cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/merge_pretrain_model_13b.sh ./
 bash merge_pretrain_model_13b.sh
 ls -lh ${chinese_alpaca_2_model_pretrain_done_13b}
 ```
 
-### 3.3.3. 推理验证
+### 3.4.3. 推理验证
 
 预训练后推理验证与之前推理流程类似，注意确认对应模型位置。以下推理脚本已经修改为预训练+Merge后的模型位置了，直接运行推理即可验证。
 ```bash
@@ -246,7 +246,7 @@ cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_inference_13b_2_
 bash run_inference_13b_2_pretrain.sh
 ```
 
-### 3.3.4. 精度验证
+### 3.4.4. 精度验证
 ```bash
 # 跑精度, 13b测试需要2卡
 cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/run_mlu_eval_2_pretrain.sh ./
