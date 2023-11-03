@@ -32,7 +32,6 @@ data_cache=${ROOT_PATH}/data/pt_train_cache
 per_device_train_batch_size=1
 per_device_eval_batch_size=1
 gradient_accumulation_steps=8
-output_dir=${ROOT_PATH}/train_pt_output
 output_dir=${train_output_pretraining_13b}
 deepspeed_config_file=ds_zero3_no_offload.json
 
