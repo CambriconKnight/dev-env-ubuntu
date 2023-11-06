@@ -22,7 +22,7 @@ mv ${train_output_pretraining_13b}/${checkpoints}/pytorch_model.bin sample_lora_
 
 echo "Debug INFO:mv done!"
 pushd ../
-python scripts/merge_llama_with_chinese_lora_low_mem.py \
+python scripts/merge_llama2_with_chinese_lora_low_mem_2.py \
     --base_model ${pretrain_model} \
     --lora_model cambricon/sample_lora_13b \
     --output_type huggingface \
