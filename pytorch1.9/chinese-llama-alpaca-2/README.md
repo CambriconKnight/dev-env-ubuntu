@@ -105,6 +105,7 @@ cd /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/
 # 激活环境变量
 cd /workspace/chinese-llama-alpaca-2/Chinese-LLaMA-Alpaca-2_mlu
 # 激活环境变量，请注意下载模型，并根据实际环境，修改模型路径。
+cp -rvf /home/share/pytorch1.9/chinese-llama-alpaca-2/tools/env.sh ./
 source env.sh
 ```
 以下是完整版Chinese-Alpaca-2-13B模型，直接下载即可使用，无需其他合并步骤。推荐网络带宽充足的用户。下载完成后放置到此目录【/data/models/chinese-alpaca-2-13b】，方便后续一键自动化环境部署脚本执行。
