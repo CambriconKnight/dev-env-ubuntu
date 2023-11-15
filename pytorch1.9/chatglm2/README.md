@@ -73,154 +73,43 @@ cd ./dev-env-ubuntu/pytorch1.9
 ./run-container-dev.sh
 ```
 
-# 2. 模型推理
-## 2.1. 安装LFS
+# 2. 代码适配
 
-安装 Git LFS，实现 Git 对大文件的支持.
+详见相关 [文档中心](https://developer.cambricon.com/index/document/index/classid/3.html) 适配手册：
+[寒武纪 PyTorch v1.9网络移植手册](https://www.cambricon.com/docs/sdk_1.13.0/cambricon_pytorch_1.15.0/porting_1.9/index.html)
+[寒武纪 PyTorch v1.6⽹络移植⼿册](https://www.cambricon.com/docs/sdk_1.13.0/cambricon_pytorch_1.15.0/porting_1.6/index.html)
+
+# 3. 模型验证
+## 3.1. 环境搭建
+
+执行一键自动化环境部署脚本即可完成基础环境搭建。
+
 ```bash
 # 进到容器后，切换到工作目录
-apt-get update
-# 安装 Git LFS，实现 Git 对大文件的支持
-apt-get install git-lfs
-#yum install git-lfs
-# Silence all safe.directory warnings
-git config --global --add safe.directory '*'
-# 执行如下命令后，如果显示Git LFS initialized说明安装成功
-git lfs install
-# 升级numpy版本
-pip install numpy --upgrade
-```
-## 2.2. 下载代码
-
-下载 transformers 及 chatglm2-6b 源码及对应版本的 chatglm2-6b 模型（模型较大，下载时间比较长）。
-```bash
-# 进到容器后，切换到工作目录
-mkdir -p /workspace/chatglm2 && cd /workspace/chatglm2
-# 1. 下载 transformers 源码: 基于 transformer 模型结构提供的预训练语言库
-git clone -b v4.30.2 https://github.com/huggingface/transformers
-# 2. 下载 chatglm2-6b 源码
-git clone https://github.com/THUDM/ChatGLM2-6B
-cd ChatGLM2-6B && git checkout 3d0225f969d56c058f052f6800a21630d14a1184 && cd -
-# 3. 下载 chatglm2-6b 模型实现
-##第一种方式： 不推荐使用以下命令。直接 git clone 大模型文件的话，下载模型时间较长.
-# git clone https://huggingface.co/THUDM/chatglm2-6b
-##第二种方式： 采用如下方式， git clone 并手动下载或拷贝过来模型，会更方便些。
-GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/THUDM/chatglm2-6b
-# 此方式仅下载一个模型标识文件，然后从https://huggingface.co/THUDM/chatglm2-6b/tree/main（或国内站点）手动下载模型和参数文件，替换到本地的 chatglm2-6b 目录下。
-# 国内可以从https://cloud.tsinghua.edu.cn/d/674208019e314311ab5c/ 手动下载模型参数文件，并将下载的文件替换到本地的 chatglm2-6b 目录下。
-#cp -rvf /data/models/chatglm2-6b/pretrained_model/chatglm2-6b/pytorch_model-0000*.bin ./chatglm2-6b
-#cp -rvf /data/models/chatglm2-6b/pretrained_model/chatglm2-6b/ice_text.model ./chatglm2-6b
-# 注意： 如果后续操作中，有shape mismatch之类报错，多半是模型更新了，需要下载对应的模型。
-##第三种方式(推荐)： 为保证与以上代码对应的模型，也可通过关注微信公众号 【AIKnight】,
-# 发送关键字(不区分大小写): **chatglm2-6b**, 公众号会自动回复对应下载地址.
-# 下载完毕后，可把下载后的【chatglm2-6b】目录拷贝到当前目录。
-cp -rvf /data/baidudisk/chatglm2-6b ./
-#cp -rvf /data/models/chatglm2-6b/ ./
-#mv -f /DATA_SPACE/baidudisk/chatglm2-6b ./
-```
-
-## 2.3. 模型适配
-### 2.3.1. 自动迁移代码
-
-使用工具 `torch_gpu2mlu.py` 从 GPU 模型脚本迁移至 MLU 设备运行，转换后的模型脚本只支持 MLU 设备运行。该工具可对模型脚本进行转换，对模型脚本修改位置较多，会对修改位置进行统计，实现开发者快速迁移。
-
-- 在容器环境中，执行以下命令
-```bash
-cd /workspace/chatglm2
-#建立软连接
-ln -s /torch/src/catch/tools/torch_gpu2mlu.py ./
-#执行转换模型脚本, 自动修改 transformers 源码
-python torch_gpu2mlu.py -i transformers
-#执行转换模型脚本, 自动修改  ChatGLM2-6B 源码
-python torch_gpu2mlu.py -i ChatGLM2-6B
-#显示转换后的代码。
-#ls -lh transformers transformers_mlu ChatGLM2-6B ChatGLM2-6B_mlu
-ls -la
-```
-
-- 输出转换结果
-```bash
-(pytorch) root@worker1:/workspace/chatglm2# python torch_gpu2mlu.py -i transformers
-# Cambricon PyTorch Model Migration Report
-Official PyTorch model scripts:  /workspace/chatglm2/transformers
-Cambricon PyTorch model scripts:  /workspace/chatglm2/transformers_mlu
-Migration Report:  /workspace/chatglm2/transformers_mlu/report.md
-(pytorch) root@worker1:/workspace/chatglm2# python torch_gpu2mlu.py -i ChatGLM2-6B
-# Cambricon PyTorch Model Migration Report
-Official PyTorch model scripts:  /workspace/chatglm2/ChatGLM2-6B
-Cambricon PyTorch model scripts:  /workspace/chatglm2/ChatGLM2-6B_mlu
-Migration Report:  /workspace/chatglm2/ChatGLM2-6B_mlu/report.md
-(pytorch) root@worker1:/workspace/chatglm2#
-```
-
-### 2.3.2. 手动修改代码
-
-由于 chatglm2-6b 要求使用 torch >=1.10，其中有 pytorch 不支持的特性包括如下。需要在【自动迁移代码】基础上再进行如下修改。
-
-进入工作目录，拷贝修改后的代码到【chatglm2-6b】目录。
-```bash
-# 进入工作目录  /home/share/pytorch1.9/chatglm2/tools/modeling_chatglm.py
-cd /workspace/chatglm2
-cp -rvf /home/share/pytorch1.9/chatglm2/tools/modeling_chatglm.py ./chatglm2-6b
-```
-
-### 2.3.3. 安装依赖库
-
-```bash
-# 安装 transformers
-cd /workspace/chatglm2/transformers_mlu/
-pip install -e .
-
-# 安装 ChatGLM2-6B 依赖库
+cd /home/share/pytorch1.9/chatglm2/tools/
+./deploy_env.sh
+#bash deploy_env.sh
+# 激活环境变量
 cd /workspace/chatglm2/ChatGLM2-6B_mlu
-sed -i 's/torch/# torch/' requirements.txt
-sed -i 's/transformers/# transformer/' requirements.txt
-#安装>=1.24.0版本会失败，当前环境下默认安装streamlit的话是安装streamlit-1.23.1-py2.py3-none-any.whl版本
-sed -i 's/streamlit>=1.24.0/# streamlit>=1.24.0/' requirements.txt
-pip install -r requirements.txt
-
-#使用 pip 安装 streamlit sentencepiece gradio, 如果出现类似报错【ERROR: Could not install packages due to an OSError: 】，可尝试一个一个安装。
-#pip install streamlit sse-starlette mdtex2html sentencepiece gradio
-pip install mdtex2html
-pip install sentencepiece
-# gradio安装时间长，耐心等待。
-pip install gradio
-pip install streamlit
 ```
+以下是ChatGLM2-6B模型，直接下载即可使用。推荐网络带宽充足的用户。下载完成后放置到此目录【/data/models/chatglm2/chatglm2-6b】，方便后续一键自动化环境部署脚本执行。
+| 名称                   | 版本/文件                                                 | 备注                                 |
+| :-------------------- | :-------------------------------                         | :---------------------------------- |
+| ChatGLM2-6B 模型         | https://huggingface.co/THUDM/chatglm2-6b	  | 直接clone 速度慢，并且为保持版本对应，也可关注微信公众号 【 AIKnight 】, 发送关键字 **chatglm2-6b** 自动获取。|
 
-## 2.4. 测试验证
+## 3.2. 模型推理
+### 3.2.1. CLI推理验证
 ```bash
 # 进入ChatGLM2-6B_mlu路径（以实际为准）
 cd /workspace/chatglm2/ChatGLM2-6B_mlu
-
-# 根据使用的demo，修改cli_demo.py或web_demo.py或api.py中的预训练模型路径“THUDM/chatglm2-6b”为实际路径，本教程中此路径修改为【../chatglm2-6b】。
-#tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True)
-#model = AutoModel.from_pretrained("THUDM/chatglm2-6b", trust_remote_code=True).half().mlu()
-#tokenizer = AutoTokenizer.from_pretrained("../chatglm2-6b", trust_remote_code=True)
-#model = AutoModel.from_pretrained("../chatglm2-6b", trust_remote_code=True).mlu()
-#也可执行以下命令，直接拷贝修改后的文件
+#可执行以下命令，直接拷贝修改后的文件
 cp -rvf /home/share/pytorch1.9/chatglm2/tools/cli_demo.py ./
 # CLI测试验证
 export MLU_VISIBLE_DEVICES=0
 python cli_demo.py
-#pip install sentencepiece gradio
-
-# 或python web_demo.py 或python api.py
-# 注意：如使用web_demo.py，需修改demo.queue().launch(share=False, inbrowser=True)中share=True，否则无法看到gradio地址
-#cp -rvf /home/share/pytorch1.9/chatglm2/tools/web_demo.py ./
-# WEB测试验证
-#python web_demo.py
-
-# API测试验证
-#cp -rvf /home/share/pytorch1.9/chatglm2/tools/api.py ./
-#python api.py
 ```
+*加载比较慢，大概需要10分钟，可耐心等待。实例如下：*
 
-### 2.4.1. 测试CLI实例
-
-使用 cli_demo.py测试。
-
-*加载比较慢，大概需要10分钟，可耐心等待。*
 ```bash
 (pytorch) root@worker1:/workspace/chatglm2/ChatGLM2-6B_mlu# python cli_demo.py
 Loading checkpoint shards: 100%|██████████████████████████████████████████████████████████████████████████████████| 7/7 [00:08<00:00,  1.25s/it]
@@ -256,11 +145,19 @@ ChatGLM：好的，如果您还有其他问题，请随时提出。
 (pytorch) root@worker1:/workspace/chatglm2/ChatGLM2-6B_mlu#
 ```
 
-### 2.4.2. 测试WEB实例
+### 3.2.2. WEB推理验证
 
-使用 web_demo.py测试 ，需修改 demo.queue().launch(share=False, inbrowser=True) 中 share=True ，否则无法看到 gradio 地址。
-
-*加载比较慢，大概需要10分钟，可耐心等待。*
+```bash
+# 进入ChatGLM2-6B_mlu路径（以实际为准）
+cd /workspace/chatglm2/ChatGLM2-6B_mlu
+# 或python web_demo.py 或python api.py
+# 注意：如使用web_demo.py，需修改demo.queue().launch(share=False, inbrowser=True)中share=True，否则无法看到gradio地址
+cp -rvf /home/share/pytorch1.9/chatglm2/tools/web_demo.py ./
+# WEB测试验证
+export MLU_VISIBLE_DEVICES=0
+python web_demo.py
+```
+*加载比较慢，大概需要10分钟，可耐心等待。实例如下：*
 
 ```bash
 (pytorch) root@worker1:/workspace/chatglm2/ChatGLM2-6B_mlu# python web_demo.py
@@ -272,5 +169,10 @@ This share link expires in 72 hours. For free permanent hosting and GPU upgrades
 ```
 
 **Web展示效果**
+<p align="left">
+    <img alt="chatglm2_web" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.9/chatglm2/res/chatglm2_web.gif" width="640" />
+</p>
+
+## 3.3. 模型训练
 
 *待补充*
