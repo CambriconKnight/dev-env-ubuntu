@@ -3,6 +3,7 @@ import platform
 import signal
 from transformers import AutoTokenizer, AutoModel
 import readline
+import time
 
 #tokenizer = AutoTokenizer.from_pretrained("../chatglm2-6b", trust_remote_code=True)
 #model = AutoModel.from_pretrained("../chatglm2-6b", trust_remote_code=True).mlu()
@@ -46,6 +47,7 @@ def main():
             continue
         print("\nChatGLM：", end="")
         current_length = 0
+        start_time=time.time()
         for response, history, past_key_values in model.stream_chat(tokenizer, query, history=history,
                                                                     past_key_values=past_key_values,
                                                                     return_past_key_values=True):
@@ -56,7 +58,28 @@ def main():
                 print(response[current_length:], end="", flush=True)
                 current_length = len(response)
         print("")
-
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        # 计算总令牌数
+        total_tokens = len(response)
+        # 计算每秒处理的令牌数
+        tokens_per_second = total_tokens / elapsed_time
+        print(f"ChatGLM2(model.stream_chat) 的推理速度为：{tokens_per_second:.2f} tokens/s","tokens 的数量：",len(response),"推理耗时：",elapsed_time)
+        print("==============================================")
+        # 1 秒的间隔
+        time.sleep(1)
+        print("==============================================")
+        #####计算一次返回最后的生成结果的生成速度#####
+        # start_time2=time.time()
+        # response2, _ = model.chat(tokenizer, query, history=history)
+        # end_time2 = time.time()
+        # elapsed_time2 = end_time2 - start_time2
+        # # 计算总令牌数
+        # total_tokens2 = len(response2)
+        # # 计算每秒处理的令牌数
+        # tokens_per_second2 = total_tokens2 / elapsed_time2
+        # print(response)
+        # print(f"ChatGLM2(model.chat) 的推理速度为：{tokens_per_second2:.2f} tokens/s","tokens 的数量：",len(response2),"推理耗时：",elapsed_time2)
 
 if __name__ == "__main__":
     main()

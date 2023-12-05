@@ -115,7 +115,7 @@ GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/THUDM/chatglm-6b
 # 下载完毕后，可把下载后的【chatglm-6b】目录拷贝到当前目录。
 cp -rvf /data/baidudisk/chatglm-6b ./
 #cp -rvf /data/models/chatglm-6b/ ./
-#mv -f /DATA_SPACE/baidudisk/chatglm-6b ./
+#mv -f /data/baidudisk/chatglm-6b ./
 ```
 
 ## 2.3. 模型适配

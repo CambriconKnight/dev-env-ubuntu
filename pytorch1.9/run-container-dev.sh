@@ -16,15 +16,15 @@ PATH_SHARE_HOST="$PWD/../"
 #Share path on the docker container
 PATH_SHARE_DOCKER="/home/share"
 #SDK path on the host
-PATH_FTP_HOST="/DATA_SPACE/ftp"
+PATH_FTP_HOST="/data/ftp"
 #Work path on the docker container
 PATH_FTP_DOCKER="/home/ftp"
 #Datasets path on the host
-PATH_DATASETS_HOST="/DATA_SPACE/datasets"
+PATH_DATASETS_HOST="/data/datasets"
 #Datasets path on the docker container
 PATH_DATASETS_DOCKER="/data/datasets"
 #Models path on the host
-PATH_MODELS_HOST="/DATA_SPACE/models"
+PATH_MODELS_HOST="/data/models"
 #Models path on the docker container
 PATH_MODELS_DOCKER="/data/models"
 

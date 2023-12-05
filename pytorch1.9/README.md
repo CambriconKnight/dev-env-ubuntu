@@ -52,7 +52,7 @@ Cambricon PyTorch 支持的典型网络及移植流程.
 # 4. 加载镜像
 ```bash
 #加载Docker镜像
-#./load-image-dev.sh /DATA_SPACE/kang/ftp/docker/pytorch-v1.10.0-torch1.9-ubuntu18.04-py37.tar.gz
+#./load-image-dev.sh /data/kang/ftp/docker/pytorch-v1.10.0-torch1.9-ubuntu18.04-py37.tar.gz
 ./load-image-dev.sh ${FULLNAME_IMAGES}
 ```
 

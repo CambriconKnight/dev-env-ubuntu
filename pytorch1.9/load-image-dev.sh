@@ -5,6 +5,7 @@ set -e
 # UpdateDate:   2023/03/14
 # Description:  Loading docker image for IDE.
 # Example:      ./load-image-dev.sh
+#               ./load-image-dev.sh ${FULLNAME_IMAGES}
 # Depends:      pytorch-v1.10.0-torch1.9-ubuntu18.04-py37.tar.gz
 # Notes:
 # -------------------------------------------------------------------------------
