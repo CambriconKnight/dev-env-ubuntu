@@ -1,7 +1,7 @@
 
 <p align="center">
     <a href="https://gitee.com/cambriconknight/dev-env-ubuntu/tree/master/pytorch1.13/benchmark/chatglm2">
-        <img alt="chatglm2-logo" src="./res/chatglm2-6b.jpg" height="140" />
+        <img alt="chatglm2-logo" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.13/benchmark/chatglm2/res/chatglm2-6b.jpg" height="140" />
         <h1 align="center">ChatGLM2模型验证教程</h1>
     </a>
 </p>
@@ -112,6 +112,17 @@ tar zxvf AdvertiseGen.tar.gz
 cp -rvf AdvertiseGen /workspace/cair_modelzoo/Benchmark/ChatGLM2-6B/data
 ```
 
+### 3.1.3. 依赖库安装
+
+```bash
+cd /workspace/cair_modelzoo/Benchmark/ChatGLM2-6B
+pip install -r requirements.txt
+cd transformers_mlu && pip install -e . && cd ..
+pip install ./cndsp-0.8.0-py3-none-any.whl
+pip install peft==0.3.0 --no-deps
+pip install ./flash_attn-2.1.1_mlu-cp310-cp310-linux_x86_64.whl
+```
+
 ## 3.2. 模型推理
 ### 3.2.1. CLI推理验证
 ```bash
@@ -125,7 +136,7 @@ python cli_demo.py --model_name_or_path /data/models/llm/chatglm2-6b-32k --use_v
 
 ```bash
 (pytorch) root@worker1:/workspace/cair_modelzoo/Benchmark/ChatGLM2-6B/src# python cli_demo.py --model_name_or_path /data/models/llm/chatglm2-6b-32k --use_v2 True
-12/11/2023 10:21:14 - WARNING - utils.common - Checkpoint is not found at evaluation, load the original model.
+11/11/2023 10:21:14 - WARNING - utils.common - Checkpoint is not found at evaluation, load the original model.
 Loading checkpoint shards: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████| 7/7 [00:09<00:00,  1.35s/it]
 trainable params: 0 || all params: 6243584000 || trainable%: 0.0000
 欢迎使用 ChatGLM-6B 模型，输入内容即可对话，clear清空对话历史，stop终止程序
@@ -142,13 +153,16 @@ Input: stop
 
 ```bash
 #安装依赖库
-pip install cpm_kernels
-pip install gradio==3.50.0
 pip install mdtex2html
+pip install gradio==3.50.0
+#pip install cpm_kernels
 # 进入工作目录
 cd /workspace/cair_modelzoo/Benchmark/ChatGLM2-6B/src
 #可执行以下命令，直接拷贝修改后的文件
 export MLU_VISIBLE_DEVICES=0
+#直接替换web_demo.py，避免出现问题记录一。
+cp -rvf /home/share/pytorch1.13/benchmark/chatglm2/tools/web_demo.py /workspace/cair_modelzoo/Benchmark/ChatGLM2-6B/src
+#运行web_demo.py
 python web_demo.py --model_name_or_path /data/models/llm/chatglm2-6b-32k --use_v2 True
 ```
 *加载比较慢，大概需要10分钟，可耐心等待。实例如下：*
@@ -163,7 +177,7 @@ This share link expires in 72 hours. For free permanent hosting and GPU upgrades
 ```
 **问题记录一：**
 
-问题描述： chatglm2 web_demo.py 在submit之后，chabot栏出现了对话内容，但是一闪而过，AI的回复显示不出来。
+问题描述： chatglm2 web_demo.py 在submit之后，MLU算力又有占用，chabot栏也出现了对话内容，但是一闪而过，AI的回复显示不出来。
 解决措施： 删除或注释掉 web_demo.py 文件里的以下代码，修改后问题解决。
 
 ```bash
@@ -182,13 +196,18 @@ This share link expires in 72 hours. For free permanent hosting and GPU upgrades
 #
 #gr.Chatbot.postprocess = postprocess
 ```
+或 直接使用已修改后的文件，替换web_demo.py。
+```bash
+cp -rvf /home/share/pytorch1.13/benchmark/chatglm2/tools/web_demo.py /workspace/cair_modelzoo/Benchmark/ChatGLM2-6B/src
+```
 
 ## 3.3. 模型训练
 
 ```bash
 # 进入工作目录
 cd /workspace/cair_modelzoo/Benchmark
-#lora 此训练脚本中会自动安装依赖库
+cp -rvf /home/share/pytorch1.13/benchmark/chatglm2/tools/benchmark_demo.sh /workspace/cair_modelzoo/Benchmark/ChatGLM2-6B
+#lora 此训练脚本中会自动安装依赖库 根据需要设置卡的数量，同时需要修改 test_benchmark.sh 脚本中 num_card 字段。
 export MLU_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 ./test_benchmark.sh 11 ddp amp ./data/AdvertiseGen/ benchmark 370X8 /data/models/llm/chatglm2-6b-32k lora
 #finetune 此训练脚本中会自动安装依赖库
@@ -226,6 +245,11 @@ lora 训练结束终端会打印如下结果：
 }
 ```
 *以上数据为4卡8芯的测试数据，batch_size为1，性能比较差。只增大batch_size，其他不变情况下，会oom。*
+
+**训练期间MLU资源占用情况**
+<p align="left">
+    <img alt="chatglm2_web" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.13/benchmark/chatglm2/res/test-x86-cnmon.gif" width="640" />
+</p>
 
 ### 3.3.2. finetune训练记录
 
