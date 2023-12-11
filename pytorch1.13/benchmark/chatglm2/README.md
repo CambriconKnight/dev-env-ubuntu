@@ -39,7 +39,7 @@
 - SDK: https://sdk.cambricon.com/download?component_name=PyTorch
 
 **AIKnight公众号**
->![](../../res/aiknight_wechat_344.jpg)
+>![](../../../res/aiknight_wechat_344.jpg)
 
 ## 1.3. 下载仓库
 ```bash
