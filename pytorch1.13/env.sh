@@ -18,7 +18,8 @@ TestModel=""
 #Work
 PATH_WORK="pytorch"
 #Dockerfile(16.04/18.04/CentOS)
-OSVer="18.04"
+#OSVer="18.04"
+OSVer="20.04"
 #Operating system，如【pytorch-v1.17.0-torch1.13.1-ubuntu18.04-py310.tar.gz】则取作【ubuntu18.04-py310】。
 OS="ubuntu${OSVer}-py310"
 #FrameVersion，如【pytorch-v1.17.0-torch1.13.1-ubuntu18.04-py310.tar.gz】则取作【v1.17.0-torch1.13.1】。
