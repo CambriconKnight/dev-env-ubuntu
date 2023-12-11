@@ -162,8 +162,10 @@ Running on public URL: https://d770ab15d67f55c617.gradio.live
 This share link expires in 72 hours. For free permanent hosting and GPU upgrades, run `gradio deploy` from Terminal to deploy to Spaces (https://huggingface.co/spaces)
 ```
 **问题记录一：**
+
 问题描述： chatglm2 web_demo.py 在submit之后，chabot栏出现了对话内容，但是一闪而过，AI的回复显示不出来。
 解决措施： 删除或注释掉 web_demo.py 文件里的以下代码，修改后问题解决。
+
 ```bash
 #"""Override Chatbot.postprocess"""
 #
@@ -189,6 +191,47 @@ cd /workspace/cair_modelzoo/Benchmark
 #lora 此训练脚本中会自动安装依赖库
 export MLU_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 ./test_benchmark.sh 11 ddp amp ./data/AdvertiseGen/ benchmark 370X8 /data/models/llm/chatglm2-6b-32k lora
+#finetune 此训练脚本中会自动安装依赖库
+export MLU_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+./test_benchmark.sh 11 ddp amp ./data/AdvertiseGen/ benchmark 370X8 /data/models/llm/chatglm2-6b-32k finetune
+```
+
+### 3.3.1. lora训练记录
+
+```bash
+# 进入工作目录
+cd /workspace/cair_modelzoo/Benchmark
+#lora 此训练脚本中会自动安装依赖库
+export MLU_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+./test_benchmark.sh 11 ddp amp ./data/AdvertiseGen/ benchmark 370X8 /data/models/llm/chatglm2-6b-32k lora
+```
+
+lora 训练结束终端会打印如下结果：
+
+```bash
+{
+    "date": "2023-11-11 11:44:07",
+    "net": "ChatGLM2-6B_LoRA",
+    "batch_size": 1,
+    "cards": 8,
+    "precision": "amp",
+    "DPF_mode": "ddp",
+    "batch_time_avg": 20.524971,
+    "batch_time_var": 0.005009,
+    "hardware_time_avg": 19.75678,
+    "hardware_time_var": 0.009588,
+    "throughput": 0.39,
+    "device": "MLU370-X8",
+    "dataset": "AdvertiseGen"
+}
+```
+*以上数据为4卡8芯的测试数据，batch_size为1，性能比较差。只增大batch_size，其他不变情况下，会oom。*
+
+### 3.3.2. finetune训练记录
+
+```bash
+# 进入工作目录
+cd /workspace/cair_modelzoo/Benchmark
 #finetune 此训练脚本中会自动安装依赖库
 export MLU_VISIBLE_DEVICES=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 ./test_benchmark.sh 11 ddp amp ./data/AdvertiseGen/ benchmark 370X8 /data/models/llm/chatglm2-6b-32k finetune
