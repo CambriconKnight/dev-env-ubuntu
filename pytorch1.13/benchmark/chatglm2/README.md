@@ -32,6 +32,7 @@
 | ChatGLM2-6B 源码       | https://github.com/THUDM/ChatGLM2-6B  | commit： 3d0225f969d56c058f052f6800a21630d14a1184 |
 | Transformers 源码      | https://github.com/huggingface/transformers  | v4.28.1                         |
 | ChatGLM2-6B-32K 模型         | https://huggingface.co/THUDM/chatglm2-6b-32k/tree/455746d4706479a1cbbd07179db39eb2741dc692	  | 直接clone 速度慢，并且为保持版本对应，也可关注微信公众号 【 AIKnight 】, 发送关键字 **chatglm2-6b-32k** 自动获取。|
+| ChatGLM2-6B 训练数据    | AdvertiseGen.tar.gz  | [Google Drive](https://drive.google.com/file/d/13_vf0xRTQsyneRKdD1bZIr93vBGOczrk/view?usp=sharing) 或者 [Tsinghua Cloud](https://cloud.tsinghua.edu.cn/f/b3f119a008264b1cabd1/?dl=1) 也可关注微信公众号 【 AIKnight 】, 发送关键字 **AdvertiseGen** 自动获取。|
 
 **下载地址:**
 - 前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载， 也可在官方提供的专属FTP账户指定路径下载。
@@ -83,26 +84,32 @@ cd ./dev-env-ubuntu/pytorch1.13
 
 以下操作均在Docker容器中。
 
-## 3.1. 环境搭建
+## 3.1. 数据准备
 
-执行一键自动化环境部署脚本即可完成基础环境搭建。
+### 3.1.1. 模型下载
 
-```bash
-# 进到容器后，切换到工作目录
-cd /workspace/cair_modelzoo/Benchmark/ChatGLM2-6B
-```
 以下是ChatGLM2-6B-32K模型，直接下载即可使用。推荐网络带宽充足的用户。下载完成后放置到此目录【/data/models/llm/chatglm2-6b-32k】，方便后续一键自动化环境部署脚本执行。
 
 | 名称                   | 版本/文件                                                 | 备注                                 |
 | :-------------------- | :-------------------------------                         | :---------------------------------- |
 | ChatGLM2-6B-32K 模型         | https://huggingface.co/THUDM/chatglm2-6b-32k/tree/455746d4706479a1cbbd07179db39eb2741dc692	  | 直接clone 速度慢，并且为保持版本对应，也可关注微信公众号 【 AIKnight 】, 发送关键字 **chatglm2-6b-32k** 自动获取。|
 
-模型权重下载完成后，替换 modeling_chatglm.py 到 权重所在目录。
+模型权重下载完成后，还需对chatglm2-6b-32k/modeling_chatglm.py 文件做一些简单适配。方便起见，以下直接用已适配后的文件替换 modeling_chatglm.py ，如需了解差异可自行 diff。
 ```bash
 #比较差异，了解修改内容
 vimdiff /home/share/pytorch1.13/benchmark/chatglm2/tools/modeling_chatglm.py /data/models/llm/chatglm2-6b-32k/modeling_chatglm.py
 #直接拷贝覆盖
 cp -rvf /home/share/pytorch1.13/benchmark/chatglm2/tools/modeling_chatglm.py /data/models/llm/chatglm2-6b-32k/modeling_chatglm.py
+```
+
+### 3.1.2. 训练数据下载
+
+从 [Google Drive](https://drive.google.com/file/d/13_vf0xRTQsyneRKdD1bZIr93vBGOczrk/view?usp=sharing) 或者 [Tsinghua Cloud](https://cloud.tsinghua.edu.cn/f/b3f119a008264b1cabd1/?dl=1) 下载处理好的 ADGEN 数据集，将解压后的 `AdvertiseGen` 目录放到本目录【/workspace/cair_modelzoo/Benchmark/ChatGLM2-6B/data】下。
+```bash
+#数据集下载完成后解压
+tar zxvf AdvertiseGen.tar.gz
+#拷贝数据集到指定目录(以下为 docker 容器内部目录), 如果有此数据集则可不拷贝
+cp -rvf AdvertiseGen /workspace/cair_modelzoo/Benchmark/ChatGLM2-6B/data
 ```
 
 ## 3.2. 模型推理
