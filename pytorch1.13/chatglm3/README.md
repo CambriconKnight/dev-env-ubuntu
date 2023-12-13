@@ -38,7 +38,7 @@
 - SDK: https://sdk.cambricon.com/download?component_name=PyTorch
 
 **AIKnight公众号**
->![](../../../res/aiknight_wechat_344.jpg)
+>![](../../res/aiknight_wechat_344.jpg)
 
 ## 1.3. 下载仓库
 ```bash
@@ -175,7 +175,7 @@ Loading checkpoint shards: 100%|████████████████
 (pytorch) root@worker1:/workspace/chatglm3/ChatGLM3_mlu#
 ```
 
-### 3.1.2. 运行官方综合demo
+### 3.1.2. 运行官方demo
 
 ```bash
 # 进入工作目录
@@ -250,15 +250,17 @@ Installed kernelspec chatglm3-demo in /root/.local/share/jupyter/kernels/chatglm
 ```bash
 # 进入工作目录
 mkdir -p /workspace/chatglm3/tools && cd /workspace/chatglm3/tools
-#下载并安装cndsp
+# 1. 下载并安装cndsp
 wget https://sdk.cambricon.com/static/Basis/MLU370_X86_ubuntu18.04/deepspeed_mlu-0.9.0-py3-none-any.whl
 pip install deepspeed_mlu-0.9.0-py3-none-any.whl
-# 联系技术支持人员，获取 flash-attn2.1.1（暂未公开发布）
+
+# 2. 下载并安装flash-attn2.1.1 。联系技术支持人员，获取 flash-attn2.1.1（暂未公开发布）
 #wget https://sdk.cambricon.com/static/Basis/MLU370_X86_ubuntu18.04/flash_attn-2.1.1_mlu-cp310-cp310-linux_x86_64.whl
 #cp -rvf /home/share/pytorch1.13/chatglm3/tools/flash_attn-2.1.1_mlu-cp310-cp310-linux_x86_64.whl ./
 # 使用提供的flash_attn-2.1.1_mlu-cp310-cp310-linux_x86_64.whl进行安装
 pip install flash_attn-2.1.1_mlu-cp310-cp310-linux_x86_64.whl
-# 联系技术支持人员，获取accelerate_mlu并手动安装
+
+# 3. 下载并安装 accelerate_mlu 。联系技术支持人员，获取 accelerate_mlu 并手动安装
 #cp -rvf /home/ftp/accelerate_mlu.tar.gz ./
 tar -zxvf accelerate_mlu.tar.gz && cd accelerate_mlu
 pip install -e .
@@ -290,19 +292,19 @@ cp -rvf /home/share/pytorch1.13/chatglm3/tools/modeling_chatglm_mlu_training.py 
 ```bash
 # 进入工作目录
 cd /workspace/chatglm3/ChatGLM3_mlu/finetune_demo
-# 下载 ToolAlpaca 数据集（多轮对话格式）
+# 1. 下载 ToolAlpaca 数据集（多轮对话格式）
 git clone https://github.com/tangqiaoyu/ToolAlpaca.git
-# 转换数据
+# 2. 转换数据
 python ./scripts/format_tool_alpaca.py --path ./ToolAlpaca/data/train_data.json
 
-# 修改P-Tuning脚本 scripts/finetune_pt_multiturn.sh，修改以下几处：
+# 3. 修改P-Tuning脚本 scripts/finetune_pt_multiturn.sh，修改以下几处：
 #1）使用卡数 NUM_GPUS，MAX_SEQ_LEN，MAX_STEP，SAVE_INTERVAL；本实例卡数为一卡双芯；
 #2）设置模型路径 BASE_MODEL_PATH；本实例修改为： /workspace/chatglm3/models/chatglm3-6b；
 #3）修改分布式调用方式；
 # 修改后的脚本放置在如下路径： /home/share/pytorch1.13/chatglm3/tools/finetune_pt_multiturn.sh
 # 使用已经修改后的文件，直接拷贝替换。如需请自行查看差异
 cp -rvf /home/share/pytorch1.13/chatglm3/tools/finetune_pt_multiturn.sh /workspace/chatglm3/ChatGLM3_mlu/finetune_demo/scripts
-# 完成脚本内容修改后，执行P-Tuning训练
+# 4. 完成脚本内容修改后，执行P-Tuning训练
 bash scripts/finetune_pt_multiturn.sh
 ```
 *注：打印中显示oom训练可正常运行可暂忽略*

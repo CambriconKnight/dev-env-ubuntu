@@ -38,10 +38,11 @@
 SDK: https://sdk.cambricon.com/download?component_name=PyTorch
 
 # 2. 网络图谱
-Cambricon PyTorch 支持的典型网络及移植流程.
+Cambricon PyTorch 环境下典型网络的验证教程.
 |网络名称|操作目录|备注|
 |----|-------|-------|
-|`chatglm2`|./chatglm2| |
+|`ChatGLM2`| [chatglm2](./benchmark/chatglm2)  | |
+|`ChatGLM3`| [chatglm3](./chatglm3)  | |
 
 # 3. 下载镜像
 
