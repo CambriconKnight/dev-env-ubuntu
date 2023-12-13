@@ -139,6 +139,7 @@ export MLU_VISIBLE_DEVICES=0,1
 #根据实际环境修改demo.py 中模型路径。
 python demo.py
 ```
+
 *加载比较慢，大概需要5分钟，可耐心等待。实例如下：*
 
 ```bash
@@ -149,29 +150,6 @@ Loading checkpoint shards: 100%|████████████████
 [2023-12-12 15:55:6] [CNNL] [Warning]:[cnnlStridedSlice] is deprecated and will be removed in the future release, please use [cnnlStridedSlice_v2] instead.
 [2023-12-12 15:55:6] [CNNL] [Warning]:[cnnlRandCreateGenerator_v2] will be deprecated.
 你好！我是人工智能助手 ChatGLM3-6B，很高兴见到你，欢迎问我任何问题。
-晚上睡不着时，你可以尝试以下方法来帮助自己入睡：
-
-1. 保持冷静：尽量放松身心，避免焦虑和紧张情绪。
-
-2. 调整环境：确保你的卧室温度、光线和噪音舒适，这有助于入睡。
-
-3. 控制饮水：晚上尽量减少饮水量，避免因夜间尿频影响睡眠。
-
-4. 规律作息：尽量保持每天相同的入睡和起床时间，帮助身体建立生物钟。
-
-5. 适当运动：白天进行适量运动，有助于晚上更好地入睡。但避免在临近睡觉前进行剧烈运动。
-
-6. 放松身心：尝试采用深呼吸、冥想或渐进性肌肉松弛等方法来放松身心。
-
-7. 避免使用电子产品：尽量在睡前一小时避免使用手机、电脑等电子产品，以免蓝光影响你的睡眠。
-
-8. 睡前禁止刺激性食物和饮料：睡前避免摄入咖啡因、茶、巧克力等刺激性食物和饮料。
-
-9. 尝试睡前的传统活动：如阅读、听轻音乐等，有助于入睡。
-
-10. 如果长时间睡不着，请寻求专业医生的帮助。
-
-希望这些建议能对你有所帮助。祝你早日入睡，拥有一个好梦！
 (pytorch) root@worker1:/workspace/chatglm3/ChatGLM3_mlu#
 ```
 
@@ -187,6 +165,7 @@ export MODEL_PATH=/workspace/chatglm3/models/chatglm3-6b
 #运行官方综合demo
 streamlit run main.py
 ```
+
 *加载比较慢，大概需要5分钟，可耐心等待。实例如下：*
 
 ```bash
@@ -199,34 +178,20 @@ Installed kernelspec chatglm3-demo in /root/.local/share/jupyter/kernels/chatglm
 (pytorch) root@worker1:/workspace/chatglm3/ChatGLM3_mlu/composite_demo# export MODEL_PATH=/workspace/chatglm3/models/chatglm3-6b
 (pytorch) root@worker1:/workspace/chatglm3/ChatGLM3_mlu/composite_demo# streamlit run main.py
 
-      👋 Welcome to Streamlit!
+      Welcome to Streamlit!
 
-      If you’d like to receive helpful onboarding emails, news, offers, promotions,
-      and the occasional swag, please enter your email address below. Otherwise,
-      leave this field blank.
-
-      Email:
-
-  You can find our privacy policy at https://streamlit.io/privacy-policy
-
-  Summary:
-  - This open source library collects usage statistics.
-  - We cannot see and do not store information contained inside Streamlit apps,
-    such as text, charts, images, etc.
-  - Telemetry data is stored in servers in the United States.
-  - If youd like to opt out, add the following to ~/.streamlit/config.toml,
-    creating that file if necessary:
+      .......
 
     [browser]
     gatherUsageStats = false
 
-
   You can now view your Streamlit app in your browser.
 
   Local URL: http://localhost:8501
-  Network URL: http://10.10.129.11:8501
+  Network URL: http://192.168.0.110:8501
 ```
-*启动完成后，根据提示打开网址，进行操作，实例如下：*
+
+zz*启动完成后，根据提示打开网址，进行操作，实例如下：*
 
 <p align="left">
     <img alt="chatglm3-6b-streamlit-demo" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.13/chatglm3/res/chatglm3-6b-streamlit-demo.gif" width="640" />
@@ -307,6 +272,7 @@ cp -rvf /home/share/pytorch1.13/chatglm3/tools/finetune_pt_multiturn.sh /workspa
 # 4. 完成脚本内容修改后，执行P-Tuning训练
 bash scripts/finetune_pt_multiturn.sh
 ```
+
 *注：打印中显示oom训练可正常运行可暂忽略*
 
 **训练开始**
@@ -324,7 +290,7 @@ bash scripts/finetune_pt_multiturn.sh
     <img alt="chatglm3-6b-p-tuning-cnmon" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.13/chatglm3/res/chatglm3-6b-p-tuning-cnmon.gif" width="640" />
 </p>
 
-**训练结束**
+**训练完成**
 <p align="left">
     <img alt="chatglm3-6b-p-tuning-3s" src="https://gitee.com/cambriconknight/dev-open-res/raw/main/dev-env-ubuntu/pytorch1.13/chatglm3/res/chatglm3-6b-p-tuning-3s.gif" width="640" />
 </p>
