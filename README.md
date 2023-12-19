@@ -14,14 +14,28 @@
 
 >![](./res/note.gif) **功能说明：**
 >- 可基于 Dockerfile 编译镜像，也可直接加载官网提供的各类镜像(推荐)。
->- 支持 Caffe、PyTorch、TensorFlow 深度学习框架以及MagicMind推理加速引擎。
+>- 支持 PyTorch、TensorFlow 深度学习框架以及 MagicMind 推理加速引擎。
 >- 支持常用算法的部署、移植、在线/离线推理等验证。
 
 *本工具集仅用于个人学习，打通流程； 不对效果负责，不承诺商用。*
 
-## 网络移植图谱
+## 大模型验证
 
-*以下仅为常用网络MLU移植教程，并未包含寒武纪支持的全部网络, 如有新网络需求, 可在 [issue](https://gitee.com/cambriconknight/mlu220-cross-compile-docker-image/issues) 区讨论。*
+*以下仅为常用大模型在MLU上的移植及验证教程，并未包含寒武纪支持的全部网络, 如有新网络需求, 可在 [issue](https://gitee.com/cambriconknight/dev-env-ubuntu/issues) 区讨论。*
+
+|  AI框架 | 类别  | 原始网络  | 验证教程   | 代码适配 | 推理验证 | 训练验证 |
+|:----  |:-------  |:----   |:----   |:----:    |:----: |:----: |
+| Pytorch1.13 | GLM  | [ChatGLM3-6B](https://github.com/THUDM/ChatGLM3)  | [验证教程](./pytorch1.13/chatglm3)  |  ✅  |  ✅  |  ✅ |
+| Pytorch1.13 | GLM  | [ChatGLM2-6B](https://github.com/THUDM/ChatGLM3)  | [验证教程](./pytorch1.13/benchmark/chatglm2)  |  ✅  |  ✅  |  ✅ |
+| Pytorch1.9 | LLaMA  | [Chinese-LLaMA-Alpaca-2](https://github.com/ymcui/Chinese-LLaMA-Alpaca-2)  | [验证教程](./pytorch1.9/chinese-llama-alpaca-2)  |  ✅  |  ✅  |  ✅ |
+| Pytorch1.9 | OB  | [OpenBioMed](https://github.com/PharMolix/OpenBioMed	)  | [验证教程](./pytorch1.9/openbiomed)  |  ✅  |  ✅  |  -- |
+| Pytorch1.9 | GLM  | [ChatGLM2-6B](https://github.com/THUDM/ChatGLM2-6B)  | [验证教程](./pytorch1.9/chatglm2)  |  ✅  |  ✅  |  -- |
+| Pytorch1.9 | GLM  | [ChatGLM-6B](https://github.com/THUDM/ChatGLM-6B)  | [验证教程](./pytorch1.9/chatglm)  |  ✅  |  ✅  |  ✅ |
+| Pytorch1.9 | Baichuan  | [Baichuan-7B](https://github.com/baichuan-inc/baichuan-7B)  | [验证教程](./pytorch1.9/baichuan)  |  ✅  |  ✅  |  -- |
+
+## 基础模型验证
+
+*以下仅为常用网络MLU移植教程，并未包含寒武纪支持的全部网络, 如有新网络需求, 可在 [issue](https://gitee.com/cambriconknight/dev-env-ubuntu/issues) 区讨论。*
 *在Cambricon Caffe/TF/Pytorch 框架下可支持CPU、MLU（逐层模式）和MFUS（融合模式）三种模式上运行。*
 
 
@@ -71,14 +85,10 @@
 | :-------------------- | :-------------------------------                      | :----------------------------------  |
 | Linux OS              | Ubuntu16.04/Ubuntu18.04/CentOS7                       | 宿主机操作系统                         |
 | Driver_MLU270         | neuware-mlu270-driver-aarch64-4.9.8.tar.gz            | 依操作系统选择                         |
-| Driver_MLU370         | cambricon-mlu-driver-ubuntu18.04-dkms_4.20.7_amd64.deb            | 依操作系统选择                         |
+| Driver_MLU370         | cambricon-mlu-driver-centos7-5.10.22-1.x86_64.rpm     | 依操作系统选择，[驱动安装教程](https://sdk.cambricon.com/download?component_name=Driver)  |
 
 注: 以上软件环境中文件名词, 如有版本升级及名称变化, 可以在 [env.sh](./env.sh) 中进行修改。
 
 ## 开发资料下载
 
-MLU开发文档: https://developer.cambricon.com/index/document/index/classid/3.html
-
-Neuware SDK: https://cair.cambricon.com/#/home/catalog?type=SDK%20Release
-
-其他开发资料, 可前往[寒武纪开发者社区](https://developer.cambricon.com)注册账号按需下载。也可在官方提供的专属FTP账户指定路径下载。
+注册开发者社区账号并下载 SDK 及文档: https://forum.cambricon.com/index.php?m=content&c=index&a=show&catid=169&id=2441
